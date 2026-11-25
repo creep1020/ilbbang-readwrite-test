@@ -124,6 +124,29 @@ button{cursor:pointer}button:disabled{opacity:.4;cursor:default}.primary{backgro
 #rwApp .rw-expression:last-child{border:0}
 #rwApp .rw-expression>span{overflow-wrap:break-word;word-break:keep-all}
 @media(max-width:385px){main{padding:16px 12px 38px}#rwApp .rw-section{padding:14px 11px}#rwApp .rw-verbs td{padding-left:2px;padding-right:2px}#rwApp .rw-verbs td:last-child{padding-left:5px}}
+
+/* Read/write review v4 - isolated to review components. Original reward panels remain untouched. */
+#rwApp .rw-review-box{background:#fffdf9}
+#rwApp .rw-review-box>strong,#rwApp .rw-review-box .rw-flex>strong{font-size:17px}
+#rwApp .rw-review-story-head{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:9px;padding-bottom:12px;border-bottom:1px solid #e5e2dc}
+#rwApp .rw-review-story-head h3{font-size:20px;line-height:1.35;margin:6px 0 2px}
+#rwApp .rw-review-story-head p{margin:0}
+#rwApp .rw-review-status{display:inline-block;padding:3px 8px;border-radius:14px;color:#38674c;background:#ebf3eb;font-size:12px}
+#rwApp .rw-review-story-line{padding:12px 0;border-bottom:1px solid #eee9e0;line-height:1.65}
+#rwApp .rw-review-story-line b{display:block;font-size:15px;overflow-wrap:anywhere}
+#rwApp .rw-review-story-line .rw-ko{margin:5px 0;color:#59695e;line-height:1.6}
+#rwApp .rw-review-story-line>.rw-ko[hidden]{display:none}
+#rwApp .rw-review-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px}
+#rwApp .rw-review-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+#rwApp button.rw-tab-active{background:#486b55;color:white;border-color:#486b55}
+#rwApp .rw-review-card{padding:14px 0;border-bottom:1px solid #e9e5de;min-width:0}
+#rwApp .rw-review-card-top{display:flex;gap:6px;flex-wrap:wrap;justify-content:space-between;align-items:center}
+#rwApp .rw-review-prompt{font-weight:700;font-size:15px;overflow-wrap:anywhere;margin:12px 0}
+#rwApp .rw-review-reveal{padding:12px;border-radius:10px;background:#eef5ee;color:#284c38;font-size:14px;line-height:1.6;overflow-wrap:anywhere;margin:8px 0}
+#rwApp .rw-review-reveal[hidden]{display:none}
+#rwApp .rw-review-mark{display:flex;flex-wrap:wrap;gap:7px;margin:7px 0 0}
+#rwApp .rw-expression .rw-difficult-btn{grid-column:1/-1;justify-self:start;margin:0 0 5px}
+#rwApp .rw-review-card button{margin-right:4px}
 </style></head>
  <script>
 if ('serviceWorker' in navigator) {
@@ -168,6 +191,22 @@ if ('serviceWorker' in navigator) {
     <div class="rw-section"><strong>🔄 불규칙동사 복습</strong><div class="rw-table-wrap"><table class="rw-verbs" aria-label="불규칙동사 표"><colgroup><col><col><col><col></colgroup><thead><tr><th>원형</th><th>과거형</th><th>과거분사</th><th>뜻</th></tr></thead><tbody id="rwVerbs"></tbody></table></div></div>
     <div class="rw-section"><strong>✨ 오늘의 새 표현</strong><div id="rwVocab"></div></div>
     <div class="rw-section"><strong>⭐ 학습 완료</strong><p class="rw-muted">읽기·쓰기 완료 기록은 프로필별로 이 기기에 따로 저장돼요.</p><button id="rwDone" class="rw-done" type="button">오늘 학습 완료하기</button><p id="rwDoneMsg" class="rw-muted" role="status"></p></div>
+    <div class="rw-section rw-review-box" id="rwRandomPanel">
+      <strong>📚 오늘의 랜덤 복습 이야기</strong>
+      <p class="rw-muted" id="rwRandomIntro">150편 이야기 목록을 불러오는 중이에요.</p>
+      <div id="rwRandomStory" aria-live="polite"><p class="rw-muted">복습 이야기를 불러오는 중이에요.</p></div>
+      <p class="rw-muted">하루 한 편을 프로필별로 고정해 보여줘요. 다음 날에는 가능한 다른 이야기를 우선 선택해요.</p>
+    </div>
+    <div class="rw-section rw-review-box" id="rwMistakePanel">
+      <div class="rw-flex"><strong>🔁 영작 오답·어려운 표현 복습</strong><span id="rwReviewTotal" class="rw-pill">등록 0개</span></div>
+      <p class="rw-muted">공책에 쓴 영어를 스스로 채점해 틀리면 「다시 복습」, 어려운 표현은 「어려워요」를 누르세요.</p>
+      <div class="rw-review-tabs"><button id="rwReviewDue" type="button" class="rw-small rw-tab-active">오늘 복습</button><button id="rwReviewAll" type="button" class="rw-small">전체 카드</button></div>
+      <div id="rwReviewCards" aria-live="polite"></div>
+      <p id="rwReviewMarkMsg" class="rw-muted" role="status"></p>
+      <p id="rwReviewStorageMsg" class="rw-muted" role="alert"></p>
+      <p class="rw-muted">재복습 간격: 다음 날 → 3일 → 7일 → 14일 → 30일 · 5회 성공하면 목록에서 제외돼요.</p>
+    </div>
+
   </div>
   <p id="rwError" class="rw-error" hidden></p>
 </section>
@@ -2396,17 +2435,19 @@ function render(){
  R('Quiz').querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{const q=Number(b.dataset.q),a=Number(b.dataset.a);const ok=a===l.qs[q][2];R('Feedback'+q).textContent=ok?'정답이에요!':'다시 생각해 보세요.';b.classList.add(ok?'rw-correct':'rw-wrong')});
  R('Writing').innerHTML=l.ws.map((w,i)=>'<div class="rw-writing"><b>'+(i+1)+'. '+escapeHTML(localize(w[0],p,day))+'</b><div class="rw-answer" id="rwAnswer'+i+'" hidden>'+escapeHTML(localize(w[1],p,day))+'</div><button class="rw-small" type="button" data-w="'+i+'">정답 확인</button></div>').join('');
  R('Writing').querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>{const el=R('Answer'+b.dataset.w);el.hidden=!el.hidden;b.textContent=el.hidden?'정답 확인':'정답 숨기기';});
+ R('Writing').querySelectorAll('.rw-writing').forEach((el,i)=>el.insertAdjacentHTML('beforeend','<div class="rw-review-mark"><button type="button" class="rw-small" data-rw-mark-w="'+i+'" data-rw-mark-action="correct">✅ 맞았어요</button><button type="button" class="rw-small" data-rw-mark-w="'+i+'" data-rw-mark-action="wrong">🔁 다시 복습</button></div>'));
  R('Verbs').innerHTML=l.verbs.map(v=>'<tr><td>'+escapeHTML(v[0])+'</td><td>'+escapeHTML(v[1])+'</td><td>'+escapeHTML(v[2])+'</td><td>'+escapeHTML(v[3])+' · '+escapeHTML(v[4])+'</td></tr>').join('');
- R('Vocab').innerHTML=l.vocab.map(v=>'<div class="rw-expression"><b>'+escapeHTML(v[0])+'</b><span>'+escapeHTML(v[1])+'</span></div>').join('');
+ R('Vocab').innerHTML=l.vocab.map((v,i)=>'<div class="rw-expression"><b>'+escapeHTML(v[0])+'</b><span>'+escapeHTML(v[1])+'</span><button type="button" class="rw-small rw-difficult-btn" data-rw-difficult="'+i+'">🔖 어려워요</button></div>').join('');
  const key=completionKey(day);let done=false;try{done=Boolean(localStorage.getItem(key));}catch(e){}
  R('DoneStatus').textContent=done?'✓ 완료':'학습 전';R('DoneMsg').textContent='';
- R('Done').onclick=()=>{try{localStorage.setItem(key,new Date().toISOString());R('DoneStatus').textContent='✓ 완료';R('DoneMsg').textContent='완료 기록을 이 기기에 저장했어요.';}catch(e){R('DoneMsg').textContent='저장에 실패했어요. 브라우저 저장 공간을 확인해 주세요.';}};
+ R('Done').onclick=()=>{try{localStorage.setItem(key,new Date().toISOString());R('DoneStatus').textContent='✓ 완료';R('DoneMsg').textContent='완료 기록을 이 기기에 저장했어요.';window.dispatchEvent(new Event('rw:lesson'));}catch(e){R('DoneMsg').textContent='저장에 실패했어요. 브라우저 저장 공간을 확인해 주세요.';}};
+window.dispatchEvent(new Event('rw:lesson'));
 }
 function setProfile(data){
  if(!data||!data.id)return;
  const next={id:String(data.id),name:String(data.name||'프로필').trim()};
  if(next.id===chosen.id&&next.name===chosen.name)return;
- chosen=next;render();
+ chosen=next;render();window.dispatchEvent(new Event('rw:profile'));
 }
 function syncSelector(){
  const sel=document.getElementById('profileSelect');
@@ -2416,8 +2457,12 @@ function syncSelector(){
  setProfile({id:sel.value,name:opt.textContent.trim()});
 }
 // The existing Firebase profile module calls this only AFTER its profile state has changed.
+window.rwReviewGetContext=()=>({profileId:chosen.id,profileName:chosen.name,person:chosen.id?getPerson():'jiwoo',day:Number(R('Day').value)});
+window.rwReviewGetLessons=()=>lessons;
 window.ilbbangOnProfileUpdated=setProfile;
 R('Day').addEventListener('change',render);
+R('Writing').addEventListener('click',e=>{const b=e.target.closest('[data-rw-mark-w]');if(!b)return;window.rwReviewEngine?.mark('writing',Number(R('Day').value),Number(b.dataset.rwMarkW),b.dataset.rwMarkAction==='wrong'?'wrong':'correct');});
+R('Vocab').addEventListener('click',e=>{const b=e.target.closest('[data-rw-difficult]');if(!b)return;window.rwReviewEngine?.mark('expression',Number(R('Day').value),Number(b.dataset.rwDifficult),'wrong');});
 // A small fallback handles older browser events and login initialization.
 const watch=new MutationObserver(()=>{const sel=document.getElementById('profileSelect');if(sel){sel.addEventListener('change',()=>{syncSelector();setTimeout(syncSelector,300);setTimeout(syncSelector,1100);},{passive:true});watch.disconnect();syncSelector();}});
 watch.observe(document.getElementById('cloudPanel'),{childList:true,subtree:true});
@@ -2425,4 +2470,4 @@ const existing=document.getElementById('profileSelect');if(existing){existing.ad
 fetch('./readwrite/lessons.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(data=>{
  if(!Array.isArray(data)||data.length<2)throw Error('DAY 1~2 데이터가 없어요.');lessons=data;render();
 }).catch(e=>{R('Error').hidden=false;R('Error').textContent='학습 데이터를 불러올 수 없어요. readwrite/lessons.json 경로를 확인해 주세요. ('+e.message+')';});
-})();</script></body></html>
+})();</script><script src="./readwrite/review.js?v=4" defer></script></body></html>
