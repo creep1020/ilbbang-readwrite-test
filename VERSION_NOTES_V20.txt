@@ -1,0 +1,6 @@
+v20 DAY 15 illustration only
+- v19 index.html의 표시 가능 DAY 배열에 15 추가
+- 지우·민서 DAY 15 이미지 파일 각각 1장 추가
+- 기존 학습/복습/녹음/프로필/보상 코드 변경 없음
+- 나머지 미검수 DAY 그림은 숨김 유지
+- 실기기·Firebase 테스트 미실시

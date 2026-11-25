@@ -1,0 +1,1 @@
+V27: Added DAY23 Jiwoo and Minseo illustrations only. Preserved story, recordings, profiles, review, Firebase, rewards and other index content. DAY24/25/27 unmodified and hidden. Local code and file checks only, not device verification.

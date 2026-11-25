@@ -1,0 +1,11 @@
+{
+  "version": "v22",
+  "total_image_files": 44,
+  "new_days": [
+    17,
+    18
+  ],
+  "new_images": 4,
+  "remaining_without_images": 16,
+  "preserved_functionality": "source html exact match except illustration mapping"
+}

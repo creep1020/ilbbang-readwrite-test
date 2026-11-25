@@ -1,0 +1,281 @@
+{
+  "day_results": [
+    {
+      "day": 1,
+      "title": "DAY 1 · The Little Blue Box",
+      "stories": 9,
+      "writing": 5,
+      "expressions": 5,
+      "heroVisible": false,
+      "heroSrc": "./readwrite/images/jiwoo1.jpg"
+    },
+    {
+      "day": 2,
+      "title": "DAY 2 · The Red Heart Card",
+      "stories": 9,
+      "writing": 5,
+      "expressions": 5,
+      "heroVisible": false,
+      "heroSrc": "./readwrite/images/jiwoo2.jpg"
+    },
+    {
+      "day": 3,
+      "title": "DAY 3 · The Book and the Drawing",
+      "stories": 9,
+      "writing": 5,
+      "expressions": 5,
+      "heroVisible": false,
+      "heroSrc": "./readwrite/images/jiwoo3.jpg"
+    },
+    {
+      "day": 4,
+      "title": "DAY 4 · The Note in the Bag",
+      "stories": 9,
+      "writing": 5,
+      "expressions": 5,
+      "heroVisible": false,
+      "heroSrc": "./readwrite/images/jiwoo4.jpg"
+    },
+    {
+      "day": 5,
+      "title": "DAY 5 · Five Questions",
+      "stories": 9,
+      "writing": 5,
+      "expressions": 5,
+      "heroVisible": false,
+      "heroSrc": "./readwrite/images/jiwoo5.jpg"
+    },
+    {
+      "day": 6,
+      "title": "DAY 6 · A Birthday Card",
+      "stories": 9,
+      "writing": 5,
+      "expressions": 5,
+      "heroVisible": false,
+      "heroSrc": "./readwrite/images/jiwoo6.jpg"
+    },
+    {
+      "day": 7,
+      "title": "DAY 7 · The Key and the Door",
+      "stories": 9,
+      "writing": 5,
+      "expressions": 5,
+      "heroVisible": false,
+      "heroSrc": "./readwrite/images/jiwoo7.jpg"
+    },
+    {
+      "day": 8,
+      "title": "DAY 8 · A Song After Class",
+      "stories": 9,
+      "writing": 5,
+      "expressions": 5,
+      "heroVisible": false,
+      "heroSrc": "./readwrite/images/jiwoo8.jpg"
+    },
+    {
+      "day": 9,
+      "title": "DAY 9 · A Book for the Library",
+      "stories": 9,
+      "writing": 5,
+      "expressions": 5,
+      "heroVisible": false,
+      "heroSrc": "./readwrite/images/jiwoo9.jpg"
+    },
+    {
+      "day": 10,
+      "title": "DAY 10 · Lunch in the Hall",
+      "stories": 9,
+      "writing": 5,
+      "expressions": 5,
+      "heroVisible": false,
+      "heroSrc": "./readwrite/images/jiwoo10.jpg"
+    },
+    {
+      "day": 11,
+      "title": "DAY 11 · The Heavy Bag",
+      "stories": 9,
+      "writing": 5,
+      "expressions": 5,
+      "heroVisible": false,
+      "heroSrc": null
+    },
+    {
+      "day": 12,
+      "title": "DAY 12 · Homework and the Book",
+      "stories": 9,
+      "writing": 5,
+      "expressions": 5,
+      "heroVisible": false,
+      "heroSrc": null
+    },
+    {
+      "day": 13,
+      "title": "DAY 13 · The Doctor Card",
+      "stories": 9,
+      "writing": 5,
+      "expressions": 5,
+      "heroVisible": false,
+      "heroSrc": null
+    },
+    {
+      "day": 14,
+      "title": "DAY 14 · The Map and the Boat",
+      "stories": 9,
+      "writing": 5,
+      "expressions": 5,
+      "heroVisible": false,
+      "heroSrc": null
+    },
+    {
+      "day": 15,
+      "title": "DAY 15 · The Small Cap",
+      "stories": 9,
+      "writing": 5,
+      "expressions": 5,
+      "heroVisible": false,
+      "heroSrc": null
+    },
+    {
+      "day": 16,
+      "title": "DAY 16 · The Plant and the Moon",
+      "stories": 9,
+      "writing": 5,
+      "expressions": 5,
+      "heroVisible": false,
+      "heroSrc": null
+    },
+    {
+      "day": 17,
+      "title": "DAY 17 · The Art Gallery",
+      "stories": 9,
+      "writing": 5,
+      "expressions": 5,
+      "heroVisible": false,
+      "heroSrc": null
+    },
+    {
+      "day": 18,
+      "title": "DAY 18 · The Ticket for the Theater",
+      "stories": 9,
+      "writing": 5,
+      "expressions": 5,
+      "heroVisible": false,
+      "heroSrc": null
+    },
+    {
+      "day": 19,
+      "title": "DAY 19 · A Gift and a Smile",
+      "stories": 9,
+      "writing": 5,
+      "expressions": 5,
+      "heroVisible": false,
+      "heroSrc": null
+    },
+    {
+      "day": 20,
+      "title": "DAY 20 · The Baseball Game",
+      "stories": 9,
+      "writing": 5,
+      "expressions": 5,
+      "heroVisible": false,
+      "heroSrc": null
+    },
+    {
+      "day": 21,
+      "title": "DAY 21 · The Robot and the Computer",
+      "stories": 9,
+      "writing": 5,
+      "expressions": 5,
+      "heroVisible": false,
+      "heroSrc": null
+    },
+    {
+      "day": 22,
+      "title": "DAY 22 · The Book and the Ticket",
+      "stories": 9,
+      "writing": 5,
+      "expressions": 5,
+      "heroVisible": false,
+      "heroSrc": null
+    },
+    {
+      "day": 23,
+      "title": "DAY 23 · The Book in the Bag",
+      "stories": 9,
+      "writing": 5,
+      "expressions": 5,
+      "heroVisible": false,
+      "heroSrc": null
+    },
+    {
+      "day": 24,
+      "title": "DAY 24 · The Flower and the Gift",
+      "stories": 9,
+      "writing": 5,
+      "expressions": 5,
+      "heroVisible": false,
+      "heroSrc": null
+    },
+    {
+      "day": 25,
+      "title": "DAY 25 · The Doctor and the Bag",
+      "stories": 9,
+      "writing": 5,
+      "expressions": 5,
+      "heroVisible": false,
+      "heroSrc": null
+    },
+    {
+      "day": 26,
+      "title": "DAY 26 · Checking Homework",
+      "stories": 9,
+      "writing": 5,
+      "expressions": 5,
+      "heroVisible": false,
+      "heroSrc": "./readwrite/images/jiwoo26.jpg"
+    },
+    {
+      "day": 27,
+      "title": "DAY 27 · A Trip to the Station",
+      "stories": 9,
+      "writing": 5,
+      "expressions": 5,
+      "heroVisible": false,
+      "heroSrc": null
+    },
+    {
+      "day": 28,
+      "title": "DAY 28 · A Book and a Message",
+      "stories": 9,
+      "writing": 5,
+      "expressions": 5,
+      "heroVisible": false,
+      "heroSrc": "./readwrite/images/jiwoo28.jpg"
+    },
+    {
+      "day": 29,
+      "title": "DAY 29 · A Plan for a Picnic",
+      "stories": 9,
+      "writing": 5,
+      "expressions": 5,
+      "heroVisible": false,
+      "heroSrc": "./readwrite/images/jiwoo29.jpg"
+    },
+    {
+      "day": 30,
+      "title": "DAY 30 · A Problem and a Cake",
+      "stories": 9,
+      "writing": 5,
+      "expressions": 5,
+      "heroVisible": false,
+      "heroSrc": "./readwrite/images/jiwoo30.jpg"
+    }
+  ],
+  "minseo_check": {
+    "profile": null,
+    "hero": "./readwrite/images/minseo28.jpg",
+    "story": "1. Minseo got ready for class.민서는 수업을 준비했어요.🔊 듣기해석 보기🎙 녹음 시작마이크 버튼을 눌러 녹음한 뒤 종료해 주세요."
+  },
+  "errors": [],
+  "all30pass": true
+}

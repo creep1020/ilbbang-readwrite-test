@@ -1,0 +1,4 @@
+DAY23: The Book in the Bag
+Actual source scene: Mina sees a book on a desk; the protagonist puts the book in a bag; Mina goes to the library.
+Illustration: Jiwoo / Minseo putting a book in a backpack, Mina points toward the library in the background.
+DAY24,25,27 remain hidden; image generation failures were NOT included.

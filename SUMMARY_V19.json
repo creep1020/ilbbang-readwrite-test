@@ -1,0 +1,13 @@
+{
+  "version": "v19",
+  "added_days": [
+    14
+  ],
+  "added_images": 2,
+  "visible_images": 36,
+  "remaining_scene_rework": 24,
+  "scope": "DAY14 illustration assets and day visibility list only; other app logic unchanged",
+  "day14_story_reference": "Map on desk with boat illustration; protagonist gives Mina a flower",
+  "day15": "not changed; generated image rejected as inconsistent with original story",
+  "verification": "Source story read, images manually matched, file and ZIP integrity checked; not tested on Android/Firebase"
+}

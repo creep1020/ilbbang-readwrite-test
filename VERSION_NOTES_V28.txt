@@ -1,0 +1,1 @@
+V28: DAY24 Jiwoo and Minseo illustration candidates integrated based on actual v27 story. Day 25 and 27 remain hidden. No learning/story logic changed, only DAY image allowlist and two JPEG assets. Not deployed or phone-tested.

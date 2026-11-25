@@ -1,0 +1,1 @@
+v21: DAY16 Jiwoo and Minseo watercolor illustrations added. DAY17 generated artwork was rejected due to mismatched narrative. Source lesson, recording, writing, rewards, Firebase and review code unchanged. Browser/device testing not completed for this build.

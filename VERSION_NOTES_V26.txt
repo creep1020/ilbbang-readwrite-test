@@ -1,0 +1,1 @@
+v26: DAY22 Jiwoo/Minseo illustration added. Existing v25 app preserved. Only change to index.html is DAY22 enabled in illustration imagePath list. Remaining unverified days are unchanged.

@@ -1,0 +1,6 @@
+DAY22 / The Book and the Ticket
+정규 원문: Mina and Jiwoo get together at the store. / Mina got a book. / Jiwoo got a ticket. / They went home together.
+그림 내용: 가게 앞, Mina가 책을 들고, 지우·민서가 표를 들고 있음.
+지우/민서 각각 한 장씩 분리. 앱 코드 수정은 DAY22 이미지 표시 조건 한 곳만.
+DAY23 생성 시도 결과는 원문과 달라 반영하지 않음.
+기존 학습/보상/복습 코드 및 데이터는 원본 그대로 보존함.

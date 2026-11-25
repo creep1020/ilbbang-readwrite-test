@@ -1,0 +1,11 @@
+{
+  "version": "v18",
+  "added_days": [
+    12,
+    13
+  ],
+  "added_images": 4,
+  "visible_images": 34,
+  "unapproved_images": 26,
+  "modified": "image visibility day list only; existing learning JS preserved"
+}

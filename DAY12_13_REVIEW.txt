@@ -1,0 +1,7 @@
+v18 삽화 수정 / DAY 12, 13
+- DAY 12 실제 원고: Jiwoo had homework after class; Mina saw a textbook on the desk; Jiwoo showed Mina a note; Mina gave Jiwoo a book.
+- DAY 13 실제 원고: Mina had a card; Jiwoo saw a doctor on the card; Mina gave Jiwoo the card; They met the teacher.
+- 지우(여아) / 민서(남아) 각 2장 추가. 지우는 왼쪽, 민서는 오른쪽 패널에서 분리.
+- DAY 1~11 기존 그림과 모든 기존 학습 코드 유지; index.html의 삽화 표시 DAY 목록만 12,13 추가.
+- DAY 14~25,27 삽화는 원문 불일치로 계속 숨김.
+- 실제 휴대폰 녹음/Firebase 동기화 기능은 이번 작업에서 테스트하지 않았음.

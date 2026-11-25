@@ -1,0 +1,8 @@
+v23 DAY19 삽화 원문 대조 수정
+- 기준: content/lessons_book1_day01_30.json 중 metadata.day=19, A Gift and a Smile.
+- 원문 주요 사건: Jiwoo got a gift after class / Mina saw Jiwoo's sad face / Mina gave Jiwoo a note / Jiwoo smiled.
+- 새 그림: 수업 후 교실 책상, 선물 상자와 미나가 건네는 쪽지, 미소 짓는 지우·민서 각각 1장.
+- DAY20 원문은 Mina had a baseball game, Mina took the bat. 생성 결과는 불일치해서 추가하지 않음.
+- index.html 변경: 이미지 표시 허용 DAY 목록에 19만 추가.
+- 기존 학습 데이터·복습·음성·보상 코드는 미변경. 실제 모바일/Firebase 검증은 미진행.
+- v22 디렉터리를 복사한 새 버전. 기존 배포본 자동 변경 없음.
