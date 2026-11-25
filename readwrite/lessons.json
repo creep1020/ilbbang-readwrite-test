@@ -1,0 +1,330 @@
+[
+  {
+    "story": [
+      [
+        "Jiwoo went to school with a small blue box.",
+        "지우는 작은 파란 상자를 가지고 학교에 갔어요."
+      ],
+      [
+        "She saw Mina and gave her the box.",
+        "지우는 미나를 보고 상자를 건네주었어요."
+      ],
+      [
+        "Mina took the box and said, \"Is this for me?\"",
+        "미나는 상자를 받고 말했어요. \"이거 나 주는 거야?\""
+      ],
+      [
+        "Jiwoo said, \"Yes, but don’t open it now!\"",
+        "지우가 말했어요. \"응, 그런데 지금은 열지 마!\""
+      ],
+      [
+        "Mina put the box in her bag and went to class.",
+        "미나는 상자를 가방에 넣고 수업에 들어갔어요."
+      ],
+      [
+        "After class, Mina opened the box and found a little note.",
+        "수업이 끝난 후 미나는 상자를 열고 작은 쪽지를 발견했어요."
+      ],
+      [
+        "Mina read the note and saw the words, \"You are my best friend!\"",
+        "미나는 쪽지를 읽고 \"너는 내 가장 친한 친구야!\"라는 글을 보았어요."
+      ],
+      [
+        "She smiled at Jiwoo, but Jiwoo did not know that Mina had a surprise for her, too.",
+        "미나는 지우에게 미소 지었지만, 지우는 미나도 자신을 위한 깜짝 선물을 준비했다는 걸 몰랐어요."
+      ],
+      [
+        "Mina gave Jiwoo another little box, and Jiwoo opened it to find a note that said, \"You are my best friend, too!\"",
+        "미나는 지우에게 또 다른 작은 상자를 주었고, 지우는 상자를 열어 \"너도 내 가장 친한 친구야!\"라는 쪽지를 발견했어요."
+      ]
+    ],
+    "qs": [
+      [
+        "What did Jiwoo give Mina?",
+        [
+          "A blue box",
+          "A red bag",
+          "A book"
+        ],
+        0
+      ],
+      [
+        "When did Mina open the box?",
+        [
+          "Before school",
+          "After class",
+          "At home"
+        ],
+        1
+      ],
+      [
+        "What was in the box?",
+        [
+          "A toy",
+          "A note",
+          "A cake"
+        ],
+        1
+      ]
+    ],
+    "ws": [
+      [
+        "지우는 학교에 갔어요.",
+        "Jiwoo went to school."
+      ],
+      [
+        "지우는 미나를 보았어요.",
+        "Jiwoo saw Mina."
+      ],
+      [
+        "지우는 미나에게 상자를 주었어요.",
+        "Jiwoo gave Mina the box."
+      ],
+      [
+        "미나는 작은 쪽지를 발견했어요.",
+        "Mina found a little note."
+      ],
+      [
+        "미나는 지우에게 또 다른 상자를 주었어요.",
+        "Mina gave Jiwoo another box."
+      ]
+    ],
+    "verbs": [
+      [
+        "go",
+        "went",
+        "gone",
+        "가다",
+        "갔다"
+      ],
+      [
+        "see",
+        "saw",
+        "seen",
+        "보다",
+        "봤다"
+      ],
+      [
+        "give",
+        "gave",
+        "given",
+        "주다",
+        "줬다"
+      ],
+      [
+        "take",
+        "took",
+        "taken",
+        "가져가다",
+        "가져갔다"
+      ],
+      [
+        "say",
+        "said",
+        "said",
+        "말하다",
+        "말했다"
+      ],
+      [
+        "find",
+        "found",
+        "found",
+        "찾다",
+        "찾았다"
+      ],
+      [
+        "read",
+        "read",
+        "read",
+        "읽다",
+        "읽었다"
+      ]
+    ],
+    "vocab": [
+      [
+        "surprise",
+        "깜짝 선물, 놀라운 일"
+      ],
+      [
+        "note",
+        "쪽지, 짧은 메모"
+      ],
+      [
+        "another",
+        "또 하나의, 다른 하나의"
+      ],
+      [
+        "after class",
+        "수업이 끝난 후"
+      ],
+      [
+        "best friend",
+        "가장 친한 친구"
+      ]
+    ]
+  },
+  {
+    "story": [
+      [
+        "Jiwoo met Mina after class and saw a red heart on the desk.",
+        "지우는 수업이 끝난 후 미나를 만나 책상 위의 빨간 하트를 봤어요."
+      ],
+      [
+        "Mina said, \"Let’s make a card for our teacher!\"",
+        "미나가 말했어요. \"선생님께 드릴 카드를 만들자!\""
+      ],
+      [
+        "Jiwoo took the red heart and began to make the card.",
+        "지우는 빨간 하트를 집어 들고 카드를 만들기 시작했어요."
+      ],
+      [
+        "\"Write, please,\" said Mina, and Jiwoo wrote, \"Thank you!\"",
+        "\"글을 써 줘.\" 미나가 말하자 지우는 \"감사합니다!\"라고 썼어요."
+      ],
+      [
+        "But the heart fell from the desk, and Jiwoo could not find it.",
+        "그런데 하트가 책상에서 떨어졌고 지우는 그것을 찾을 수 없었어요."
+      ],
+      [
+        "\"Wait, please!\" said Mina, and they looked under the desk together.",
+        "\"잠깐 기다려!\" 미나가 말했고 두 사람은 함께 책상 아래를 살펴봤어요."
+      ],
+      [
+        "Mina found the heart beside Jiwoo’s bag, but the heart was now in two pieces.",
+        "미나는 지우 가방 옆에서 하트를 찾았지만, 하트는 두 조각이 나 있었어요."
+      ],
+      [
+        "Jiwoo felt sad, but Mina said, \"Try again!\" and they made two little hearts instead.",
+        "지우는 슬펐지만 미나는 \"다시 해 봐!\"라고 말했고, 둘은 대신 작은 하트 두 개를 만들었어요."
+      ],
+      [
+        "When the teacher saw the card with two hearts, she smiled and said, \"I have two wonderful friends!\"",
+        "선생님은 하트 두 개가 붙은 카드를 보고 웃으며 \"나에게는 멋진 친구 두 명이 있구나!\"라고 말했어요."
+      ]
+    ],
+    "qs": [
+      [
+        "What did Jiwoo and Mina make?",
+        [
+          "A birthday cake",
+          "A card for their teacher",
+          "A blue box"
+        ],
+        1
+      ],
+      [
+        "Where did Mina find the heart?",
+        [
+          "Beside Jiwoo’s bag",
+          "In her book",
+          "Outside the classroom"
+        ],
+        0
+      ],
+      [
+        "How many hearts were on the finished card?",
+        [
+          "One",
+          "Three",
+          "Two"
+        ],
+        2
+      ]
+    ],
+    "ws": [
+      [
+        "지우는 미나를 만났어요.",
+        "Jiwoo met Mina."
+      ],
+      [
+        "지우는 카드를 만들기 시작했어요.",
+        "Jiwoo began to make the card."
+      ],
+      [
+        "하트가 책상에서 떨어졌어요.",
+        "The heart fell from the desk."
+      ],
+      [
+        "미나는 하트를 찾았어요.",
+        "Mina found the heart."
+      ],
+      [
+        "그들은 작은 하트 두 개를 만들었어요.",
+        "They made two little hearts."
+      ]
+    ],
+    "verbs": [
+      [
+        "meet",
+        "met",
+        "met",
+        "만나다",
+        "만났다"
+      ],
+      [
+        "begin",
+        "began",
+        "begun",
+        "시작하다",
+        "시작했다"
+      ],
+      [
+        "fall",
+        "fell",
+        "fallen",
+        "떨어지다",
+        "떨어졌다"
+      ],
+      [
+        "find",
+        "found",
+        "found",
+        "찾다",
+        "찾았다"
+      ],
+      [
+        "make",
+        "made",
+        "made",
+        "만들다",
+        "만들었다"
+      ],
+      [
+        "write",
+        "wrote",
+        "written",
+        "쓰다",
+        "썼다"
+      ],
+      [
+        "see",
+        "saw",
+        "seen",
+        "보다",
+        "봤다"
+      ]
+    ],
+    "vocab": [
+      [
+        "heart",
+        "하트, 마음"
+      ],
+      [
+        "card",
+        "카드"
+      ],
+      [
+        "teacher",
+        "선생님"
+      ],
+      [
+        "in two pieces",
+        "두 조각으로"
+      ],
+      [
+        "instead",
+        "대신에"
+      ]
+    ]
+  }
+]
