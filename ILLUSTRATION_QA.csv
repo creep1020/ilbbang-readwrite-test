@@ -1,0 +1,61 @@
+﻿day,profile,file,present,resolution,review_status
+1,jiwoo,readwrite/images/jiwoo1.jpg,False,,missing / not approved
+1,minseo,readwrite/images/minseo1.jpg,False,,missing / not approved
+2,jiwoo,readwrite/images/jiwoo2.jpg,False,,missing / not approved
+2,minseo,readwrite/images/minseo2.jpg,False,,missing / not approved
+3,jiwoo,readwrite/images/jiwoo3.jpg,True,512x512,v12 existing image (final review pending)
+3,minseo,readwrite/images/minseo3.jpg,True,768x512,v12 existing image (final review pending)
+4,jiwoo,readwrite/images/jiwoo4.jpg,True,512x512,v12 existing image (final review pending)
+4,minseo,readwrite/images/minseo4.jpg,True,768x512,v12 existing image (final review pending)
+5,jiwoo,readwrite/images/jiwoo5.jpg,True,512x512,v12 existing image (final review pending)
+5,minseo,readwrite/images/minseo5.jpg,False,,missing / not approved
+6,jiwoo,readwrite/images/jiwoo6.jpg,True,512x512,v12 existing image (final review pending)
+6,minseo,readwrite/images/minseo6.jpg,False,,missing / not approved
+7,jiwoo,readwrite/images/jiwoo7.jpg,True,512x512,v12 existing image (final review pending)
+7,minseo,readwrite/images/minseo7.jpg,False,,missing / not approved
+8,jiwoo,readwrite/images/jiwoo8.jpg,True,512x512,v12 existing image (final review pending)
+8,minseo,readwrite/images/minseo8.jpg,False,,missing / not approved
+9,jiwoo,readwrite/images/jiwoo9.jpg,False,,missing / not approved
+9,minseo,readwrite/images/minseo9.jpg,False,,missing / not approved
+10,jiwoo,readwrite/images/jiwoo10.jpg,False,,missing / not approved
+10,minseo,readwrite/images/minseo10.jpg,False,,missing / not approved
+11,jiwoo,readwrite/images/jiwoo11.jpg,False,,missing / not approved
+11,minseo,readwrite/images/minseo11.jpg,False,,missing / not approved
+12,jiwoo,readwrite/images/jiwoo12.jpg,False,,missing / not approved
+12,minseo,readwrite/images/minseo12.jpg,False,,missing / not approved
+13,jiwoo,readwrite/images/jiwoo13.jpg,False,,missing / not approved
+13,minseo,readwrite/images/minseo13.jpg,False,,missing / not approved
+14,jiwoo,readwrite/images/jiwoo14.jpg,False,,missing / not approved
+14,minseo,readwrite/images/minseo14.jpg,False,,missing / not approved
+15,jiwoo,readwrite/images/jiwoo15.jpg,False,,missing / not approved
+15,minseo,readwrite/images/minseo15.jpg,False,,missing / not approved
+16,jiwoo,readwrite/images/jiwoo16.jpg,False,,missing / not approved
+16,minseo,readwrite/images/minseo16.jpg,False,,missing / not approved
+17,jiwoo,readwrite/images/jiwoo17.jpg,False,,missing / not approved
+17,minseo,readwrite/images/minseo17.jpg,False,,missing / not approved
+18,jiwoo,readwrite/images/jiwoo18.jpg,False,,missing / not approved
+18,minseo,readwrite/images/minseo18.jpg,False,,missing / not approved
+19,jiwoo,readwrite/images/jiwoo19.jpg,False,,missing / not approved
+19,minseo,readwrite/images/minseo19.jpg,False,,missing / not approved
+20,jiwoo,readwrite/images/jiwoo20.jpg,False,,missing / not approved
+20,minseo,readwrite/images/minseo20.jpg,False,,missing / not approved
+21,jiwoo,readwrite/images/jiwoo21.jpg,False,,missing / not approved
+21,minseo,readwrite/images/minseo21.jpg,False,,missing / not approved
+22,jiwoo,readwrite/images/jiwoo22.jpg,False,,missing / not approved
+22,minseo,readwrite/images/minseo22.jpg,False,,missing / not approved
+23,jiwoo,readwrite/images/jiwoo23.jpg,False,,missing / not approved
+23,minseo,readwrite/images/minseo23.jpg,False,,missing / not approved
+24,jiwoo,readwrite/images/jiwoo24.jpg,False,,missing / not approved
+24,minseo,readwrite/images/minseo24.jpg,False,,missing / not approved
+25,jiwoo,readwrite/images/jiwoo25.jpg,False,,missing / not approved
+25,minseo,readwrite/images/minseo25.jpg,False,,missing / not approved
+26,jiwoo,readwrite/images/jiwoo26.jpg,False,,missing / not approved
+26,minseo,readwrite/images/minseo26.jpg,True,1672x941,v13 accepted scene (low-res; final photo-likeness QA pending)
+27,jiwoo,readwrite/images/jiwoo27.jpg,False,,missing / not approved
+27,minseo,readwrite/images/minseo27.jpg,False,,missing / not approved
+28,jiwoo,readwrite/images/jiwoo28.jpg,True,300x440,v13 accepted scene (low-res; final photo-likeness QA pending)
+28,minseo,readwrite/images/minseo28.jpg,True,300x444,v13 accepted scene (low-res; final photo-likeness QA pending)
+29,jiwoo,readwrite/images/jiwoo29.jpg,False,,missing / not approved
+29,minseo,readwrite/images/minseo29.jpg,True,300x444,v13 accepted scene (low-res; final photo-likeness QA pending)
+30,jiwoo,readwrite/images/jiwoo30.jpg,False,,missing / not approved
+30,minseo,readwrite/images/minseo30.jpg,True,301x444,v13 accepted scene (low-res; final photo-likeness QA pending)

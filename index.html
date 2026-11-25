@@ -6,7 +6,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#fbf8f0">
-<title>영어 읽기·쓰기 DAY 1~2 · v9</title>
+<title>영어 읽기·쓰기 DAY 1~30 · v12</title>
 <style>
 :root{color-scheme:light;--paper:#fbf8f0;--ink:#28251f;--muted:#827b70;--line:#e7dfd2;--accent:#486b55;--soft:#edf3eb}
 *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif}
@@ -229,7 +229,7 @@ button{cursor:pointer}button:disabled{opacity:.4;cursor:default}.primary{backgro
 #rwApp #rwStartStatus:empty{display:none}
 #rwApp .rw-story-record-row{display:block!important}
 @media(max-width:400px){#rwApp #rwSchedulePanel{padding:13px 11px}#rwApp .rw-schedule button,#rwApp .rw-schedule select{padding:10px 11px}}
-</style><style id="rwStabilizationV11">
+#rwApp .rw-hero[hidden]{display:none!important} #rwApp #rwIllustrationStatus[hidden]{display:none!important}</style><style id="rwStabilizationV11">
 /* v11 stability: preserve original reward screens and improve repeat controls. */
 #rwApp .rw-expression{grid-template-columns:minmax(0,1fr) minmax(0,1.3fr) auto auto;align-items:center;gap:6px}
 #rwApp .rw-expression>span{font-size:12px}
@@ -261,7 +261,7 @@ if ('serviceWorker' in navigator) {
 }
  </script>
 <body><main>
-<header><div><div class="kicker">ILPPANGPPANG · READ & WRITE</div><strong>매일 한 편, 읽고 쓰는 영어</strong></div><div class="day" id="dayBadge">DAY 1 / 30</div><div class="day" id="rwDayBadge">DAY 1 / 2</div></header>
+<header><div><div class="kicker">ILPPANGPPANG · READ & WRITE</div><strong>매일 한 편, 읽고 쓰는 영어</strong></div><div class="day" id="dayBadge">DAY 1 / 30</div><div class="day" id="rwDayBadge">DAY 1 / 30</div></header>
 <h1>영어 이야기 읽기·쓰기</h1><p class="sub" id="dateLabel"></p>
 <section class="panel" id="cloudPanel">
 <strong style="font-size:14px">👨‍👧 부모 · 자녀 학습 공유</strong>
@@ -272,7 +272,7 @@ if ('serviceWorker' in navigator) {
   <div class="panel rw-schedule" id="rwSchedulePanel">
     <div class="controls rw-schedule-first"><label for="rwStartDate">학습 시작일</label><input type="date" id="rwStartDate"><button type="button" id="rwApply">적용</button></div>
     <div class="controls rw-schedule-today"><button type="button" id="rwToday">오늘의 DAY</button></div>
-    <div class="controls rw-schedule-days"><button type="button" id="rwPrevDay">← 이전 DAY</button><select id="rwDay" aria-label="읽기 쓰기 DAY 선택"><option value="1">DAY 1</option><option value="2">DAY 2</option></select></div>
+    <div class="controls rw-schedule-days"><button type="button" id="rwPrevDay">← 이전 DAY</button><select id="rwDay" aria-label="읽기 쓰기 DAY 선택"><option value="1">DAY 1</option><option value="2">DAY 2</option><option value="3">DAY 3</option><option value="4">DAY 4</option><option value="5">DAY 5</option><option value="6">DAY 6</option><option value="7">DAY 7</option><option value="8">DAY 8</option><option value="9">DAY 9</option><option value="10">DAY 10</option><option value="11">DAY 11</option><option value="12">DAY 12</option><option value="13">DAY 13</option><option value="14">DAY 14</option><option value="15">DAY 15</option><option value="16">DAY 16</option><option value="17">DAY 17</option><option value="18">DAY 18</option><option value="19">DAY 19</option><option value="20">DAY 20</option><option value="21">DAY 21</option><option value="22">DAY 22</option><option value="23">DAY 23</option><option value="24">DAY 24</option><option value="25">DAY 25</option><option value="26">DAY 26</option><option value="27">DAY 27</option><option value="28">DAY 28</option><option value="29">DAY 29</option><option value="30">DAY 30</option></select></div>
     <div class="controls rw-schedule-next"><button type="button" id="rwNextDay">다음 DAY →</button></div>
     <div class="progress"><span id="rwProgressBar"></span></div>
     <div class="small" id="rwProgressLabel">녹음 기록을 확인하는 중이에요.</div>
@@ -280,7 +280,7 @@ if ('serviceWorker' in navigator) {
   </div>
   <div class="rw-section rw-review-box" id="rwRandomPanel" hidden>
       <strong>📚 오늘의 랜덤 복습 이야기</strong>
-      <p class="rw-muted" id="rwRandomIntro">150편 이야기 목록을 불러오는 중이에요.</p>
+      <p class="rw-muted" id="rwRandomIntro">1권 복습 이야기 30편을 불러오는 중이에요.</p>
       <div id="rwRandomStory" aria-live="polite"><p class="rw-muted">복습 이야기를 불러오는 중이에요.</p></div>
       <p class="rw-muted">하루 한 편을 프로필별로 고정해 보여줘요. 다음 날에는 가능한 다른 이야기를 우선 선택해요.</p>
       <div id="rwReviewWords" class="rw-due-words" hidden></div>
@@ -295,12 +295,14 @@ if ('serviceWorker' in navigator) {
       <p class="rw-muted">영작 오답은 다음 DAY부터 복습하고, 맞히면 1·3·7·14·30일 간격으로 다시 확인해요.</p>
     </div>
   <div class="rw-top" id="rwTodayStoryHeader">
-    <div class="rw-flex"><strong>📖 오늘의 정규 이야기 <span class="rw-version">v11</span></strong><span id="rwProfileName" class="rw-pill">프로필을 선택해 주세요</span></div>
+    <div class="rw-flex"><strong>📖 오늘의 정규 이야기 <span class="rw-version">v12</span></strong><span id="rwProfileName" class="rw-pill">프로필을 선택해 주세요</span></div>
     <div class="rw-flex"><span id="rwDoneStatus" class="rw-muted">학습 전</span></div>
   </div>
   <div id="rwLoginHint" class="rw-note">위에서 가족 계정에 로그인하고 프로필을 선택하면 해당 주인공의 이야기가 나와요.</div>
 <div id="rwStudy" hidden>
+    <p class="rw-note" id="rwContentCaution">DAY 1~2는 기존 원고, DAY 3~30은 사용자 제공 3개 ZIP에 맞춘 콘텐츠 초안입니다. 일부 삽화와 영어 연결 문장은 최종 검수 전이에요.</p>
     <img id="rwHero" class="rw-hero" alt="오늘의 이야기 삽화" loading="eager">
+    <p id="rwIllustrationStatus" class="rw-note" hidden></p>
     <button id="rwDownload" type="button" class="rw-download">📥 전체 학습 이미지 저장</button>
     <h2 id="rwTitle" class="rw-title"></h2><p id="rwSubtitle" class="rw-muted rw-subtitle"></p>
     <div class="rw-section"><strong>📖 영어 이야기</strong><p class="rw-muted">모든 문장은 처음부터 볼 수 있어요. 문장마다 녹음한 뒤 종료를 눌러 저장하세요. 9문장 녹음을 완료해야 오늘 학습 완료 버튼이 열려요.</p><div id="rwStory"></div></div>
@@ -312,7 +314,7 @@ if ('serviceWorker' in navigator) {
   <div class="rw-section rw-review-box" id="rwCalendarPanel">
   <strong>🗓️ 나의 읽기·쓰기 학습 달력</strong>
   <p class="rw-muted">학습 완료 날짜와 DAY 진도를 프로필별로 저장해요.</p>
-  <div id="rwProgressSummary" class="rw-progress-summary" role="status">DAY 1~2 진도를 확인하는 중이에요.</div>
+  <div id="rwProgressSummary" class="rw-progress-summary" role="status">DAY 1~30 진도를 확인하는 중이에요.</div>
   <div class="rw-day-progress" id="rwDayProgress" aria-label="30일 진도표"></div>
   <div class="rw-month-head">
     <button id="rwMonthPrev" type="button" aria-label="이전 달">‹ 이전</button>
@@ -1349,7 +1351,8 @@ $('childRewardHistory').addEventListener('click',e=>{
  if(!confirm('이 보상을 실제로 사용했나요? 사용 완료로 기록할까요?'))return;
  item.status='used';item.usedAt=new Date().toISOString();saveRewardShop(shop);
 });
-$('parentRewardCatalog').addEventListener('click',e=>{
+document.addEventListener('click',e=>{
+ if(!e.target.closest('#parentRewardCatalog'))return;
  const save=e.target.closest('[data-save-reward]'),del=e.target.closest('[data-delete-reward]');if(!save&&!del)return;
  if(window.ilbbangIsParentSettingsUnlocked?.()!==true)return;
  const shop=rewardShopData();
@@ -1361,14 +1364,16 @@ $('parentRewardCatalog').addEventListener('click',e=>{
  if(!title||!Number.isInteger(cost)||cost<1||cost>420){$('parentRewardStatus').textContent='보상 이름과 별 개수(1~420)를 확인해 주세요.';return;}
  Object.assign(r,{title,cost,desc});saveRewardShop(shop);$('parentRewardStatus').textContent='보상 항목을 저장했어요.';
 });
-$('parentRewardAdd').addEventListener('click',()=>{
+document.addEventListener('click',e=>{
+ if(!e.target.closest('#parentRewardAdd'))return;
  if(window.ilbbangIsParentSettingsUnlocked?.()!==true)return;
  const title=$('parentRewardNewTitle').value.trim(),cost=Number($('parentRewardNewCost').value),desc=$('parentRewardNewDesc').value.trim();
  if(!title||!Number.isInteger(cost)||cost<1||cost>420){$('parentRewardStatus').textContent='보상 이름과 별 개수(1~420)를 입력해 주세요.';return;}
  const shop=rewardShopData();shop.rewards.push({id:'custom_reward_'+Date.now(),title,cost,desc});saveRewardShop(shop);
  $('parentRewardNewTitle').value='';$('parentRewardNewCost').value='';$('parentRewardNewDesc').value='';$('parentRewardStatus').textContent='새 보상을 추가했어요.';
 });
-$('parentRewardRequests').addEventListener('click',e=>{
+document.addEventListener('click',e=>{
+ if(!e.target.closest('#parentRewardRequests'))return;
  if(window.ilbbangIsParentSettingsUnlocked?.()!==true)return;
  const approve=e.target.closest('[data-parent-approve]'),reject=e.target.closest('[data-parent-reject]'),used=e.target.closest('[data-parent-used]'),cancel=e.target.closest('[data-parent-cancel]');
  const btn=approve||reject||used||cancel;if(!btn)return;
@@ -1592,7 +1597,7 @@ panel.innerHTML = `
           </div>
           <div style="margin:0 0 16px;padding:12px;border:1px solid #d8b6a8;border-radius:12px;background:#fffaf7">
             <strong style="font-size:14px">📚 읽기·쓰기 학습 기록 초기화</strong>
-            <div class="small" style="margin:6px 0">현재 선택된 프로필의 읽기·쓰기 DAY 1~2 완료, 영작 오답·표현, 랜덤 복습 이야기 및 녹음 기록만 지웁니다. 기존 일빵빵 600문장·별·캐릭터·다른 프로필은 유지합니다. 이 기록은 이 기기에만 저장되며 Firebase와 자동 동기화되지 않습니다.</div>
+            <div class="small" style="margin:6px 0">현재 선택된 프로필의 읽기·쓰기 DAY 1~30 완료, 영작 오답·표현, 랜덤 복습 이야기 및 녹음 기록만 지웁니다. 기존 일빵빵 600문장·별·캐릭터·다른 프로필은 유지합니다. 이 기록은 이 기기에만 저장되며 Firebase와 자동 동기화되지 않습니다.</div>
             <button id="resetStudyRecords" type="button" style="border-color:#c66;color:#a33;width:100%">읽기·쓰기 기록만 초기화</button>
             <div class="small" id="resetStudyStatus" style="margin-top:8px" aria-live="polite"></div>
           </div>
@@ -1973,7 +1978,7 @@ $login('resetStudyRecords').onclick = async () => {
     output.textContent = '읽기·쓰기 초기화 기능이 아직 준비되지 않았어요. 페이지를 새로고침해 주세요.';
     return;
   }
-  if (!confirm(`'${selected.name}' 프로필의 읽기·쓰기 DAY 1~2 기록만 초기화할까요?\n\n학습 완료, 오답·모르는 표현, 랜덤 복습과 녹음이 이 기기에서 삭제됩니다.\n기존 일빵빵 600문장, 별, 캐릭터, 다른 프로필은 건드리지 않습니다.`)) return;
+  if (!confirm(`'${selected.name}' 프로필의 읽기·쓰기 DAY 1~30 기록만 초기화할까요?\n\n학습 완료, 오답·모르는 표현, 랜덤 복습과 녹음이 이 기기에서 삭제됩니다.\n기존 일빵빵 600문장, 별, 캐릭터, 다른 프로필은 건드리지 않습니다.`)) return;
   const phrase = prompt(`마지막 확인입니다.\n초기화할 프로필 이름을 그대로 입력해 주세요: ${selected.name}`);
   if (phrase !== selected.name) { output.textContent = '프로필 이름이 일치하지 않아 초기화를 취소했어요.'; return; }
   const button = $login('resetStudyRecords');
@@ -2604,7 +2609,15 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
         "best friend",
         "가장 친한 친구"
       ]
-    ]
+    ],
+    "metadata": {
+      "day": 1,
+      "edition": "원본 DAY 1~2 학습자료 보존",
+      "story_title": "The Little Blue Box",
+      "status": "existing",
+      "source": "기존 readwrite/lessons.json",
+      "source_status": "기존 DAY 1~2 원고 보존(3개 ZIP 언어 제한 재작성 대상 아님)"
+    }
   },
   {
     "story": [
@@ -2768,7 +2781,4859 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
         "instead",
         "대신에"
       ]
-    ]
+    ],
+    "metadata": {
+      "day": 2,
+      "edition": "원본 DAY 1~2 학습자료 보존",
+      "story_title": "The Red Heart Card",
+      "status": "existing",
+      "source": "기존 readwrite/lessons.json",
+      "source_status": "기존 DAY 1~2 원고 보존(3개 ZIP 언어 제한 재작성 대상 아님)"
+    }
+  },
+  {
+    "story": [
+      [
+        "Jiwoo and Mina met after class.",
+        "지우와 미나는 수업이 끝난 후 만났어요."
+      ],
+      [
+        "Mina put a book on the desk.",
+        "미나는 책 한 권을 책상 위에 놓았어요."
+      ],
+      [
+        "Jiwoo said, \"I do read.\"",
+        "지우가 말했어요. “나는 (진짜) 읽거든.”"
+      ],
+      [
+        "Mina said, \"I do write.\"",
+        "미나가 말했어요. “나는 (진짜) 쓰거든.”"
+      ],
+      [
+        "Jiwoo drew a small heart.",
+        "지우는 작은 하트를 그렸어요."
+      ],
+      [
+        "Jiwoo said, \"I do check.\"",
+        "지우가 말했어요. “나는 (진짜) 체크하거든.”"
+      ],
+      [
+        "Mina said, \"I do study.\"",
+        "미나가 말했어요. “나는 (진짜) 공부하거든.”"
+      ],
+      [
+        "Jiwoo said, \"I do try.\"",
+        "지우가 말했어요. “나는 (진짜) 해 보거든.”"
+      ],
+      [
+        "Mina took the heart home.",
+        "미나는 그 하트를 집으로 가져갔어요."
+      ]
+    ],
+    "qs": [
+      [
+        "이야기의 첫 장면에 나온 문장은 무엇인가요?",
+        [
+          "Jiwoo and Mina met after class.",
+          "Mina put a book on the desk.",
+          "Jiwoo drew a small heart."
+        ],
+        0
+      ],
+      [
+        "이야기 중간에 있었던 일은 무엇인가요?",
+        [
+          "Jiwoo and Mina met after class.",
+          "Mina took the heart home.",
+          "Jiwoo drew a small heart."
+        ],
+        2
+      ],
+      [
+        "이야기가 끝나는 문장은 무엇인가요?",
+        [
+          "Jiwoo drew a small heart.",
+          "Mina took the heart home.",
+          "Mina put a book on the desk."
+        ],
+        1
+      ]
+    ],
+    "ws": [
+      [
+        "나는 (진짜) 읽거든.",
+        "I do read."
+      ],
+      [
+        "나는 (진짜) 쓰거든.",
+        "I do write."
+      ],
+      [
+        "나는 (진짜) 체크하거든.",
+        "I do check."
+      ],
+      [
+        "나는 (진짜) 공부하거든.",
+        "I do study."
+      ],
+      [
+        "나는 (진짜) 해 보거든.",
+        "I do try."
+      ]
+    ],
+    "verbs": [
+      [
+        "give",
+        "gave",
+        "given",
+        "주다",
+        ""
+      ],
+      [
+        "make",
+        "made",
+        "made",
+        "만들다",
+        ""
+      ],
+      [
+        "get",
+        "got",
+        "got",
+        "얻다 / 되다",
+        ""
+      ],
+      [
+        "know",
+        "knew",
+        "known",
+        "알다",
+        ""
+      ],
+      [
+        "think",
+        "thought",
+        "thought",
+        "생각하다",
+        ""
+      ]
+    ],
+    "vocab": [
+      [
+        "build built built",
+        "짓다 / 구축하다 · build / built / built"
+      ],
+      [
+        "catch caught caught",
+        "잡다 / 따라잡다 · catch / caught / caught"
+      ],
+      [
+        "draw drew drawn",
+        "그리다 / 끌어당기다 · draw / drew / drawn"
+      ],
+      [
+        "sleep slept slept",
+        "자다 · sleep / slept / slept"
+      ],
+      [
+        "put put put",
+        "놓다 / 두다 · put / put / put"
+      ]
+    ],
+    "metadata": {
+      "day": 3,
+      "story_title": "The Book and the Drawing",
+      "edition": "3개 사용자 ZIP 기반 자료 정합 버전 v2",
+      "source_status": "영작 5개: 원문 일빵빵 그대로 / 새 표현 5개: 원문 단어 앱 그대로 / 문법 참고: 문법 앱 해당 강",
+      "grammar_lesson_title": "주어와 동사를 찾고, 명사를 알아보자",
+      "ilbbang_line_indices": [
+        6,
+        7,
+        14,
+        8,
+        20
+      ],
+      "vocab_indices": [
+        1,
+        2,
+        3,
+        4,
+        8
+      ],
+      "story_mode": "원문 회화 5문장 + 연결 서술 4문장",
+      "qa_status": "영어 연결 서술/번역 교육적 검수 전, 원문 보존 및 허용 어휘 검사"
+    }
+  },
+  {
+    "story": [
+      [
+        "Jiwoo met Mina after class.",
+        "지우는 수업이 끝난 후 미나를 만났어요."
+      ],
+      [
+        "Mina found a note in the bag.",
+        "미나는 가방에서 쪽지를 발견했어요."
+      ],
+      [
+        "Jiwoo said, \"I don't eat breakfast.\"",
+        "지우가 말했어요. “나는 아침을 먹지 않아.”"
+      ],
+      [
+        "Mina said, \"I don't drink juice.\"",
+        "미나가 말했어요. “나는 주스를 마시지 않아.”"
+      ],
+      [
+        "Jiwoo shut the bag.",
+        "지우는 가방을 닫았어요."
+      ],
+      [
+        "Jiwoo said, \"I don't read the book.\"",
+        "지우가 말했어요. “나는 그 책을 읽지 않아.”"
+      ],
+      [
+        "Mina said, \"I don't write a letter.\"",
+        "미나가 말했어요. “나는 편지를 쓰지 않아.”"
+      ],
+      [
+        "Jiwoo said, \"I don't study English.\"",
+        "지우가 말했어요. “나는 영어를 공부하지 않아.”"
+      ],
+      [
+        "Mina read the note.",
+        "미나는 쪽지를 읽었어요."
+      ]
+    ],
+    "qs": [
+      [
+        "이야기의 첫 장면에 나온 문장은 무엇인가요?",
+        [
+          "Mina found a note in the bag.",
+          "Jiwoo shut the bag.",
+          "Jiwoo met Mina after class."
+        ],
+        2
+      ],
+      [
+        "이야기 중간에 있었던 일은 무엇인가요?",
+        [
+          "Mina read the note.",
+          "Jiwoo shut the bag.",
+          "Jiwoo met Mina after class."
+        ],
+        1
+      ],
+      [
+        "이야기가 끝나는 문장은 무엇인가요?",
+        [
+          "Mina read the note.",
+          "Mina found a note in the bag.",
+          "Jiwoo shut the bag."
+        ],
+        0
+      ]
+    ],
+    "ws": [
+      [
+        "나는 아침을 먹지 않아.",
+        "I don't eat breakfast."
+      ],
+      [
+        "나는 주스를 마시지 않아.",
+        "I don't drink juice."
+      ],
+      [
+        "나는 그 책을 읽지 않아.",
+        "I don't read the book."
+      ],
+      [
+        "나는 편지를 쓰지 않아.",
+        "I don't write a letter."
+      ],
+      [
+        "나는 영어를 공부하지 않아.",
+        "I don't study English."
+      ]
+    ],
+    "verbs": [
+      [
+        "know",
+        "knew",
+        "known",
+        "알다",
+        ""
+      ],
+      [
+        "think",
+        "thought",
+        "thought",
+        "생각하다",
+        ""
+      ],
+      [
+        "say",
+        "said",
+        "said",
+        "말하다",
+        ""
+      ],
+      [
+        "tell",
+        "told",
+        "told",
+        "말해주다 / 이야기하다",
+        ""
+      ],
+      [
+        "find",
+        "found",
+        "found",
+        "찾다 / 발견하다",
+        ""
+      ]
+    ],
+    "vocab": [
+      [
+        "ring rang rung",
+        "울리다 / 전화하다 · ring / rang / rung"
+      ],
+      [
+        "rise rose risen",
+        "오르다 / 떠오르다 · rise / rose / risen"
+      ],
+      [
+        "shine shone shone",
+        "빛나다 / 비추다 · shine / shone / shone"
+      ],
+      [
+        "shoot shot shot",
+        "쏘다 / 촬영하다 · shoot / shot / shot"
+      ],
+      [
+        "shut shut shut",
+        "닫다 / 닫히다 · shut / shut / shut"
+      ]
+    ],
+    "metadata": {
+      "day": 4,
+      "story_title": "The Note in the Bag",
+      "edition": "3개 사용자 ZIP 기반 자료 정합 버전 v2",
+      "source_status": "영작 5개: 원문 일빵빵 그대로 / 새 표현 5개: 원문 단어 앱 그대로 / 문법 참고: 문법 앱 해당 강",
+      "grammar_lesson_title": "이름을 대신하는 대명사",
+      "ilbbang_line_indices": [
+        6,
+        8,
+        12,
+        14,
+        16
+      ],
+      "vocab_indices": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "story_mode": "원문 회화 5문장 + 연결 서술 4문장",
+      "qa_status": "영어 연결 서술/번역 교육적 검수 전, 원문 보존 및 허용 어휘 검사"
+    }
+  },
+  {
+    "story": [
+      [
+        "Mina made a card.",
+        "미나는 카드 한 장을 만들었어요."
+      ],
+      [
+        "Jiwoo saw the card on the desk.",
+        "지우는 책상 위의 카드를 보았어요."
+      ],
+      [
+        "Jiwoo said, \"Do you make tea?\"",
+        "지우가 말했어요. “너는 (마시는) 차 만드니?”"
+      ],
+      [
+        "Mina said, \"Do you drink water?\"",
+        "미나가 말했어요. “너는 물을 마시니?”"
+      ],
+      [
+        "Mina lent Jiwoo a book.",
+        "미나는 지우에게 책을 빌려주었어요."
+      ],
+      [
+        "Jiwoo said, \"Do you read the newspaper?\"",
+        "지우가 말했어요. “너는 그 신문 읽니?”"
+      ],
+      [
+        "Mina said, \"Do you write a story?\"",
+        "미나가 말했어요. “너는 이야기 쓰니?”"
+      ],
+      [
+        "Jiwoo said, \"Do you play the piano?\"",
+        "지우가 말했어요. “너는 피아노 연주하니?”"
+      ],
+      [
+        "Jiwoo gave Mina a note.",
+        "지우는 미나에게 쪽지를 주었어요."
+      ]
+    ],
+    "qs": [
+      [
+        "이야기의 첫 장면에 나온 문장은 무엇인가요?",
+        [
+          "Mina lent Jiwoo a book.",
+          "Mina made a card.",
+          "Jiwoo saw the card on the desk."
+        ],
+        1
+      ],
+      [
+        "이야기 중간에 있었던 일은 무엇인가요?",
+        [
+          "Mina lent Jiwoo a book.",
+          "Mina made a card.",
+          "Jiwoo gave Mina a note."
+        ],
+        0
+      ],
+      [
+        "이야기가 끝나는 문장은 무엇인가요?",
+        [
+          "Jiwoo saw the card on the desk.",
+          "Mina lent Jiwoo a book.",
+          "Jiwoo gave Mina a note."
+        ],
+        2
+      ]
+    ],
+    "ws": [
+      [
+        "너는 (마시는) 차 만드니?",
+        "Do you make tea?"
+      ],
+      [
+        "너는 물을 마시니?",
+        "Do you drink water?"
+      ],
+      [
+        "너는 그 신문 읽니?",
+        "Do you read the newspaper?"
+      ],
+      [
+        "너는 이야기 쓰니?",
+        "Do you write a story?"
+      ],
+      [
+        "너는 피아노 연주하니?",
+        "Do you play the piano?"
+      ]
+    ],
+    "verbs": [
+      [
+        "tell",
+        "told",
+        "told",
+        "말해주다 / 이야기하다",
+        ""
+      ],
+      [
+        "find",
+        "found",
+        "found",
+        "찾다 / 발견하다",
+        ""
+      ],
+      [
+        "leave",
+        "left",
+        "left",
+        "떠나다 / 남기다",
+        ""
+      ],
+      [
+        "feel",
+        "felt",
+        "felt",
+        "느끼다",
+        ""
+      ],
+      [
+        "bring",
+        "brought",
+        "brought",
+        "가져오다",
+        ""
+      ]
+    ],
+    "vocab": [
+      [
+        "fight fought fought",
+        "싸우다 / 투쟁하다 · fight / fought / fought"
+      ],
+      [
+        "hang hung hung",
+        "걸다 / 매달다 · hang / hung / hung"
+      ],
+      [
+        "lay laid laid",
+        "눕히다 / (알을) 낳다 · lay / laid / laid"
+      ],
+      [
+        "lend lent lent",
+        "빌려주다 · lend / lent / lent"
+      ],
+      [
+        "light lit lit",
+        "불을 켜다 / 밝히다 · light / lit / lit"
+      ]
+    ],
+    "metadata": {
+      "day": 5,
+      "story_title": "Five Questions",
+      "edition": "3개 사용자 ZIP 기반 자료 정합 버전 v2",
+      "source_status": "영작 5개: 원문 일빵빵 그대로 / 새 표현 5개: 원문 단어 앱 그대로 / 문법 참고: 문법 앱 해당 강",
+      "grammar_lesson_title": "긴 주어를 한 덩어리로 읽자",
+      "ilbbang_line_indices": [
+        4,
+        8,
+        12,
+        14,
+        20
+      ],
+      "vocab_indices": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "story_mode": "원문 회화 5문장 + 연결 서술 4문장",
+      "qa_status": "영어 연결 서술/번역 교육적 검수 전, 원문 보존 및 허용 어휘 검사"
+    }
+  },
+  {
+    "story": [
+      [
+        "Mina came to Jiwoo's class.",
+        "미나는 지우의 교실에 왔어요."
+      ],
+      [
+        "Jiwoo gave Mina a birthday card.",
+        "지우는 미나에게 생일 카드를 주었어요."
+      ],
+      [
+        "Jiwoo said, \"Do you wash the dishes?\"",
+        "지우가 말했어요. “너는 접시를 씻니?”"
+      ],
+      [
+        "Mina said, \"Don't you wash the dishes?\"",
+        "미나가 말했어요. “너는 접시를 씻지 않니? (설거지하지 않니?)”"
+      ],
+      [
+        "Mina gave Jiwoo a hug.",
+        "미나는 지우를 꼭 안아 주었어요."
+      ],
+      [
+        "Jiwoo said, \"Do you make cheese cake?\"",
+        "지우가 말했어요. “너는 치즈 케이크를 만드니?”"
+      ],
+      [
+        "Mina said, \"Don't you make cheese cake?\"",
+        "미나가 말했어요. “너는 치즈 케이크를 만들지 않니?”"
+      ],
+      [
+        "Jiwoo said, \"Do you eat dinner?\"",
+        "지우가 말했어요. “너는 저녁을 먹니?”"
+      ],
+      [
+        "They sat together.",
+        "둘은 함께 앉았어요."
+      ]
+    ],
+    "qs": [
+      [
+        "이야기의 첫 장면에 나온 문장은 무엇인가요?",
+        [
+          "Mina came to Jiwoo's class.",
+          "Jiwoo gave Mina a birthday card.",
+          "Mina gave Jiwoo a hug."
+        ],
+        0
+      ],
+      [
+        "이야기 중간에 있었던 일은 무엇인가요?",
+        [
+          "Mina came to Jiwoo's class.",
+          "They sat together.",
+          "Mina gave Jiwoo a hug."
+        ],
+        2
+      ],
+      [
+        "이야기가 끝나는 문장은 무엇인가요?",
+        [
+          "Mina gave Jiwoo a hug.",
+          "They sat together.",
+          "Jiwoo gave Mina a birthday card."
+        ],
+        1
+      ]
+    ],
+    "ws": [
+      [
+        "너는 접시를 씻니?",
+        "Do you wash the dishes?"
+      ],
+      [
+        "너는 접시를 씻지 않니? (설거지하지 않니?)",
+        "Don't you wash the dishes?"
+      ],
+      [
+        "너는 치즈 케이크를 만드니?",
+        "Do you make cheese cake?"
+      ],
+      [
+        "너는 치즈 케이크를 만들지 않니?",
+        "Don't you make cheese cake?"
+      ],
+      [
+        "너는 저녁을 먹니?",
+        "Do you eat dinner?"
+      ]
+    ],
+    "verbs": [
+      [
+        "feel",
+        "felt",
+        "felt",
+        "느끼다",
+        ""
+      ],
+      [
+        "bring",
+        "brought",
+        "brought",
+        "가져오다",
+        ""
+      ],
+      [
+        "buy",
+        "bought",
+        "bought",
+        "사다",
+        ""
+      ],
+      [
+        "write",
+        "wrote",
+        "written",
+        "쓰다",
+        ""
+      ],
+      [
+        "read",
+        "read",
+        "read",
+        "읽다",
+        ""
+      ]
+    ],
+    "vocab": [
+      [
+        "baby",
+        "아기"
+      ],
+      [
+        "love",
+        "사랑하다, 대단히 좋아하다"
+      ],
+      [
+        "hug",
+        "껴안다"
+      ],
+      [
+        "birthday",
+        "생일"
+      ],
+      [
+        "together",
+        "함께"
+      ]
+    ],
+    "metadata": {
+      "day": 6,
+      "story_title": "A Birthday Card",
+      "edition": "3개 사용자 ZIP 기반 자료 정합 버전 v2",
+      "source_status": "영작 5개: 원문 일빵빵 그대로 / 새 표현 5개: 원문 단어 앱 그대로 / 문법 참고: 문법 앱 해당 강",
+      "grammar_lesson_title": "동사 뒤에는 무엇이 올까?",
+      "ilbbang_line_indices": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "vocab_indices": [
+        1,
+        2,
+        5,
+        9,
+        17
+      ],
+      "story_mode": "원문 회화 5문장 + 연결 서술 4문장",
+      "qa_status": "영어 연결 서술/번역 교육적 검수 전, 원문 보존 및 허용 어휘 검사"
+    }
+  },
+  {
+    "story": [
+      [
+        "Mina saw a key on a chair.",
+        "미나는 의자 위의 열쇠를 보았어요."
+      ],
+      [
+        "Jiwoo put the key in a bag.",
+        "지우는 열쇠를 가방 안에 넣었어요."
+      ],
+      [
+        "Jiwoo said, \"I can go.\"",
+        "지우가 말했어요. “나는 갈 수 있다.”"
+      ],
+      [
+        "Mina said, \"I can walk.\"",
+        "미나가 말했어요. “나는 걸을 수 있다.”"
+      ],
+      [
+        "Mina opened the door.",
+        "미나는 문을 열었어요."
+      ],
+      [
+        "Jiwoo said, \"I can run.\"",
+        "지우가 말했어요. “나는 뛸 수 있다.”"
+      ],
+      [
+        "Mina said, \"I can wait.\"",
+        "미나가 말했어요. “나는 기다릴 수 있다.”"
+      ],
+      [
+        "Jiwoo said, \"I can sleep.\"",
+        "지우가 말했어요. “나는 잘 수 있다.”"
+      ],
+      [
+        "They went home together.",
+        "둘은 함께 집으로 갔어요."
+      ]
+    ],
+    "qs": [
+      [
+        "이야기의 첫 장면에 나온 문장은 무엇인가요?",
+        [
+          "Jiwoo put the key in a bag.",
+          "Mina opened the door.",
+          "Mina saw a key on a chair."
+        ],
+        2
+      ],
+      [
+        "이야기 중간에 있었던 일은 무엇인가요?",
+        [
+          "They went home together.",
+          "Mina opened the door.",
+          "Mina saw a key on a chair."
+        ],
+        1
+      ],
+      [
+        "이야기가 끝나는 문장은 무엇인가요?",
+        [
+          "They went home together.",
+          "Jiwoo put the key in a bag.",
+          "Mina opened the door."
+        ],
+        0
+      ]
+    ],
+    "ws": [
+      [
+        "나는 갈 수 있다.",
+        "I can go."
+      ],
+      [
+        "나는 걸을 수 있다.",
+        "I can walk."
+      ],
+      [
+        "나는 뛸 수 있다.",
+        "I can run."
+      ],
+      [
+        "나는 기다릴 수 있다.",
+        "I can wait."
+      ],
+      [
+        "나는 잘 수 있다.",
+        "I can sleep."
+      ]
+    ],
+    "verbs": [
+      [
+        "write",
+        "wrote",
+        "written",
+        "쓰다",
+        ""
+      ],
+      [
+        "read",
+        "read",
+        "read",
+        "읽다",
+        ""
+      ],
+      [
+        "speak",
+        "spoke",
+        "spoken",
+        "말하다 / 대화하다",
+        ""
+      ],
+      [
+        "meet",
+        "met",
+        "met",
+        "만나다",
+        ""
+      ],
+      [
+        "run",
+        "ran",
+        "run",
+        "달리다 / 운영하다",
+        ""
+      ]
+    ],
+    "vocab": [
+      [
+        "fan",
+        "선풍기"
+      ],
+      [
+        "bath",
+        "목욕"
+      ],
+      [
+        "chair",
+        "의자"
+      ],
+      [
+        "door",
+        "문"
+      ],
+      [
+        "key",
+        "열쇠"
+      ]
+    ],
+    "metadata": {
+      "day": 7,
+      "story_title": "The Key and the Door",
+      "edition": "3개 사용자 ZIP 기반 자료 정합 버전 v2",
+      "source_status": "영작 5개: 원문 일빵빵 그대로 / 새 표현 5개: 원문 단어 앱 그대로 / 문법 참고: 문법 앱 해당 강",
+      "grammar_lesson_title": "보어와 꾸미는 말을 구별하자",
+      "ilbbang_line_indices": [
+        1,
+        3,
+        4,
+        8,
+        10
+      ],
+      "vocab_indices": [
+        1,
+        2,
+        3,
+        6,
+        9
+      ],
+      "story_mode": "원문 회화 5문장 + 연결 서술 4문장",
+      "qa_status": "영어 연결 서술/번역 교육적 검수 전, 원문 보존 및 허용 어휘 검사"
+    }
+  },
+  {
+    "story": [
+      [
+        "Jiwoo and Mina met after class.",
+        "지우와 미나는 수업이 끝나고 만났어요."
+      ],
+      [
+        "Mina began to sing a song.",
+        "미나는 노래를 부르기 시작했어요."
+      ],
+      [
+        "Jiwoo said, \"I can't go home.\"",
+        "지우가 말했어요. “나는 집에 갈 수 없어.”"
+      ],
+      [
+        "Mina said, \"I can't run alone.\"",
+        "미나가 말했어요. “나는 혼자 뛸 수 없어.”"
+      ],
+      [
+        "Jiwoo took a book from the bag.",
+        "지우는 가방에서 책 한 권을 꺼냈어요."
+      ],
+      [
+        "Jiwoo said, \"I can't wait more.\"",
+        "지우가 말했어요. “나는 더 이상 기다릴 수 없어.”"
+      ],
+      [
+        "Mina said, \"I can't sleep tonight.\"",
+        "미나가 말했어요. “나는 오늘 밤 잘 수 없어.”"
+      ],
+      [
+        "Jiwoo said, \"You can't run alone.\"",
+        "지우가 말했어요. “너는 혼자 뛸 수 없어.”"
+      ],
+      [
+        "They went home together.",
+        "둘은 함께 집으로 갔어요."
+      ]
+    ],
+    "qs": [
+      [
+        "이야기의 첫 장면에 나온 문장은 무엇인가요?",
+        [
+          "Jiwoo took a book from the bag.",
+          "Jiwoo and Mina met after class.",
+          "Mina began to sing a song."
+        ],
+        1
+      ],
+      [
+        "이야기 중간에 있었던 일은 무엇인가요?",
+        [
+          "Jiwoo took a book from the bag.",
+          "Jiwoo and Mina met after class.",
+          "They went home together."
+        ],
+        0
+      ],
+      [
+        "이야기가 끝나는 문장은 무엇인가요?",
+        [
+          "Mina began to sing a song.",
+          "Jiwoo took a book from the bag.",
+          "They went home together."
+        ],
+        2
+      ]
+    ],
+    "ws": [
+      [
+        "나는 집에 갈 수 없어.",
+        "I can't go home."
+      ],
+      [
+        "나는 혼자 뛸 수 없어.",
+        "I can't run alone."
+      ],
+      [
+        "나는 더 이상 기다릴 수 없어.",
+        "I can't wait more."
+      ],
+      [
+        "나는 오늘 밤 잘 수 없어.",
+        "I can't sleep tonight."
+      ],
+      [
+        "너는 혼자 뛸 수 없어.",
+        "You can't run alone."
+      ]
+    ],
+    "verbs": [
+      [
+        "meet",
+        "met",
+        "met",
+        "만나다",
+        ""
+      ],
+      [
+        "run",
+        "ran",
+        "run",
+        "달리다 / 운영하다",
+        ""
+      ],
+      [
+        "begin",
+        "began",
+        "begun",
+        "시작하다",
+        ""
+      ],
+      [
+        "break",
+        "broke",
+        "broken",
+        "부수다 / 깨뜨리다",
+        ""
+      ],
+      [
+        "choose",
+        "chose",
+        "chosen",
+        "선택하다",
+        ""
+      ]
+    ],
+    "vocab": [
+      [
+        "jump",
+        "뛰어오르다"
+      ],
+      [
+        "read",
+        "읽다"
+      ],
+      [
+        "sing",
+        "노래하다"
+      ],
+      [
+        "move",
+        "움직이다"
+      ],
+      [
+        "song",
+        "노래"
+      ]
+    ],
+    "metadata": {
+      "day": 8,
+      "story_title": "A Song After Class",
+      "edition": "3개 사용자 ZIP 기반 자료 정합 버전 v2",
+      "source_status": "영작 5개: 원문 일빵빵 그대로 / 새 표현 5개: 원문 단어 앱 그대로 / 문법 참고: 문법 앱 해당 강",
+      "grammar_lesson_title": "문장의 뼈대와 형용사",
+      "ilbbang_line_indices": [
+        1,
+        4,
+        8,
+        10,
+        14
+      ],
+      "vocab_indices": [
+        1,
+        2,
+        3,
+        4,
+        18
+      ],
+      "story_mode": "원문 회화 5문장 + 연결 서술 4문장",
+      "qa_status": "영어 연결 서술/번역 교육적 검수 전, 원문 보존 및 허용 어휘 검사"
+    }
+  },
+  {
+    "story": [
+      [
+        "Mina met Jiwoo at school.",
+        "미나는 학교에서 지우를 만났어요."
+      ],
+      [
+        "Jiwoo had a colorful book and a bag.",
+        "지우는 알록달록한 책 한 권과 가방을 가지고 있었어요."
+      ],
+      [
+        "Jiwoo said, \"Can you go to school?\"",
+        "지우가 말했어요. “너는 학교 갈 수 있니?”"
+      ],
+      [
+        "Mina said, \"Can I go to school?\"",
+        "미나가 말했어요. “내가 학교 갈 수 있을까?”"
+      ],
+      [
+        "Mina put the book on a chair.",
+        "미나는 그 책을 의자 위에 놓았어요."
+      ],
+      [
+        "Jiwoo said, \"Can you walk to the shop?\"",
+        "지우가 말했어요. “너는 그 가게로 걸어갈 수 있니?”"
+      ],
+      [
+        "Mina said, \"Can I walk to the shop?\"",
+        "미나가 말했어요. “내가 그 가게로 걸어갈 수 있을까?”"
+      ],
+      [
+        "Jiwoo said, \"Can I work in the library?\"",
+        "지우가 말했어요. “내가 그 도서관에서 일할 수 있을까?”"
+      ],
+      [
+        "Jiwoo went to the library.",
+        "지우는 도서관으로 갔어요."
+      ]
+    ],
+    "qs": [
+      [
+        "이야기의 첫 장면에 나온 문장은 무엇인가요?",
+        [
+          "Mina met Jiwoo at school.",
+          "Jiwoo had a colorful book and a bag.",
+          "Mina put the book on a chair."
+        ],
+        0
+      ],
+      [
+        "이야기 중간에 있었던 일은 무엇인가요?",
+        [
+          "Mina met Jiwoo at school.",
+          "Jiwoo went to the library.",
+          "Mina put the book on a chair."
+        ],
+        2
+      ],
+      [
+        "이야기가 끝나는 문장은 무엇인가요?",
+        [
+          "Mina put the book on a chair.",
+          "Jiwoo went to the library.",
+          "Jiwoo had a colorful book and a bag."
+        ],
+        1
+      ]
+    ],
+    "ws": [
+      [
+        "너는 학교 갈 수 있니?",
+        "Can you go to school?"
+      ],
+      [
+        "내가 학교 갈 수 있을까?",
+        "Can I go to school?"
+      ],
+      [
+        "너는 그 가게로 걸어갈 수 있니?",
+        "Can you walk to the shop?"
+      ],
+      [
+        "내가 그 가게로 걸어갈 수 있을까?",
+        "Can I walk to the shop?"
+      ],
+      [
+        "내가 그 도서관에서 일할 수 있을까?",
+        "Can I work in the library?"
+      ]
+    ],
+    "verbs": [
+      [
+        "break",
+        "broke",
+        "broken",
+        "부수다 / 깨뜨리다",
+        ""
+      ],
+      [
+        "choose",
+        "chose",
+        "chosen",
+        "선택하다",
+        ""
+      ],
+      [
+        "drive",
+        "drove",
+        "driven",
+        "운전하다",
+        ""
+      ],
+      [
+        "fall",
+        "fell",
+        "fallen",
+        "떨어지다 / 넘어지다",
+        ""
+      ],
+      [
+        "forget",
+        "forgot",
+        "forgotten",
+        "잊어버리다",
+        ""
+      ]
+    ],
+    "vocab": [
+      [
+        "pretty",
+        "예쁜"
+      ],
+      [
+        "same",
+        "같은"
+      ],
+      [
+        "twin",
+        "쌍둥이"
+      ],
+      [
+        "old",
+        "늙은, 나이 많은"
+      ],
+      [
+        "colorful",
+        "다채로운"
+      ]
+    ],
+    "metadata": {
+      "day": 9,
+      "story_title": "A Book for the Library",
+      "edition": "3개 사용자 ZIP 기반 자료 정합 버전 v2",
+      "source_status": "영작 5개: 원문 일빵빵 그대로 / 새 표현 5개: 원문 단어 앱 그대로 / 문법 참고: 문법 앱 해당 강",
+      "grammar_lesson_title": "어떻게 하는지, 여러 낱말이 한 팀이 되는지",
+      "ilbbang_line_indices": [
+        1,
+        2,
+        5,
+        6,
+        18
+      ],
+      "vocab_indices": [
+        1,
+        2,
+        3,
+        4,
+        19
+      ],
+      "story_mode": "원문 회화 5문장 + 연결 서술 4문장",
+      "qa_status": "영어 연결 서술/번역 교육적 검수 전, 원문 보존 및 허용 어휘 검사"
+    }
+  },
+  {
+    "story": [
+      [
+        "Jiwoo and Mina came to the hall.",
+        "지우와 미나는 복도로 왔어요."
+      ],
+      [
+        "Mina had lunch.",
+        "미나는 점심을 먹었어요."
+      ],
+      [
+        "Jiwoo said, \"Can't you go to church?\"",
+        "지우가 말했어요. “너는 교회로 갈 수 없니?”"
+      ],
+      [
+        "Mina said, \"Can't you come to the store?\"",
+        "미나가 말했어요. “너는 그 가게로 올 수 없니?”"
+      ],
+      [
+        "They saw the menu.",
+        "둘은 메뉴를 보았어요."
+      ],
+      [
+        "Jiwoo said, \"Can't you live in the city?\"",
+        "지우가 말했어요. “너는 그 도시에서 살 수 없니?”"
+      ],
+      [
+        "Mina said, \"Can't you wait in the classroom?\"",
+        "미나가 말했어요. “너는 그 교실에서 기다릴 수 없니?”"
+      ],
+      [
+        "Jiwoo said, \"Can't you work in the hall?\"",
+        "지우가 말했어요. “너는 그 홀에서 일할 수 없니?”"
+      ],
+      [
+        "The teacher came to the hall.",
+        "선생님이 복도로 오셨어요."
+      ]
+    ],
+    "qs": [
+      [
+        "이야기의 첫 장면에 나온 문장은 무엇인가요?",
+        [
+          "Mina had lunch.",
+          "They saw the menu.",
+          "Jiwoo and Mina came to the hall."
+        ],
+        2
+      ],
+      [
+        "이야기 중간에 있었던 일은 무엇인가요?",
+        [
+          "The teacher came to the hall.",
+          "They saw the menu.",
+          "Jiwoo and Mina came to the hall."
+        ],
+        1
+      ],
+      [
+        "이야기가 끝나는 문장은 무엇인가요?",
+        [
+          "The teacher came to the hall.",
+          "Mina had lunch.",
+          "They saw the menu."
+        ],
+        0
+      ]
+    ],
+    "ws": [
+      [
+        "너는 교회로 갈 수 없니?",
+        "Can't you go to church?"
+      ],
+      [
+        "너는 그 가게로 올 수 없니?",
+        "Can't you come to the store?"
+      ],
+      [
+        "너는 그 도시에서 살 수 없니?",
+        "Can't you live in the city?"
+      ],
+      [
+        "너는 그 교실에서 기다릴 수 없니?",
+        "Can't you wait in the classroom?"
+      ],
+      [
+        "너는 그 홀에서 일할 수 없니?",
+        "Can't you work in the hall?"
+      ]
+    ],
+    "verbs": [
+      [
+        "fall",
+        "fell",
+        "fallen",
+        "떨어지다 / 넘어지다",
+        ""
+      ],
+      [
+        "forget",
+        "forgot",
+        "forgotten",
+        "잊어버리다",
+        ""
+      ],
+      [
+        "grow",
+        "grew",
+        "grown",
+        "자라다 / 키우다",
+        ""
+      ],
+      [
+        "hold",
+        "held",
+        "held",
+        "잡다 / 개최하다",
+        ""
+      ],
+      [
+        "keep",
+        "kept",
+        "kept",
+        "유지하다 / 보관하다",
+        ""
+      ]
+    ],
+    "vocab": [
+      [
+        "meal",
+        "식사"
+      ],
+      [
+        "breakfast",
+        "아침 식사"
+      ],
+      [
+        "lunch",
+        "점심 식사"
+      ],
+      [
+        "dinner",
+        "저녁 식사"
+      ],
+      [
+        "menu",
+        "메뉴"
+      ]
+    ],
+    "metadata": {
+      "day": 10,
+      "story_title": "Lunch in the Hall",
+      "edition": "3개 사용자 ZIP 기반 자료 정합 버전 v2",
+      "source_status": "영작 5개: 원문 일빵빵 그대로 / 새 표현 5개: 원문 단어 앱 그대로 / 문법 참고: 문법 앱 해당 강",
+      "grammar_lesson_title": "문장은 어디서 끝날까?",
+      "ilbbang_line_indices": [
+        2,
+        4,
+        12,
+        16,
+        18
+      ],
+      "vocab_indices": [
+        1,
+        2,
+        3,
+        4,
+        19
+      ],
+      "story_mode": "원문 회화 5문장 + 연결 서술 4문장",
+      "qa_status": "영어 연결 서술/번역 교육적 검수 전, 원문 보존 및 허용 어휘 검사"
+    }
+  },
+  {
+    "story": [
+      [
+        "Mina saw a heavy bag beside the door.",
+        "미나는 문 옆에 놓인 무거운 가방을 보았어요."
+      ],
+      [
+        "Jiwoo took the bag.",
+        "지우는 가방을 들었어요."
+      ],
+      [
+        "Jiwoo said, \"I will open.\"",
+        "지우가 말했어요. “나는 열 것이다.”"
+      ],
+      [
+        "Mina said, \"I will close.\"",
+        "미나가 말했어요. “나는 닫을 것이다.”"
+      ],
+      [
+        "Mina gave Jiwoo a book.",
+        "미나는 지우에게 책을 주었어요."
+      ],
+      [
+        "Jiwoo said, \"I will buy.\"",
+        "지우가 말했어요. “나는 살 것이다.”"
+      ],
+      [
+        "Mina said, \"I will start.\"",
+        "미나가 말했어요. “나는 시작할 것이다.”"
+      ],
+      [
+        "Jiwoo said, \"I will finish.\"",
+        "지우가 말했어요. “나는 끝낼 것이다.”"
+      ],
+      [
+        "They went to school.",
+        "둘은 학교에 갔어요."
+      ]
+    ],
+    "qs": [
+      [
+        "이야기의 첫 장면에 나온 문장은 무엇인가요?",
+        [
+          "Mina gave Jiwoo a book.",
+          "Mina saw a heavy bag beside the door.",
+          "Jiwoo took the bag."
+        ],
+        1
+      ],
+      [
+        "이야기 중간에 있었던 일은 무엇인가요?",
+        [
+          "Mina gave Jiwoo a book.",
+          "Mina saw a heavy bag beside the door.",
+          "They went to school."
+        ],
+        0
+      ],
+      [
+        "이야기가 끝나는 문장은 무엇인가요?",
+        [
+          "Jiwoo took the bag.",
+          "Mina gave Jiwoo a book.",
+          "They went to school."
+        ],
+        2
+      ]
+    ],
+    "ws": [
+      [
+        "나는 열 것이다.",
+        "I will open."
+      ],
+      [
+        "나는 닫을 것이다.",
+        "I will close."
+      ],
+      [
+        "나는 살 것이다.",
+        "I will buy."
+      ],
+      [
+        "나는 시작할 것이다.",
+        "I will start."
+      ],
+      [
+        "나는 끝낼 것이다.",
+        "I will finish."
+      ]
+    ],
+    "verbs": [
+      [
+        "hold",
+        "held",
+        "held",
+        "잡다 / 개최하다",
+        ""
+      ],
+      [
+        "keep",
+        "kept",
+        "kept",
+        "유지하다 / 보관하다",
+        ""
+      ],
+      [
+        "lose",
+        "lost",
+        "lost",
+        "잃어버리다 / 지다",
+        ""
+      ],
+      [
+        "pay",
+        "paid",
+        "paid",
+        "지불하다",
+        ""
+      ],
+      [
+        "send",
+        "sent",
+        "sent",
+        "보내다",
+        ""
+      ]
+    ],
+    "vocab": [
+      [
+        "look",
+        "보다"
+      ],
+      [
+        "touch",
+        "만지다"
+      ],
+      [
+        "every",
+        "모든"
+      ],
+      [
+        "stand",
+        "서다"
+      ],
+      [
+        "heavy",
+        "무거운"
+      ]
+    ],
+    "metadata": {
+      "day": 11,
+      "story_title": "The Heavy Bag",
+      "edition": "3개 사용자 ZIP 기반 자료 정합 버전 v2",
+      "source_status": "영작 5개: 원문 일빵빵 그대로 / 새 표현 5개: 원문 단어 앱 그대로 / 문법 참고: 문법 앱 해당 강",
+      "grammar_lesson_title": "하나일까, 여러 개일까?",
+      "ilbbang_line_indices": [
+        1,
+        2,
+        3,
+        6,
+        7
+      ],
+      "vocab_indices": [
+        1,
+        2,
+        3,
+        4,
+        12
+      ],
+      "story_mode": "원문 회화 5문장 + 연결 서술 4문장",
+      "qa_status": "영어 연결 서술/번역 교육적 검수 전, 원문 보존 및 허용 어휘 검사"
+    }
+  },
+  {
+    "story": [
+      [
+        "Jiwoo had homework after class.",
+        "지우는 수업이 끝난 후 숙제가 있었어요."
+      ],
+      [
+        "Mina saw a textbook on the desk.",
+        "미나는 책상 위의 교과서를 보았어요."
+      ],
+      [
+        "Jiwoo said, \"I will not (won't) open the door.\"",
+        "지우가 말했어요. “나는 그 문을 열지 않을 거야.”"
+      ],
+      [
+        "Mina said, \"I will not (won't) buy the ticket.\"",
+        "미나가 말했어요. “나는 그 티켓을 사지 않을 거야.”"
+      ],
+      [
+        "Jiwoo showed Mina a note.",
+        "지우는 미나에게 쪽지를 보여주었어요."
+      ],
+      [
+        "Jiwoo said, \"I will not (won't) finish homework.\"",
+        "지우가 말했어요. “나는 숙제를 끝내지 않을 거야.”"
+      ],
+      [
+        "Mina said, \"I will not (won't) teach the dog.\"",
+        "미나가 말했어요. “나는 그 개를 가르치지 않을 거야.”"
+      ],
+      [
+        "Jiwoo said, \"I will not (won't) learn the language.\"",
+        "지우가 말했어요. “나는 그 언어를 배우지 않을 거야.”"
+      ],
+      [
+        "Mina gave Jiwoo a book.",
+        "미나는 지우에게 책을 주었어요."
+      ]
+    ],
+    "qs": [
+      [
+        "이야기의 첫 장면에 나온 문장은 무엇인가요?",
+        [
+          "Jiwoo had homework after class.",
+          "Mina saw a textbook on the desk.",
+          "Jiwoo showed Mina a note."
+        ],
+        0
+      ],
+      [
+        "이야기 중간에 있었던 일은 무엇인가요?",
+        [
+          "Jiwoo had homework after class.",
+          "Mina gave Jiwoo a book.",
+          "Jiwoo showed Mina a note."
+        ],
+        2
+      ],
+      [
+        "이야기가 끝나는 문장은 무엇인가요?",
+        [
+          "Jiwoo showed Mina a note.",
+          "Mina gave Jiwoo a book.",
+          "Mina saw a textbook on the desk."
+        ],
+        1
+      ]
+    ],
+    "ws": [
+      [
+        "나는 그 문을 열지 않을 거야.",
+        "I will not (won't) open the door."
+      ],
+      [
+        "나는 그 티켓을 사지 않을 거야.",
+        "I will not (won't) buy the ticket."
+      ],
+      [
+        "나는 숙제를 끝내지 않을 거야.",
+        "I will not (won't) finish homework."
+      ],
+      [
+        "나는 그 개를 가르치지 않을 거야.",
+        "I will not (won't) teach the dog."
+      ],
+      [
+        "나는 그 언어를 배우지 않을 거야.",
+        "I will not (won't) learn the language."
+      ]
+    ],
+    "verbs": [
+      [
+        "pay",
+        "paid",
+        "paid",
+        "지불하다",
+        ""
+      ],
+      [
+        "send",
+        "sent",
+        "sent",
+        "보내다",
+        ""
+      ],
+      [
+        "sit",
+        "sat",
+        "sat",
+        "앉다",
+        ""
+      ],
+      [
+        "stand",
+        "stood",
+        "stood",
+        "서 있다 / 참다",
+        ""
+      ],
+      [
+        "understand",
+        "understood",
+        "understood",
+        "이해하다",
+        ""
+      ]
+    ],
+    "vocab": [
+      [
+        "play",
+        "놀다"
+      ],
+      [
+        "learn",
+        "배우다"
+      ],
+      [
+        "teach",
+        "가르치다"
+      ],
+      [
+        "textbook",
+        "교과서"
+      ],
+      [
+        "homework",
+        "숙제"
+      ]
+    ],
+    "metadata": {
+      "day": 12,
+      "story_title": "Homework and the Book",
+      "edition": "3개 사용자 ZIP 기반 자료 정합 버전 v2",
+      "source_status": "영작 5개: 원문 일빵빵 그대로 / 새 표현 5개: 원문 단어 앱 그대로 / 문법 참고: 문법 앱 해당 강",
+      "grammar_lesson_title": "복수형은 모양이 바뀌기도 해",
+      "ilbbang_line_indices": [
+        2,
+        6,
+        14,
+        18,
+        20
+      ],
+      "vocab_indices": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "story_mode": "원문 회화 5문장 + 연결 서술 4문장",
+      "qa_status": "영어 연결 서술/번역 교육적 검수 전, 원문 보존 및 허용 어휘 검사"
+    }
+  },
+  {
+    "story": [
+      [
+        "Mina had a card.",
+        "미나는 카드 한 장을 가지고 있었어요."
+      ],
+      [
+        "Jiwoo saw a doctor on the card.",
+        "지우는 카드에 있는 의사 그림을 보았어요."
+      ],
+      [
+        "Jiwoo said, \"Will you help?\"",
+        "지우가 말했어요. “너는 도울 거니?”"
+      ],
+      [
+        "Mina said, \"Will you sing?\"",
+        "미나가 말했어요. “너는 부를 거니?”"
+      ],
+      [
+        "Mina gave Jiwoo the card.",
+        "미나는 지우에게 그 카드를 건네주었어요."
+      ],
+      [
+        "Jiwoo said, \"Will you try?\"",
+        "지우가 말했어요. “너는 시도해 볼 거니?”"
+      ],
+      [
+        "Mina said, \"Will you move?\"",
+        "미나가 말했어요. “너는 옮길 거니?”"
+      ],
+      [
+        "Jiwoo said, \"Will you check?\"",
+        "지우가 말했어요. “너는 체크할 거니?”"
+      ],
+      [
+        "They met the teacher.",
+        "둘은 선생님을 만났어요."
+      ]
+    ],
+    "qs": [
+      [
+        "이야기의 첫 장면에 나온 문장은 무엇인가요?",
+        [
+          "Jiwoo saw a doctor on the card.",
+          "Mina gave Jiwoo the card.",
+          "Mina had a card."
+        ],
+        2
+      ],
+      [
+        "이야기 중간에 있었던 일은 무엇인가요?",
+        [
+          "They met the teacher.",
+          "Mina gave Jiwoo the card.",
+          "Mina had a card."
+        ],
+        1
+      ],
+      [
+        "이야기가 끝나는 문장은 무엇인가요?",
+        [
+          "They met the teacher.",
+          "Jiwoo saw a doctor on the card.",
+          "Mina gave Jiwoo the card."
+        ],
+        0
+      ]
+    ],
+    "ws": [
+      [
+        "너는 도울 거니?",
+        "Will you help?"
+      ],
+      [
+        "너는 부를 거니?",
+        "Will you sing?"
+      ],
+      [
+        "너는 시도해 볼 거니?",
+        "Will you try?"
+      ],
+      [
+        "너는 옮길 거니?",
+        "Will you move?"
+      ],
+      [
+        "너는 체크할 거니?",
+        "Will you check?"
+      ]
+    ],
+    "verbs": [
+      [
+        "stand",
+        "stood",
+        "stood",
+        "서 있다 / 참다",
+        ""
+      ],
+      [
+        "understand",
+        "understood",
+        "understood",
+        "이해하다",
+        ""
+      ],
+      [
+        "win",
+        "won",
+        "won",
+        "이기다 / 우승하다",
+        ""
+      ],
+      [
+        "wear",
+        "wore",
+        "worn",
+        "입다 / 착용하다",
+        ""
+      ],
+      [
+        "build",
+        "built",
+        "built",
+        "짓다 / 구축하다",
+        ""
+      ]
+    ],
+    "vocab": [
+      [
+        "become",
+        "~이 되다"
+      ],
+      [
+        "skill",
+        "기술, 실력"
+      ],
+      [
+        "report",
+        "알리다"
+      ],
+      [
+        "company",
+        "회사"
+      ],
+      [
+        "doctor",
+        "의사"
+      ]
+    ],
+    "metadata": {
+      "day": 13,
+      "story_title": "The Doctor Card",
+      "edition": "3개 사용자 ZIP 기반 자료 정합 버전 v2",
+      "source_status": "영작 5개: 원문 일빵빵 그대로 / 새 표현 5개: 원문 단어 앱 그대로 / 문법 참고: 문법 앱 해당 강",
+      "grammar_lesson_title": "셀 수 있는 것과 셀 수 없는 것",
+      "ilbbang_line_indices": [
+        2,
+        3,
+        5,
+        7,
+        8
+      ],
+      "vocab_indices": [
+        1,
+        2,
+        3,
+        4,
+        7
+      ],
+      "story_mode": "원문 회화 5문장 + 연결 서술 4문장",
+      "qa_status": "영어 연결 서술/번역 교육적 검수 전, 원문 보존 및 허용 어휘 검사"
+    }
+  },
+  {
+    "story": [
+      [
+        "Jiwoo and Mina had a map.",
+        "지우와 미나는 지도를 가지고 있었어요."
+      ],
+      [
+        "They saw a picture of a boat.",
+        "둘은 배 그림을 보았어요."
+      ],
+      [
+        "Jiwoo said, \"Won't you help the man?\"",
+        "지우가 말했어요. “너는 그 남자를 돕지 않을 거니?”"
+      ],
+      [
+        "Mina said, \"Won't you sing a song?\"",
+        "미나가 말했어요. “너는 노래를 부르지 않을 거니?”"
+      ],
+      [
+        "Mina put the map on the desk.",
+        "미나는 지도를 책상 위에 놓았어요."
+      ],
+      [
+        "Jiwoo said, \"Won't you move the desk?\"",
+        "지우가 말했어요. “너는 책상을 옮기지 않을 거니?”"
+      ],
+      [
+        "Mina said, \"Won't you check the list?\"",
+        "미나가 말했어요. “너는 그 명단을 체크하지 않을 거니?”"
+      ],
+      [
+        "Jiwoo said, \"Won't you give the flower?\"",
+        "지우가 말했어요. “너는 그 꽃을 주지 않을 거니?”"
+      ],
+      [
+        "Jiwoo gave Mina a flower.",
+        "지우는 미나에게 꽃을 주었어요."
+      ]
+    ],
+    "qs": [
+      [
+        "이야기의 첫 장면에 나온 문장은 무엇인가요?",
+        [
+          "Mina put the map on the desk.",
+          "Jiwoo and Mina had a map.",
+          "They saw a picture of a boat."
+        ],
+        1
+      ],
+      [
+        "이야기 중간에 있었던 일은 무엇인가요?",
+        [
+          "Mina put the map on the desk.",
+          "Jiwoo and Mina had a map.",
+          "Jiwoo gave Mina a flower."
+        ],
+        0
+      ],
+      [
+        "이야기가 끝나는 문장은 무엇인가요?",
+        [
+          "They saw a picture of a boat.",
+          "Mina put the map on the desk.",
+          "Jiwoo gave Mina a flower."
+        ],
+        2
+      ]
+    ],
+    "ws": [
+      [
+        "너는 그 남자를 돕지 않을 거니?",
+        "Won't you help the man?"
+      ],
+      [
+        "너는 노래를 부르지 않을 거니?",
+        "Won't you sing a song?"
+      ],
+      [
+        "너는 책상을 옮기지 않을 거니?",
+        "Won't you move the desk?"
+      ],
+      [
+        "너는 그 명단을 체크하지 않을 거니?",
+        "Won't you check the list?"
+      ],
+      [
+        "너는 그 꽃을 주지 않을 거니?",
+        "Won't you give the flower?"
+      ]
+    ],
+    "verbs": [
+      [
+        "wear",
+        "wore",
+        "worn",
+        "입다 / 착용하다",
+        ""
+      ],
+      [
+        "build",
+        "built",
+        "built",
+        "짓다 / 구축하다",
+        ""
+      ],
+      [
+        "catch",
+        "caught",
+        "caught",
+        "잡다 / 따라잡다",
+        ""
+      ],
+      [
+        "draw",
+        "drew",
+        "drawn",
+        "그리다 / 끌어당기다",
+        ""
+      ],
+      [
+        "sleep",
+        "slept",
+        "slept",
+        "자다",
+        ""
+      ]
+    ],
+    "vocab": [
+      [
+        "trip",
+        "여행"
+      ],
+      [
+        "place",
+        "장소, 곳"
+      ],
+      [
+        "map",
+        "지도"
+      ],
+      [
+        "picture",
+        "사진, 그림"
+      ],
+      [
+        "boat",
+        "배"
+      ]
+    ],
+    "metadata": {
+      "day": 14,
+      "story_title": "The Map and the Boat",
+      "edition": "3개 사용자 ZIP 기반 자료 정합 버전 v2",
+      "source_status": "영작 5개: 원문 일빵빵 그대로 / 새 표현 5개: 원문 단어 앱 그대로 / 문법 참고: 문법 앱 해당 강",
+      "grammar_lesson_title": "물 한 잔과 a, an",
+      "ilbbang_line_indices": [
+        4,
+        6,
+        14,
+        16,
+        18
+      ],
+      "vocab_indices": [
+        1,
+        2,
+        8,
+        9,
+        11
+      ],
+      "story_mode": "원문 회화 5문장 + 연결 서술 4문장",
+      "qa_status": "영어 연결 서술/번역 교육적 검수 전, 원문 보존 및 허용 어휘 검사"
+    }
+  },
+  {
+    "story": [
+      [
+        "Mina put a small cap in the bag.",
+        "미나는 작은 모자를 가방에 넣었어요."
+      ],
+      [
+        "Jiwoo saw the cap.",
+        "지우는 모자를 보았어요."
+      ],
+      [
+        "Jiwoo said, \"I did have breakfast.\"",
+        "지우가 말했어요. “나는 (진짜) 아침 먹었거든.”"
+      ],
+      [
+        "Mina said, \"I did have lunch.\"",
+        "미나가 말했어요. “나는 (진짜) 점심 먹었거든.”"
+      ],
+      [
+        "Mina had a little mirror.",
+        "미나는 작은 거울을 가지고 있었어요."
+      ],
+      [
+        "Jiwoo said, \"I did have a walk.\"",
+        "지우가 말했어요. “나는 (진짜) 산책했거든.”"
+      ],
+      [
+        "Mina said, \"I did have fun.\"",
+        "미나가 말했어요. “나는 (진짜) 즐거웠거든.”"
+      ],
+      [
+        "Jiwoo said, \"I did have a seat.\"",
+        "지우가 말했어요. “나는 (진짜) 앉았거든.”"
+      ],
+      [
+        "Jiwoo gave the cap to Mina.",
+        "지우는 미나에게 모자를 건네주었어요."
+      ]
+    ],
+    "qs": [
+      [
+        "이야기의 첫 장면에 나온 문장은 무엇인가요?",
+        [
+          "Mina put a small cap in the bag.",
+          "Jiwoo saw the cap.",
+          "Mina had a little mirror."
+        ],
+        0
+      ],
+      [
+        "이야기 중간에 있었던 일은 무엇인가요?",
+        [
+          "Mina put a small cap in the bag.",
+          "Jiwoo gave the cap to Mina.",
+          "Mina had a little mirror."
+        ],
+        2
+      ],
+      [
+        "이야기가 끝나는 문장은 무엇인가요?",
+        [
+          "Mina had a little mirror.",
+          "Jiwoo gave the cap to Mina.",
+          "Jiwoo saw the cap."
+        ],
+        1
+      ]
+    ],
+    "ws": [
+      [
+        "나는 (진짜) 아침 먹었거든.",
+        "I did have breakfast."
+      ],
+      [
+        "나는 (진짜) 점심 먹었거든.",
+        "I did have lunch."
+      ],
+      [
+        "나는 (진짜) 산책했거든.",
+        "I did have a walk."
+      ],
+      [
+        "나는 (진짜) 즐거웠거든.",
+        "I did have fun."
+      ],
+      [
+        "나는 (진짜) 앉았거든.",
+        "I did have a seat."
+      ]
+    ],
+    "verbs": [
+      [
+        "draw",
+        "drew",
+        "drawn",
+        "그리다 / 끌어당기다",
+        ""
+      ],
+      [
+        "sleep",
+        "slept",
+        "slept",
+        "자다",
+        ""
+      ],
+      [
+        "hear",
+        "heard",
+        "heard",
+        "듣다 / 소식을 접하다",
+        ""
+      ],
+      [
+        "lead",
+        "led",
+        "led",
+        "이끌다 / 안내하다",
+        ""
+      ],
+      [
+        "mean",
+        "meant",
+        "meant",
+        "의미하다 / 뜻하다",
+        ""
+      ]
+    ],
+    "vocab": [
+      [
+        "wear",
+        "입다"
+      ],
+      [
+        "dirty",
+        "더러운"
+      ],
+      [
+        "mirror",
+        "거울"
+      ],
+      [
+        "small",
+        "작은"
+      ],
+      [
+        "cap",
+        "모자"
+      ]
+    ],
+    "metadata": {
+      "day": 15,
+      "story_title": "The Small Cap",
+      "edition": "3개 사용자 ZIP 기반 자료 정합 버전 v2",
+      "source_status": "영작 5개: 원문 일빵빵 그대로 / 새 표현 5개: 원문 단어 앱 그대로 / 문법 참고: 문법 앱 해당 강",
+      "grammar_lesson_title": "a와 an을 언제 쓸까?",
+      "ilbbang_line_indices": [
+        1,
+        2,
+        6,
+        7,
+        8
+      ],
+      "vocab_indices": [
+        1,
+        2,
+        4,
+        7,
+        12
+      ],
+      "story_mode": "원문 회화 5문장 + 연결 서술 4문장",
+      "qa_status": "영어 연결 서술/번역 교육적 검수 전, 원문 보존 및 허용 어휘 검사"
+    }
+  },
+  {
+    "story": [
+      [
+        "Jiwoo and Mina saw a plant.",
+        "지우와 미나는 식물을 보았어요."
+      ],
+      [
+        "Mina saw the moon.",
+        "미나는 달을 보았어요."
+      ],
+      [
+        "Jiwoo said, \"I didn't take a book.\"",
+        "지우가 말했어요. “나는 책을 받지 않았어.”"
+      ],
+      [
+        "Mina said, \"I didn't take a taxi.\"",
+        "미나가 말했어요. “나는 택시를 타지 않았어.”"
+      ],
+      [
+        "Jiwoo put a stone beside the plant.",
+        "지우는 식물 옆에 돌을 놓았어요."
+      ],
+      [
+        "Jiwoo said, \"I didn't take a photo.\"",
+        "지우가 말했어요. “나는 사진을 찍지 않았어.”"
+      ],
+      [
+        "Mina said, \"I didn't take a trip.\"",
+        "미나가 말했어요. “나는 여행을 가지 않았어.”"
+      ],
+      [
+        "Jiwoo said, \"I didn't take a lesson.\"",
+        "지우가 말했어요. “나는 수업을 받지 않았어.”"
+      ],
+      [
+        "They came home.",
+        "둘은 집에 왔어요."
+      ]
+    ],
+    "qs": [
+      [
+        "이야기의 첫 장면에 나온 문장은 무엇인가요?",
+        [
+          "Mina saw the moon.",
+          "Jiwoo put a stone beside the plant.",
+          "Jiwoo and Mina saw a plant."
+        ],
+        2
+      ],
+      [
+        "이야기 중간에 있었던 일은 무엇인가요?",
+        [
+          "They came home.",
+          "Jiwoo put a stone beside the plant.",
+          "Jiwoo and Mina saw a plant."
+        ],
+        1
+      ],
+      [
+        "이야기가 끝나는 문장은 무엇인가요?",
+        [
+          "They came home.",
+          "Mina saw the moon.",
+          "Jiwoo put a stone beside the plant."
+        ],
+        0
+      ]
+    ],
+    "ws": [
+      [
+        "나는 책을 받지 않았어.",
+        "I didn't take a book."
+      ],
+      [
+        "나는 택시를 타지 않았어.",
+        "I didn't take a taxi."
+      ],
+      [
+        "나는 사진을 찍지 않았어.",
+        "I didn't take a photo."
+      ],
+      [
+        "나는 여행을 가지 않았어.",
+        "I didn't take a trip."
+      ],
+      [
+        "나는 수업을 받지 않았어.",
+        "I didn't take a lesson."
+      ]
+    ],
+    "verbs": [
+      [
+        "lead",
+        "led",
+        "led",
+        "이끌다 / 안내하다",
+        ""
+      ],
+      [
+        "mean",
+        "meant",
+        "meant",
+        "의미하다 / 뜻하다",
+        ""
+      ],
+      [
+        "put",
+        "put",
+        "put",
+        "놓다 / 두다",
+        ""
+      ],
+      [
+        "show",
+        "showed",
+        "shown",
+        "보여주다 / 나타나다",
+        ""
+      ],
+      [
+        "돈) · spend",
+        "spent",
+        "spent",
+        "쓰다 / 보내다(시간",
+        ""
+      ]
+    ],
+    "vocab": [
+      [
+        "sand",
+        "모래"
+      ],
+      [
+        "ugly",
+        "못생긴"
+      ],
+      [
+        "plant",
+        "식물"
+      ],
+      [
+        "moon",
+        "달"
+      ],
+      [
+        "stone",
+        "돌"
+      ]
+    ],
+    "metadata": {
+      "day": 16,
+      "story_title": "The Plant and the Moon",
+      "edition": "3개 사용자 ZIP 기반 자료 정합 버전 v2",
+      "source_status": "영작 5개: 원문 일빵빵 그대로 / 새 표현 5개: 원문 단어 앱 그대로 / 문법 참고: 문법 앱 해당 강",
+      "grammar_lesson_title": "처음에는 a, 다시 말하면 the",
+      "ilbbang_line_indices": [
+        1,
+        2,
+        4,
+        8,
+        9
+      ],
+      "vocab_indices": [
+        1,
+        2,
+        4,
+        13,
+        20
+      ],
+      "story_mode": "원문 회화 5문장 + 연결 서술 4문장",
+      "qa_status": "영어 연결 서술/번역 교육적 검수 전, 원문 보존 및 허용 어휘 검사"
+    }
+  },
+  {
+    "story": [
+      [
+        "Jiwoo had a sketch.",
+        "지우는 스케치를 가지고 있었어요."
+      ],
+      [
+        "Mina saw a bright color.",
+        "미나는 밝은 색을 보았어요."
+      ],
+      [
+        "Jiwoo said, \"Did you get a book?\"",
+        "지우가 말했어요. “너는 책을 받았니?”"
+      ],
+      [
+        "Mina said, \"Did you get a call?\"",
+        "미나가 말했어요. “너는 전화를 받았니?”"
+      ],
+      [
+        "Jiwoo said, \"This is my picture.\"",
+        "지우가 말했어요. “이건 내 그림이야.”"
+      ],
+      [
+        "Jiwoo said, \"Did you get a ticket?\"",
+        "지우가 말했어요. “너는 표 샀니?”"
+      ],
+      [
+        "Mina said, \"Did you get ready?\"",
+        "미나가 말했어요. “너는 준비를 했니?”"
+      ],
+      [
+        "Jiwoo said, \"Did you take a photo?\"",
+        "지우가 말했어요. “너는 사진을 찍었니?”"
+      ],
+      [
+        "They went to the gallery.",
+        "둘은 미술관으로 갔어요."
+      ]
+    ],
+    "qs": [
+      [
+        "이야기의 첫 장면에 나온 문장은 무엇인가요?",
+        [
+          "Jiwoo said, \"This is my picture.\"",
+          "Jiwoo had a sketch.",
+          "Mina saw a bright color."
+        ],
+        1
+      ],
+      [
+        "이야기 중간에 있었던 일은 무엇인가요?",
+        [
+          "Jiwoo said, \"This is my picture.\"",
+          "Jiwoo had a sketch.",
+          "They went to the gallery."
+        ],
+        0
+      ],
+      [
+        "이야기가 끝나는 문장은 무엇인가요?",
+        [
+          "Mina saw a bright color.",
+          "Jiwoo said, \"This is my picture.\"",
+          "They went to the gallery."
+        ],
+        2
+      ]
+    ],
+    "ws": [
+      [
+        "너는 책을 받았니?",
+        "Did you get a book?"
+      ],
+      [
+        "너는 전화를 받았니?",
+        "Did you get a call?"
+      ],
+      [
+        "너는 표 샀니?",
+        "Did you get a ticket?"
+      ],
+      [
+        "너는 준비를 했니?",
+        "Did you get ready?"
+      ],
+      [
+        "너는 사진을 찍었니?",
+        "Did you take a photo?"
+      ]
+    ],
+    "verbs": [
+      [
+        "show",
+        "showed",
+        "shown",
+        "보여주다 / 나타나다",
+        ""
+      ],
+      [
+        "돈) · spend",
+        "spent",
+        "spent",
+        "쓰다 / 보내다(시간",
+        ""
+      ],
+      [
+        "become",
+        "became",
+        "become",
+        "되다",
+        ""
+      ],
+      [
+        "fly",
+        "flew",
+        "flown",
+        "날다 / 비행기로 가다",
+        ""
+      ],
+      [
+        "hide",
+        "hid",
+        "hidden",
+        "숨기다 / 숨다",
+        ""
+      ]
+    ],
+    "vocab": [
+      [
+        "art",
+        "미술, 미술품"
+      ],
+      [
+        "color",
+        "색칠하다"
+      ],
+      [
+        "gallery",
+        "미술관, 화랑, 갤러리"
+      ],
+      [
+        "sketch",
+        "스케치하다"
+      ],
+      [
+        "bright",
+        "밝은"
+      ]
+    ],
+    "metadata": {
+      "day": 17,
+      "story_title": "The Art Gallery",
+      "edition": "3개 사용자 ZIP 기반 자료 정합 버전 v2",
+      "source_status": "영작 5개: 원문 일빵빵 그대로 / 새 표현 5개: 원문 단어 앱 그대로 / 문법 참고: 문법 앱 해당 강",
+      "grammar_lesson_title": "이것과 저것을 가리켜 보자",
+      "ilbbang_line_indices": [
+        1,
+        2,
+        5,
+        8,
+        14
+      ],
+      "vocab_indices": [
+        1,
+        2,
+        7,
+        12,
+        14
+      ],
+      "story_mode": "원문 회화 5문장 + 연결 서술 4문장",
+      "qa_status": "영어 연결 서술/번역 교육적 검수 전, 원문 보존 및 허용 어휘 검사"
+    }
+  },
+  {
+    "story": [
+      [
+        "Mina had a ticket for the theater.",
+        "미나는 극장 표를 가지고 있었어요."
+      ],
+      [
+        "Jiwoo and Mina went to the station.",
+        "지우와 미나는 역에 갔어요."
+      ],
+      [
+        "Jiwoo said, \"Did you go to school?\"",
+        "지우가 말했어요. “너는 학교를 등교했니?”"
+      ],
+      [
+        "Mina said, \"Didn't you go to school?\"",
+        "미나가 말했어요. “너는 학교를 등교하지 않았니?”"
+      ],
+      [
+        "Mina put the ticket in a bag.",
+        "미나는 표를 가방에 넣었어요."
+      ],
+      [
+        "Jiwoo said, \"Did you go to the movies?\"",
+        "지우가 말했어요. “너는 영화를 보러 갔니?”"
+      ],
+      [
+        "Mina said, \"Didn't you go to the movies?\"",
+        "미나가 말했어요. “너는 영화를 보러 가지 않았니?”"
+      ],
+      [
+        "Jiwoo said, \"Did you go fishing?\"",
+        "지우가 말했어요. “너는 낚시하러 갔었니?”"
+      ],
+      [
+        "They met a classmate.",
+        "둘은 같은 반 친구를 만났어요."
+      ]
+    ],
+    "qs": [
+      [
+        "이야기의 첫 장면에 나온 문장은 무엇인가요?",
+        [
+          "Mina had a ticket for the theater.",
+          "Jiwoo and Mina went to the station.",
+          "Mina put the ticket in a bag."
+        ],
+        0
+      ],
+      [
+        "이야기 중간에 있었던 일은 무엇인가요?",
+        [
+          "Mina had a ticket for the theater.",
+          "They met a classmate.",
+          "Mina put the ticket in a bag."
+        ],
+        2
+      ],
+      [
+        "이야기가 끝나는 문장은 무엇인가요?",
+        [
+          "Mina put the ticket in a bag.",
+          "They met a classmate.",
+          "Jiwoo and Mina went to the station."
+        ],
+        1
+      ]
+    ],
+    "ws": [
+      [
+        "너는 학교를 등교했니?",
+        "Did you go to school?"
+      ],
+      [
+        "너는 학교를 등교하지 않았니?",
+        "Didn't you go to school?"
+      ],
+      [
+        "너는 영화를 보러 갔니?",
+        "Did you go to the movies?"
+      ],
+      [
+        "너는 영화를 보러 가지 않았니?",
+        "Didn't you go to the movies?"
+      ],
+      [
+        "너는 낚시하러 갔었니?",
+        "Did you go fishing?"
+      ]
+    ],
+    "verbs": [
+      [
+        "fly",
+        "flew",
+        "flown",
+        "날다 / 비행기로 가다",
+        ""
+      ],
+      [
+        "hide",
+        "hid",
+        "hidden",
+        "숨기다 / 숨다",
+        ""
+      ],
+      [
+        "hit",
+        "hit",
+        "hit",
+        "치다 / 부딪히다",
+        ""
+      ],
+      [
+        "hurt",
+        "hurt",
+        "hurt",
+        "다치게 하다 / 아프다",
+        ""
+      ],
+      [
+        "let",
+        "let",
+        "let",
+        "하게 하다 / 허락하다",
+        ""
+      ]
+    ],
+    "vocab": [
+      [
+        "build",
+        "짓다"
+      ],
+      [
+        "inside",
+        "~의 안에"
+      ],
+      [
+        "ticket",
+        "표"
+      ],
+      [
+        "station",
+        "역"
+      ],
+      [
+        "theater",
+        "극장"
+      ]
+    ],
+    "metadata": {
+      "day": 18,
+      "story_title": "The Ticket for the Theater",
+      "edition": "3개 사용자 ZIP 기반 자료 정합 버전 v2",
+      "source_status": "영작 5개: 원문 일빵빵 그대로 / 새 표현 5개: 원문 단어 앱 그대로 / 문법 참고: 문법 앱 해당 강",
+      "grammar_lesson_title": "누구의 물건인지 말해 보자",
+      "ilbbang_line_indices": [
+        1,
+        2,
+        5,
+        6,
+        15
+      ],
+      "vocab_indices": [
+        1,
+        2,
+        5,
+        16,
+        18
+      ],
+      "story_mode": "원문 회화 5문장 + 연결 서술 4문장",
+      "qa_status": "영어 연결 서술/번역 교육적 검수 전, 원문 보존 및 허용 어휘 검사"
+    }
+  },
+  {
+    "story": [
+      [
+        "Jiwoo got a gift after class.",
+        "지우는 수업 후 선물을 받았어요."
+      ],
+      [
+        "Mina saw Jiwoo's sad face.",
+        "미나는 지우의 슬픈 얼굴을 보았어요."
+      ],
+      [
+        "Jiwoo said, \"I could go yesterday.\"",
+        "지우가 말했어요. “나는 어제는 갈 수 있었어.”"
+      ],
+      [
+        "Mina said, \"I could come tomorrow.\"",
+        "미나가 말했어요. “나는 내일은 올 수도 있어.”"
+      ],
+      [
+        "Mina gave Jiwoo a note.",
+        "미나는 지우에게 쪽지를 주었어요."
+      ],
+      [
+        "Jiwoo said, \"I could walk then.\"",
+        "지우가 말했어요. “나는 그때는 걸을 수 있었어.”"
+      ],
+      [
+        "Mina said, \"I could run soon.\"",
+        "미나가 말했어요. “나는 곧 뛸 수도 있어.”"
+      ],
+      [
+        "Jiwoo said, \"I could wait three days later.\"",
+        "지우가 말했어요. “나는 사흘 후에는 기다릴 수도 있어.”"
+      ],
+      [
+        "Jiwoo smiled.",
+        "지우는 미소 지었어요."
+      ]
+    ],
+    "qs": [
+      [
+        "이야기의 첫 장면에 나온 문장은 무엇인가요?",
+        [
+          "Mina saw Jiwoo's sad face.",
+          "Mina gave Jiwoo a note.",
+          "Jiwoo got a gift after class."
+        ],
+        2
+      ],
+      [
+        "이야기 중간에 있었던 일은 무엇인가요?",
+        [
+          "Jiwoo smiled.",
+          "Mina gave Jiwoo a note.",
+          "Jiwoo got a gift after class."
+        ],
+        1
+      ],
+      [
+        "이야기가 끝나는 문장은 무엇인가요?",
+        [
+          "Jiwoo smiled.",
+          "Mina saw Jiwoo's sad face.",
+          "Mina gave Jiwoo a note."
+        ],
+        0
+      ]
+    ],
+    "ws": [
+      [
+        "나는 어제는 갈 수 있었어.",
+        "I could go yesterday."
+      ],
+      [
+        "나는 내일은 올 수도 있어.",
+        "I could come tomorrow."
+      ],
+      [
+        "나는 그때는 걸을 수 있었어.",
+        "I could walk then."
+      ],
+      [
+        "나는 곧 뛸 수도 있어.",
+        "I could run soon."
+      ],
+      [
+        "나는 사흘 후에는 기다릴 수도 있어.",
+        "I could wait three days later."
+      ]
+    ],
+    "verbs": [
+      [
+        "hurt",
+        "hurt",
+        "hurt",
+        "다치게 하다 / 아프다",
+        ""
+      ],
+      [
+        "let",
+        "let",
+        "let",
+        "하게 하다 / 허락하다",
+        ""
+      ],
+      [
+        "lie",
+        "lay",
+        "lain",
+        "눕다 / 놓여 있다",
+        ""
+      ],
+      [
+        "set",
+        "set",
+        "set",
+        "놓다 / 설정하다 / 지다",
+        ""
+      ],
+      [
+        "sing",
+        "sang",
+        "sung",
+        "노래하다",
+        ""
+      ]
+    ],
+    "vocab": [
+      [
+        "want",
+        "원하다"
+      ],
+      [
+        "sick",
+        "아픈"
+      ],
+      [
+        "fine",
+        "좋은, 괜찮은"
+      ],
+      [
+        "sad",
+        "슬픈"
+      ],
+      [
+        "gift",
+        "선물"
+      ]
+    ],
+    "metadata": {
+      "day": 19,
+      "story_title": "A Gift and a Smile",
+      "edition": "3개 사용자 ZIP 기반 자료 정합 버전 v2",
+      "source_status": "영작 5개: 원문 일빵빵 그대로 / 새 표현 5개: 원문 단어 앱 그대로 / 문법 참고: 문법 앱 해당 강",
+      "grammar_lesson_title": "Tom의 가방과 내 가방",
+      "ilbbang_line_indices": [
+        1,
+        4,
+        5,
+        8,
+        16
+      ],
+      "vocab_indices": [
+        1,
+        2,
+        3,
+        6,
+        8
+      ],
+      "story_mode": "원문 회화 5문장 + 연결 서술 4문장",
+      "qa_status": "영어 연결 서술/번역 교육적 검수 전, 원문 보존 및 허용 어휘 검사"
+    }
+  },
+  {
+    "story": [
+      [
+        "Mina had a baseball game.",
+        "미나는 야구 경기가 있었어요."
+      ],
+      [
+        "Jiwoo saw the game.",
+        "지우는 경기를 보았어요."
+      ],
+      [
+        "Jiwoo said, \"I couldn't wash my face yesterday.\"",
+        "지우가 말했어요. “나는 어제는 세수할 수 없었어.”"
+      ],
+      [
+        "Mina said, \"I couldn't eat breakfast then.\"",
+        "미나가 말했어요. “나는 그때는 아침 먹을 수 없었어.”"
+      ],
+      [
+        "Mina took the bat.",
+        "미나는 방망이를 집어 들었어요."
+      ],
+      [
+        "Jiwoo said, \"I couldn't read the book before.\"",
+        "지우가 말했어요. “나는 전에는 책을 읽을 수 없었어.”"
+      ],
+      [
+        "Mina said, \"I couldn't study English ten days ago.\"",
+        "미나가 말했어요. “나는 10일 전에는 영어 공부할 수 없었어.”"
+      ],
+      [
+        "Jiwoo said, \"I couldn't play tennis ten weeks ago.\"",
+        "지우가 말했어요. “나는 10주 전에는 테니스 칠 수 없었어.”"
+      ],
+      [
+        "They went home together.",
+        "둘은 함께 집으로 갔어요."
+      ]
+    ],
+    "qs": [
+      [
+        "이야기의 첫 장면에 나온 문장은 무엇인가요?",
+        [
+          "Mina took the bat.",
+          "Mina had a baseball game.",
+          "Jiwoo saw the game."
+        ],
+        1
+      ],
+      [
+        "이야기 중간에 있었던 일은 무엇인가요?",
+        [
+          "Mina took the bat.",
+          "Mina had a baseball game.",
+          "They went home together."
+        ],
+        0
+      ],
+      [
+        "이야기가 끝나는 문장은 무엇인가요?",
+        [
+          "Jiwoo saw the game.",
+          "Mina took the bat.",
+          "They went home together."
+        ],
+        2
+      ]
+    ],
+    "ws": [
+      [
+        "나는 어제는 세수할 수 없었어.",
+        "I couldn't wash my face yesterday."
+      ],
+      [
+        "나는 그때는 아침 먹을 수 없었어.",
+        "I couldn't eat breakfast then."
+      ],
+      [
+        "나는 전에는 책을 읽을 수 없었어.",
+        "I couldn't read the book before."
+      ],
+      [
+        "나는 10일 전에는 영어 공부할 수 없었어.",
+        "I couldn't study English ten days ago."
+      ],
+      [
+        "나는 10주 전에는 테니스 칠 수 없었어.",
+        "I couldn't play tennis ten weeks ago."
+      ]
+    ],
+    "verbs": [
+      [
+        "set",
+        "set",
+        "set",
+        "놓다 / 설정하다 / 지다",
+        ""
+      ],
+      [
+        "sing",
+        "sang",
+        "sung",
+        "노래하다",
+        ""
+      ],
+      [
+        "teach",
+        "taught",
+        "taught",
+        "가르치다",
+        ""
+      ],
+      [
+        "ring",
+        "rang",
+        "rung",
+        "울리다 / 전화하다",
+        ""
+      ],
+      [
+        "rise",
+        "rose",
+        "risen",
+        "오르다 / 떠오르다",
+        ""
+      ]
+    ],
+    "vocab": [
+      [
+        "game",
+        "게임, 경기"
+      ],
+      [
+        "win",
+        "이기다"
+      ],
+      [
+        "tennis",
+        "테니스"
+      ],
+      [
+        "bat",
+        "방망이"
+      ],
+      [
+        "baseball",
+        "야구"
+      ]
+    ],
+    "metadata": {
+      "day": 20,
+      "story_title": "The Baseball Game",
+      "edition": "3개 사용자 ZIP 기반 자료 정합 버전 v2",
+      "source_status": "영작 5개: 원문 일빵빵 그대로 / 새 표현 5개: 원문 단어 앱 그대로 / 문법 참고: 문법 앱 해당 강",
+      "grammar_lesson_title": "내가 하는 일, 나에게 일어나는 일",
+      "ilbbang_line_indices": [
+        2,
+        6,
+        12,
+        16,
+        20
+      ],
+      "vocab_indices": [
+        1,
+        2,
+        5,
+        10,
+        18
+      ],
+      "story_mode": "원문 회화 5문장 + 연결 서술 4문장",
+      "qa_status": "영어 연결 서술/번역 교육적 검수 전, 원문 보존 및 허용 어휘 검사"
+    }
+  },
+  {
+    "story": [
+      [
+        "Jiwoo had a robot.",
+        "지우는 로봇을 가지고 있었어요."
+      ],
+      [
+        "Mina showed Jiwoo a computer.",
+        "미나는 지우에게 컴퓨터를 보여주었어요."
+      ],
+      [
+        "Jiwoo said, \"Could you wash my car?\"",
+        "지우가 말했어요. “제 차 세차해 주시겠어요?”"
+      ],
+      [
+        "Mina said, \"Could you make tea?\"",
+        "미나가 말했어요. “(마시는) 차 타 주시겠어요?”"
+      ],
+      [
+        "The robot is new.",
+        "그 로봇은 새것이었어요."
+      ],
+      [
+        "Jiwoo said, \"Could you clean the bedroom?\"",
+        "지우가 말했어요. “침실을 청소해 주시겠어요?”"
+      ],
+      [
+        "Mina said, \"Could you write address?\"",
+        "미나가 말했어요. “주소 써 주시겠어요?”"
+      ],
+      [
+        "Jiwoo said, \"Could you come today?\"",
+        "지우가 말했어요. “오늘 와 주시겠어요?”"
+      ],
+      [
+        "Jiwoo showed Mina the robot.",
+        "지우는 미나에게 로봇을 보여주었어요."
+      ]
+    ],
+    "qs": [
+      [
+        "이야기의 첫 장면에 나온 문장은 무엇인가요?",
+        [
+          "Jiwoo had a robot.",
+          "Mina showed Jiwoo a computer.",
+          "The robot is new."
+        ],
+        0
+      ],
+      [
+        "이야기 중간에 있었던 일은 무엇인가요?",
+        [
+          "Jiwoo had a robot.",
+          "Jiwoo showed Mina the robot.",
+          "The robot is new."
+        ],
+        2
+      ],
+      [
+        "이야기가 끝나는 문장은 무엇인가요?",
+        [
+          "The robot is new.",
+          "Jiwoo showed Mina the robot.",
+          "Mina showed Jiwoo a computer."
+        ],
+        1
+      ]
+    ],
+    "ws": [
+      [
+        "제 차 세차해 주시겠어요?",
+        "Could you wash my car?"
+      ],
+      [
+        "(마시는) 차 타 주시겠어요?",
+        "Could you make tea?"
+      ],
+      [
+        "침실을 청소해 주시겠어요?",
+        "Could you clean the bedroom?"
+      ],
+      [
+        "주소 써 주시겠어요?",
+        "Could you write address?"
+      ],
+      [
+        "오늘 와 주시겠어요?",
+        "Could you come today?"
+      ]
+    ],
+    "verbs": [
+      [
+        "ring",
+        "rang",
+        "rung",
+        "울리다 / 전화하다",
+        ""
+      ],
+      [
+        "rise",
+        "rose",
+        "risen",
+        "오르다 / 떠오르다",
+        ""
+      ],
+      [
+        "shine",
+        "shone",
+        "shone",
+        "빛나다 / 비추다",
+        ""
+      ],
+      [
+        "shoot",
+        "shot",
+        "shot",
+        "쏘다 / 촬영하다",
+        ""
+      ],
+      [
+        "shut",
+        "shut",
+        "shut",
+        "닫다 / 닫히다",
+        ""
+      ]
+    ],
+    "vocab": [
+      [
+        "robot",
+        "로봇"
+      ],
+      [
+        "human",
+        "인간"
+      ],
+      [
+        "perfect",
+        "완벽한"
+      ],
+      [
+        "computer",
+        "컴퓨터"
+      ],
+      [
+        "fix",
+        "고치다"
+      ]
+    ],
+    "metadata": {
+      "day": 21,
+      "story_title": "The Robot and the Computer",
+      "edition": "3개 사용자 ZIP 기반 자료 정합 버전 v2",
+      "source_status": "영작 5개: 원문 일빵빵 그대로 / 새 표현 5개: 원문 단어 앱 그대로 / 문법 참고: 문법 앱 해당 강",
+      "grammar_lesson_title": "be동사로 나를 소개해 보자",
+      "ilbbang_line_indices": [
+        2,
+        4,
+        6,
+        10,
+        12
+      ],
+      "vocab_indices": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "story_mode": "원문 회화 5문장 + 연결 서술 4문장",
+      "qa_status": "영어 연결 서술/번역 교육적 검수 전, 원문 보존 및 허용 어휘 검사"
+    }
+  },
+  {
+    "story": [
+      [
+        "Mina and Jiwoo get together at the store.",
+        "미나와 지우는 가게에서 모여요."
+      ],
+      [
+        "Mina got a book.",
+        "미나는 책을 받았어요."
+      ],
+      [
+        "Jiwoo said, \"I would go every night.\"",
+        "지우가 말했어요. “나는 매일 밤 가곤 했었어.”"
+      ],
+      [
+        "Mina said, \"I would walk every day.\"",
+        "미나가 말했어요. “나는 매일 걷곤 했었어.”"
+      ],
+      [
+        "Jiwoo got a ticket.",
+        "지우는 표를 받았어요."
+      ],
+      [
+        "Jiwoo said, \"I would run every day.\"",
+        "지우가 말했어요. “나는 매일 뛰곤 했었어.”"
+      ],
+      [
+        "Mina said, \"I would work next week.\"",
+        "미나가 말했어요. “나는 다음 주에는 (아마) 일할 거야.”"
+      ],
+      [
+        "Jiwoo said, \"I would sleep next week.\"",
+        "지우가 말했어요. “나는 다음 주에는 (아마) 잘 거야.”"
+      ],
+      [
+        "They went home together.",
+        "둘은 함께 집으로 갔어요."
+      ]
+    ],
+    "qs": [
+      [
+        "이야기의 첫 장면에 나온 문장은 무엇인가요?",
+        [
+          "Mina got a book.",
+          "Jiwoo got a ticket.",
+          "Mina and Jiwoo get together at the store."
+        ],
+        2
+      ],
+      [
+        "이야기 중간에 있었던 일은 무엇인가요?",
+        [
+          "They went home together.",
+          "Jiwoo got a ticket.",
+          "Mina and Jiwoo get together at the store."
+        ],
+        1
+      ],
+      [
+        "이야기가 끝나는 문장은 무엇인가요?",
+        [
+          "They went home together.",
+          "Mina got a book.",
+          "Jiwoo got a ticket."
+        ],
+        0
+      ]
+    ],
+    "ws": [
+      [
+        "나는 매일 밤 가곤 했었어.",
+        "I would go every night."
+      ],
+      [
+        "나는 매일 걷곤 했었어.",
+        "I would walk every day."
+      ],
+      [
+        "나는 매일 뛰곤 했었어.",
+        "I would run every day."
+      ],
+      [
+        "나는 다음 주에는 (아마) 일할 거야.",
+        "I would work next week."
+      ],
+      [
+        "나는 다음 주에는 (아마) 잘 거야.",
+        "I would sleep next week."
+      ]
+    ],
+    "verbs": [
+      [
+        "shoot",
+        "shot",
+        "shot",
+        "쏘다 / 촬영하다",
+        ""
+      ],
+      [
+        "shut",
+        "shut",
+        "shut",
+        "닫다 / 닫히다",
+        ""
+      ],
+      [
+        "sink",
+        "sank",
+        "sunk",
+        "가라앉다 / 침몰하다",
+        ""
+      ],
+      [
+        "slide",
+        "slid",
+        "slid",
+        "미끄러지다 / 미끄러뜨리다",
+        ""
+      ],
+      [
+        "smell",
+        "smelt",
+        "smelt",
+        "냄새가 나다 / 냄새를 맡다",
+        ""
+      ]
+    ],
+    "vocab": [
+      [
+        "get over",
+        "~을 극복하다/이겨내다"
+      ],
+      [
+        "get along with",
+        "~와 잘 지내다"
+      ],
+      [
+        "get away",
+        "휴가를 가다, 떠나다"
+      ],
+      [
+        "get off work",
+        "일을 끝내다, 퇴근하다"
+      ],
+      [
+        "get together",
+        "함께 만나다, 모이다"
+      ]
+    ],
+    "metadata": {
+      "day": 22,
+      "story_title": "The Book and the Ticket",
+      "edition": "3개 사용자 ZIP 기반 자료 정합 버전 v2",
+      "source_status": "영작 5개: 원문 일빵빵 그대로 / 새 표현 5개: 원문 단어 앱 그대로 / 문법 참고: 문법 앱 해당 강",
+      "grammar_lesson_title": "이름 뒤의 be동사와 줄여 쓰기",
+      "ilbbang_line_indices": [
+        1,
+        5,
+        7,
+        18,
+        20
+      ],
+      "vocab_indices": [
+        1,
+        2,
+        3,
+        7,
+        18
+      ],
+      "story_mode": "원문 회화 5문장 + 연결 서술 4문장",
+      "qa_status": "영어 연결 서술/번역 교육적 검수 전, 원문 보존 및 허용 어휘 검사"
+    }
+  },
+  {
+    "story": [
+      [
+        "Jiwoo and Mina went out.",
+        "지우와 미나는 밖으로 나갔어요."
+      ],
+      [
+        "Mina saw the book on the desk.",
+        "미나는 책상 위의 책을 보았어요."
+      ],
+      [
+        "Jiwoo said, \"I won't open the door.\"",
+        "지우가 말했어요. “나는 문을 열지 않을 거야.”"
+      ],
+      [
+        "Mina said, \"I wouldn't open the door.\"",
+        "미나가 말했어요. “나는 (앞으로) 그 문을 열지 않을 거야.”"
+      ],
+      [
+        "Jiwoo put the book in the bag.",
+        "지우는 책을 가방에 넣었어요."
+      ],
+      [
+        "Jiwoo said, \"I won't buy the ticket.\"",
+        "지우가 말했어요. “나는 그 티켓을 사지 않을 거야.”"
+      ],
+      [
+        "Mina said, \"I wouldn't have a party.\"",
+        "미나가 말했어요. “나는 (앞으로) 파티를 가지지 않을 거야. (열지 않을 거야)”"
+      ],
+      [
+        "Jiwoo said, \"I won't learn the language.\"",
+        "지우가 말했어요. “나는 그 언어를 배우지 않을 거야.”"
+      ],
+      [
+        "Mina went to the library.",
+        "미나는 도서관에 갔어요."
+      ]
+    ],
+    "qs": [
+      [
+        "이야기의 첫 장면에 나온 문장은 무엇인가요?",
+        [
+          "Jiwoo put the book in the bag.",
+          "Jiwoo and Mina went out.",
+          "Mina saw the book on the desk."
+        ],
+        1
+      ],
+      [
+        "이야기 중간에 있었던 일은 무엇인가요?",
+        [
+          "Jiwoo put the book in the bag.",
+          "Jiwoo and Mina went out.",
+          "Mina went to the library."
+        ],
+        0
+      ],
+      [
+        "이야기가 끝나는 문장은 무엇인가요?",
+        [
+          "Mina saw the book on the desk.",
+          "Jiwoo put the book in the bag.",
+          "Mina went to the library."
+        ],
+        2
+      ]
+    ],
+    "ws": [
+      [
+        "나는 문을 열지 않을 거야.",
+        "I won't open the door."
+      ],
+      [
+        "나는 (앞으로) 그 문을 열지 않을 거야.",
+        "I wouldn't open the door."
+      ],
+      [
+        "나는 그 티켓을 사지 않을 거야.",
+        "I won't buy the ticket."
+      ],
+      [
+        "나는 (앞으로) 파티를 가지지 않을 거야. (열지 않을 거야)",
+        "I wouldn't have a party."
+      ],
+      [
+        "나는 그 언어를 배우지 않을 거야.",
+        "I won't learn the language."
+      ]
+    ],
+    "verbs": [
+      [
+        "slide",
+        "slid",
+        "slid",
+        "미끄러지다 / 미끄러뜨리다",
+        ""
+      ],
+      [
+        "smell",
+        "smelt",
+        "smelt",
+        "냄새가 나다 / 냄새를 맡다",
+        ""
+      ],
+      [
+        "spread",
+        "spread",
+        "spread",
+        "펼치다 / 퍼지다",
+        ""
+      ],
+      [
+        "steal",
+        "stole",
+        "stolen",
+        "훔치다",
+        ""
+      ],
+      [
+        "stick",
+        "stuck",
+        "stuck",
+        "붙이다 / 찌르다 / 꼼짝 못 하다",
+        ""
+      ]
+    ],
+    "vocab": [
+      [
+        "call out",
+        "큰 소리로 부르다"
+      ],
+      [
+        "call in sick",
+        "병가를 내다"
+      ],
+      [
+        "go on",
+        "계속하다, 시작되다"
+      ],
+      [
+        "go on",
+        "(일이) 일어나다"
+      ],
+      [
+        "go out",
+        "외출하다, 나가다"
+      ]
+    ],
+    "metadata": {
+      "day": 23,
+      "story_title": "The Book in the Bag",
+      "edition": "3개 사용자 ZIP 기반 자료 정합 버전 v2",
+      "source_status": "영작 5개: 원문 일빵빵 그대로 / 새 표현 5개: 원문 단어 앱 그대로 / 문법 참고: 문법 앱 해당 강",
+      "grammar_lesson_title": "아니라고 말하고 싶을 때",
+      "ilbbang_line_indices": [
+        1,
+        2,
+        5,
+        8,
+        19
+      ],
+      "vocab_indices": [
+        2,
+        3,
+        10,
+        11,
+        14
+      ],
+      "story_mode": "원문 회화 5문장 + 연결 서술 4문장",
+      "qa_status": "영어 연결 서술/번역 교육적 검수 전, 원문 보존 및 허용 어휘 검사"
+    }
+  },
+  {
+    "story": [
+      [
+        "Mina looked for a flower.",
+        "미나는 꽃을 찾았어요."
+      ],
+      [
+        "Jiwoo saw a gift in the bag.",
+        "지우는 가방에서 선물을 보았어요."
+      ],
+      [
+        "Jiwoo said, \"Would you help the man?\"",
+        "지우가 말했어요. “그 남자를 도와주시겠어요?”"
+      ],
+      [
+        "Mina said, \"Would you sing a song?\"",
+        "미나가 말했어요. “노래를 불러 주시겠어요?”"
+      ],
+      [
+        "Mina put the gift on the desk.",
+        "미나는 선물을 책상 위에 놓았어요."
+      ],
+      [
+        "Jiwoo said, \"Would you move the desk?\"",
+        "지우가 말했어요. “그 책상을 옮겨 주시겠어요?”"
+      ],
+      [
+        "Mina said, \"Would you give the flower?\"",
+        "미나가 말했어요. “그 꽃을 주시겠어요?”"
+      ],
+      [
+        "Jiwoo said, \"Would you put the bag?\"",
+        "지우가 말했어요. “그 가방을 놓으시겠어요?”"
+      ],
+      [
+        "Jiwoo gave Mina a card.",
+        "지우는 미나에게 카드를 주었어요."
+      ]
+    ],
+    "qs": [
+      [
+        "이야기의 첫 장면에 나온 문장은 무엇인가요?",
+        [
+          "Mina looked for a flower.",
+          "Jiwoo saw a gift in the bag.",
+          "Mina put the gift on the desk."
+        ],
+        0
+      ],
+      [
+        "이야기 중간에 있었던 일은 무엇인가요?",
+        [
+          "Mina looked for a flower.",
+          "Jiwoo gave Mina a card.",
+          "Mina put the gift on the desk."
+        ],
+        2
+      ],
+      [
+        "이야기가 끝나는 문장은 무엇인가요?",
+        [
+          "Mina put the gift on the desk.",
+          "Jiwoo gave Mina a card.",
+          "Jiwoo saw a gift in the bag."
+        ],
+        1
+      ]
+    ],
+    "ws": [
+      [
+        "그 남자를 도와주시겠어요?",
+        "Would you help the man?"
+      ],
+      [
+        "노래를 불러 주시겠어요?",
+        "Would you sing a song?"
+      ],
+      [
+        "그 책상을 옮겨 주시겠어요?",
+        "Would you move the desk?"
+      ],
+      [
+        "그 꽃을 주시겠어요?",
+        "Would you give the flower?"
+      ],
+      [
+        "그 가방을 놓으시겠어요?",
+        "Would you put the bag?"
+      ]
+    ],
+    "verbs": [
+      [
+        "steal",
+        "stole",
+        "stolen",
+        "훔치다",
+        ""
+      ],
+      [
+        "stick",
+        "stuck",
+        "stuck",
+        "붙이다 / 찌르다 / 꼼짝 못 하다",
+        ""
+      ],
+      [
+        "strike",
+        "struck",
+        "struck",
+        "치다 / 파업하다 / 떠오르다",
+        ""
+      ],
+      [
+        "sweep",
+        "swept",
+        "swept",
+        "쓸다 / 휩쓸다",
+        ""
+      ],
+      [
+        "swim",
+        "swam",
+        "swum",
+        "수영하다",
+        ""
+      ]
+    ],
+    "vocab": [
+      [
+        "look for",
+        "~을 찾다"
+      ],
+      [
+        "look over",
+        "간단히 훑어보다, 대강 살펴보다"
+      ],
+      [
+        "look back on something",
+        "(과거를) 되돌아보다, 회상하다"
+      ],
+      [
+        "make up for",
+        "만회하다, 보상하다"
+      ],
+      [
+        "take on",
+        "(일, 책임 등을) 맡다, 떠맡다"
+      ]
+    ],
+    "metadata": {
+      "day": 24,
+      "story_title": "The Flower and the Gift",
+      "edition": "3개 사용자 ZIP 기반 자료 정합 버전 v2",
+      "source_status": "영작 5개: 원문 일빵빵 그대로 / 새 표현 5개: 원문 단어 앱 그대로 / 문법 참고: 문법 앱 해당 강",
+      "grammar_lesson_title": "아니라고 말하고, 질문도 해 보자",
+      "ilbbang_line_indices": [
+        4,
+        6,
+        14,
+        18,
+        20
+      ],
+      "vocab_indices": [
+        1,
+        2,
+        3,
+        13,
+        15
+      ],
+      "story_mode": "원문 회화 5문장 + 연결 서술 4문장",
+      "qa_status": "영어 연결 서술/번역 교육적 검수 전, 원문 보존 및 허용 어휘 검사"
+    }
+  },
+  {
+    "story": [
+      [
+        "Mina saw a doctor at school.",
+        "미나는 학교에서 의사를 보았어요."
+      ],
+      [
+        "Jiwoo had a small bag.",
+        "지우는 작은 가방을 가지고 있었어요."
+      ],
+      [
+        "Jiwoo said, \"You must come here.\"",
+        "지우가 말했어요. “너는 (반드시) 여기로 와야 해.”"
+      ],
+      [
+        "Mina said, \"You must have a seat.\"",
+        "미나가 말했어요. “너는 (반드시) 앉아야 해.”"
+      ],
+      [
+        "Mina opened the bag.",
+        "미나는 가방을 열었어요."
+      ],
+      [
+        "Jiwoo said, \"You must see the doctor.\"",
+        "지우가 말했어요. “너는 (반드시) 진찰받아야 해.”"
+      ],
+      [
+        "Mina said, \"You must not stop there.\"",
+        "미나가 말했어요. “너는 (반드시) 거기서 멈추면 안 돼.”"
+      ],
+      [
+        "Jiwoo said, \"You must try more.\"",
+        "지우가 말했어요. “너는 (반드시) 더 해 봐야 해.”"
+      ],
+      [
+        "Jiwoo put the book away.",
+        "지우는 책을 치웠어요."
+      ]
+    ],
+    "qs": [
+      [
+        "이야기의 첫 장면에 나온 문장은 무엇인가요?",
+        [
+          "Jiwoo had a small bag.",
+          "Mina opened the bag.",
+          "Mina saw a doctor at school."
+        ],
+        2
+      ],
+      [
+        "이야기 중간에 있었던 일은 무엇인가요?",
+        [
+          "Jiwoo put the book away.",
+          "Mina opened the bag.",
+          "Mina saw a doctor at school."
+        ],
+        1
+      ],
+      [
+        "이야기가 끝나는 문장은 무엇인가요?",
+        [
+          "Jiwoo put the book away.",
+          "Jiwoo had a small bag.",
+          "Mina opened the bag."
+        ],
+        0
+      ]
+    ],
+    "ws": [
+      [
+        "너는 (반드시) 여기로 와야 해.",
+        "You must come here."
+      ],
+      [
+        "너는 (반드시) 앉아야 해.",
+        "You must have a seat."
+      ],
+      [
+        "너는 (반드시) 진찰받아야 해.",
+        "You must see the doctor."
+      ],
+      [
+        "너는 (반드시) 거기서 멈추면 안 돼.",
+        "You must not stop there."
+      ],
+      [
+        "너는 (반드시) 더 해 봐야 해.",
+        "You must try more."
+      ]
+    ],
+    "verbs": [
+      [
+        "sweep",
+        "swept",
+        "swept",
+        "쓸다 / 휩쓸다",
+        ""
+      ],
+      [
+        "swim",
+        "swam",
+        "swum",
+        "수영하다",
+        ""
+      ],
+      [
+        "swing",
+        "swung",
+        "swung",
+        "흔들다 / 흔들리다",
+        ""
+      ],
+      [
+        "tear",
+        "tore",
+        "torn",
+        "찢다 / 찢어지다",
+        ""
+      ],
+      [
+        "throw",
+        "threw",
+        "thrown",
+        "던지다",
+        ""
+      ]
+    ],
+    "vocab": [
+      [
+        "put on",
+        "입다, 착용하다"
+      ],
+      [
+        "put off",
+        "연기하다, 미루다"
+      ],
+      [
+        "put up with",
+        "(못마땅한 것을) 견디다"
+      ],
+      [
+        "put away",
+        "치우다, 정리하다"
+      ],
+      [
+        "put down",
+        "적어 놓다, 내려놓다"
+      ]
+    ],
+    "metadata": {
+      "day": 25,
+      "story_title": "The Doctor and the Bag",
+      "edition": "3개 사용자 ZIP 기반 자료 정합 버전 v2",
+      "source_status": "영작 5개: 원문 일빵빵 그대로 / 새 표현 5개: 원문 단어 앱 그대로 / 문법 참고: 문법 앱 해당 강",
+      "grammar_lesson_title": "질문에 대답하고 문장 바꾸기",
+      "ilbbang_line_indices": [
+        3,
+        5,
+        7,
+        12,
+        19
+      ],
+      "vocab_indices": [
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "story_mode": "원문 회화 5문장 + 연결 서술 4문장",
+      "qa_status": "영어 연결 서술/번역 교육적 검수 전, 원문 보존 및 허용 어휘 검사"
+    }
+  },
+  {
+    "story": [
+      [
+        "Jiwoo had homework and a note.",
+        "지우는 숙제와 쪽지를 가지고 있었어요."
+      ],
+      [
+        "Mina saw the homework.",
+        "미나는 숙제를 보았어요."
+      ],
+      [
+        "Jiwoo said, \"You should study alone.\"",
+        "지우가 말했어요. “너는 혼자 공부해야 해.”"
+      ],
+      [
+        "Mina said, \"You shouldn't study alone.\"",
+        "미나가 말했어요. “너는 혼자 공부해서는 안 돼.”"
+      ],
+      [
+        "They read a book together.",
+        "둘은 책 한 권을 함께 읽었어요."
+      ],
+      [
+        "Jiwoo said, \"You should read here.\"",
+        "지우가 말했어요. “너는 여기서 읽어야 해.”"
+      ],
+      [
+        "Mina said, \"You should check homework.\"",
+        "미나가 말했어요. “너는 숙제 체크해야 해.”"
+      ],
+      [
+        "Jiwoo said, \"You shouldn't wait today.\"",
+        "지우가 말했어요. “너는 오늘 기다려서는 안 돼.”"
+      ],
+      [
+        "Mina said, \"Pick up the note.\"",
+        "미나가 말했어요. “쪽지를 주워.”"
+      ]
+    ],
+    "qs": [
+      [
+        "이야기의 첫 장면에 나온 문장은 무엇인가요?",
+        [
+          "They read a book together.",
+          "Jiwoo had homework and a note.",
+          "Mina saw the homework."
+        ],
+        1
+      ],
+      [
+        "이야기 중간에 있었던 일은 무엇인가요?",
+        [
+          "They read a book together.",
+          "Jiwoo had homework and a note.",
+          "Mina said, \"Pick up the note.\""
+        ],
+        0
+      ],
+      [
+        "이야기가 끝나는 문장은 무엇인가요?",
+        [
+          "Mina saw the homework.",
+          "They read a book together.",
+          "Mina said, \"Pick up the note.\""
+        ],
+        2
+      ]
+    ],
+    "ws": [
+      [
+        "너는 혼자 공부해야 해.",
+        "You should study alone."
+      ],
+      [
+        "너는 혼자 공부해서는 안 돼.",
+        "You shouldn't study alone."
+      ],
+      [
+        "너는 여기서 읽어야 해.",
+        "You should read here."
+      ],
+      [
+        "너는 숙제 체크해야 해.",
+        "You should check homework."
+      ],
+      [
+        "너는 오늘 기다려서는 안 돼.",
+        "You shouldn't wait today."
+      ]
+    ],
+    "verbs": [
+      [
+        "tear",
+        "tore",
+        "torn",
+        "찢다 / 찢어지다",
+        ""
+      ],
+      [
+        "throw",
+        "threw",
+        "thrown",
+        "던지다",
+        ""
+      ],
+      [
+        "wake",
+        "woke",
+        "woken",
+        "깨다 / 깨우다",
+        ""
+      ],
+      [
+        "dig",
+        "dug",
+        "dug",
+        "파다 / 캐다",
+        ""
+      ],
+      [
+        "feed",
+        "fed",
+        "fed",
+        "먹이를 주다 / 부양하다",
+        ""
+      ]
+    ],
+    "vocab": [
+      [
+        "show up",
+        "(약속된 곳에) 나타나다, 눈에 띄다"
+      ],
+      [
+        "break up",
+        "헤어지다, 이별하다"
+      ],
+      [
+        "pick up",
+        "줍다, 치우다, 정리하다"
+      ],
+      [
+        "catch up",
+        "따라잡다, (밀린) 진도를 나가다"
+      ],
+      [
+        "dress up",
+        "차려입다"
+      ]
+    ],
+    "metadata": {
+      "day": 26,
+      "story_title": "Checking Homework",
+      "edition": "3개 사용자 ZIP 기반 자료 정합 버전 v2",
+      "source_status": "영작 5개: 원문 일빵빵 그대로 / 새 표현 5개: 원문 단어 앱 그대로 / 문법 참고: 문법 앱 해당 강",
+      "grammar_lesson_title": "누구, 무엇, 어디인지 묻기",
+      "ilbbang_line_indices": [
+        1,
+        2,
+        5,
+        11,
+        16
+      ],
+      "vocab_indices": [
+        1,
+        5,
+        9,
+        10,
+        11
+      ],
+      "story_mode": "원문 회화 5문장 + 연결 서술 4문장",
+      "qa_status": "영어 연결 서술/번역 교육적 검수 전, 원문 보존 및 허용 어휘 검사"
+    }
+  },
+  {
+    "story": [
+      [
+        "Mina and Jiwoo went to the station.",
+        "미나와 지우는 역에 갔어요."
+      ],
+      [
+        "Mina had a ticket.",
+        "미나는 표 한 장을 가지고 있었어요."
+      ],
+      [
+        "Jiwoo said, \"You have to take a car.\"",
+        "지우가 말했어요. “너는 차를 타야 해.”"
+      ],
+      [
+        "Mina said, \"You need to take an exam.\"",
+        "미나가 말했어요. “너는 시험을 치를 필요가 있어.”"
+      ],
+      [
+        "Jiwoo took a picture.",
+        "지우는 사진을 찍었어요."
+      ],
+      [
+        "Jiwoo said, \"You have to take a picture.\"",
+        "지우가 말했어요. “너는 사진 찍어야 해.”"
+      ],
+      [
+        "Mina said, \"You need to take a rest.\"",
+        "미나가 말했어요. “너는 쉴 필요가 있어.”"
+      ],
+      [
+        "Jiwoo said, \"You have to take a walk.\"",
+        "지우가 말했어요. “너는 산책해야 해.”"
+      ],
+      [
+        "They took a bus.",
+        "둘은 버스를 탔어요."
+      ]
+    ],
+    "qs": [
+      [
+        "이야기의 첫 장면에 나온 문장은 무엇인가요?",
+        [
+          "Mina and Jiwoo went to the station.",
+          "Mina had a ticket.",
+          "Jiwoo took a picture."
+        ],
+        0
+      ],
+      [
+        "이야기 중간에 있었던 일은 무엇인가요?",
+        [
+          "Mina and Jiwoo went to the station.",
+          "They took a bus.",
+          "Jiwoo took a picture."
+        ],
+        2
+      ],
+      [
+        "이야기가 끝나는 문장은 무엇인가요?",
+        [
+          "Jiwoo took a picture.",
+          "They took a bus.",
+          "Mina had a ticket."
+        ],
+        1
+      ]
+    ],
+    "ws": [
+      [
+        "너는 차를 타야 해.",
+        "You have to take a car."
+      ],
+      [
+        "너는 시험을 치를 필요가 있어.",
+        "You need to take an exam."
+      ],
+      [
+        "너는 사진 찍어야 해.",
+        "You have to take a picture."
+      ],
+      [
+        "너는 쉴 필요가 있어.",
+        "You need to take a rest."
+      ],
+      [
+        "너는 산책해야 해.",
+        "You have to take a walk."
+      ]
+    ],
+    "verbs": [
+      [
+        "dig",
+        "dug",
+        "dug",
+        "파다 / 캐다",
+        ""
+      ],
+      [
+        "feed",
+        "fed",
+        "fed",
+        "먹이를 주다 / 부양하다",
+        ""
+      ],
+      [
+        "fight",
+        "fought",
+        "fought",
+        "싸우다 / 투쟁하다",
+        ""
+      ],
+      [
+        "hang",
+        "hung",
+        "hung",
+        "걸다 / 매달다",
+        ""
+      ],
+      [
+        "lay",
+        "laid",
+        "laid",
+        "눕히다 / (알을) 낳다",
+        ""
+      ]
+    ],
+    "vocab": [
+      [
+        "take a bus",
+        "버스를 타다"
+      ],
+      [
+        "take a car",
+        "차를 이용하다"
+      ],
+      [
+        "take a walk",
+        "산책하다"
+      ],
+      [
+        "take a rest",
+        "휴식을 취하다"
+      ],
+      [
+        "take a picture",
+        "사진을 찍다"
+      ]
+    ],
+    "metadata": {
+      "day": 27,
+      "story_title": "A Trip to the Station",
+      "edition": "3개 사용자 ZIP 기반 자료 정합 버전 v2",
+      "source_status": "영작 5개: 원문 일빵빵 그대로 / 새 표현 5개: 원문 단어 앱 그대로 / 문법 참고: 문법 앱 해당 강",
+      "grammar_lesson_title": "안부와 나이, 말하는 사람 바꾸기",
+      "ilbbang_line_indices": [
+        1,
+        4,
+        5,
+        10,
+        13
+      ],
+      "vocab_indices": [
+        1,
+        5,
+        6,
+        10,
+        11
+      ],
+      "story_mode": "원문 회화 5문장 + 연결 서술 4문장",
+      "qa_status": "영어 연결 서술/번역 교육적 검수 전, 원문 보존 및 허용 어휘 검사"
+    }
+  },
+  {
+    "story": [
+      [
+        "Jiwoo got ready for class.",
+        "지우는 수업을 준비했어요."
+      ],
+      [
+        "Mina had a book in the bag.",
+        "미나는 가방에 책을 가지고 있었어요."
+      ],
+      [
+        "Jiwoo said, \"You don't have to get a taxi.\"",
+        "지우가 말했어요. “너는 택시를 타지 않아도 돼.”"
+      ],
+      [
+        "Mina said, \"You don't need to get a book.\"",
+        "미나가 말했어요. “너는 책을 살 필요가 없어.”"
+      ],
+      [
+        "Jiwoo got the book.",
+        "지우는 책을 받았어요."
+      ],
+      [
+        "Jiwoo said, \"You don't have to get a rest.\"",
+        "지우가 말했어요. “너는 휴식을 취하지 않아도 돼.”"
+      ],
+      [
+        "Mina said, \"You don't need to get a test.\"",
+        "미나가 말했어요. “너는 테스트를 받을 필요가 없어.”"
+      ],
+      [
+        "Jiwoo said, \"You don't need to get a message.\"",
+        "지우가 말했어요. “너는 메시지를 받을 필요가 없어.”"
+      ],
+      [
+        "Mina gave Jiwoo a message.",
+        "미나는 지우에게 메시지를 주었어요."
+      ]
+    ],
+    "qs": [
+      [
+        "이야기의 첫 장면에 나온 문장은 무엇인가요?",
+        [
+          "Mina had a book in the bag.",
+          "Jiwoo got the book.",
+          "Jiwoo got ready for class."
+        ],
+        2
+      ],
+      [
+        "이야기 중간에 있었던 일은 무엇인가요?",
+        [
+          "Mina gave Jiwoo a message.",
+          "Jiwoo got the book.",
+          "Jiwoo got ready for class."
+        ],
+        1
+      ],
+      [
+        "이야기가 끝나는 문장은 무엇인가요?",
+        [
+          "Mina gave Jiwoo a message.",
+          "Mina had a book in the bag.",
+          "Jiwoo got the book."
+        ],
+        0
+      ]
+    ],
+    "ws": [
+      [
+        "너는 택시를 타지 않아도 돼.",
+        "You don't have to get a taxi."
+      ],
+      [
+        "너는 책을 살 필요가 없어.",
+        "You don't need to get a book."
+      ],
+      [
+        "너는 휴식을 취하지 않아도 돼.",
+        "You don't have to get a rest."
+      ],
+      [
+        "너는 테스트를 받을 필요가 없어.",
+        "You don't need to get a test."
+      ],
+      [
+        "너는 메시지를 받을 필요가 없어.",
+        "You don't need to get a message."
+      ]
+    ],
+    "verbs": [
+      [
+        "hang",
+        "hung",
+        "hung",
+        "걸다 / 매달다",
+        ""
+      ],
+      [
+        "lay",
+        "laid",
+        "laid",
+        "눕히다 / (알을) 낳다",
+        ""
+      ],
+      [
+        "lend",
+        "lent",
+        "lent",
+        "빌려주다",
+        ""
+      ],
+      [
+        "light",
+        "lit",
+        "lit",
+        "불을 켜다 / 밝히다",
+        ""
+      ],
+      [
+        "말 등) · ride",
+        "rode",
+        "ridden",
+        "타다(자전거",
+        ""
+      ]
+    ],
+    "vocab": [
+      [
+        "get to work",
+        "직장에 도착하다"
+      ],
+      [
+        "get to school",
+        "학교에 도착하다"
+      ],
+      [
+        "get ready",
+        "준비하다"
+      ],
+      [
+        "get in the car",
+        "차에 타다"
+      ],
+      [
+        "get out of the car",
+        "차에서 내리다"
+      ]
+    ],
+    "metadata": {
+      "day": 28,
+      "story_title": "A Book and a Message",
+      "edition": "3개 사용자 ZIP 기반 자료 정합 버전 v2",
+      "source_status": "영작 5개: 원문 일빵빵 그대로 / 새 표현 5개: 원문 단어 앱 그대로 / 문법 참고: 문법 앱 해당 강",
+      "grammar_lesson_title": "대화로 묻고, 무엇이 있는지 소개하기",
+      "ilbbang_line_indices": [
+        3,
+        6,
+        13,
+        16,
+        20
+      ],
+      "vocab_indices": [
+        6,
+        7,
+        10,
+        12,
+        13
+      ],
+      "story_mode": "원문 회화 5문장 + 연결 서술 4문장",
+      "qa_status": "영어 연결 서술/번역 교육적 검수 전, 원문 보존 및 허용 어휘 검사"
+    }
+  },
+  {
+    "story": [
+      [
+        "Mina and Jiwoo had a picnic.",
+        "미나와 지우는 소풍을 갔어요."
+      ],
+      [
+        "Mina made a list.",
+        "미나는 목록을 만들었어요."
+      ],
+      [
+        "Jiwoo said, \"Do you have to go on a picnic?\"",
+        "지우가 말했어요. “너는 소풍하러 가야 해?”"
+      ],
+      [
+        "Mina said, \"Do you need to go on a trip?\"",
+        "미나가 말했어요. “너는 여행하러 가는 게 필요해?”"
+      ],
+      [
+        "Jiwoo got the map.",
+        "지우는 지도를 가져왔어요."
+      ],
+      [
+        "Jiwoo said, \"Do you have to make money?\"",
+        "지우가 말했어요. “너는 돈 벌어야 해?”"
+      ],
+      [
+        "Mina said, \"Do you need to make a list?\"",
+        "미나가 말했어요. “너는 명단을 작성하는 게 필요해?”"
+      ],
+      [
+        "Jiwoo said, \"Do you have to make a plan?\"",
+        "지우가 말했어요. “너는 계획 세워야 해?”"
+      ],
+      [
+        "They made a plan.",
+        "둘은 계획을 세웠어요."
+      ]
+    ],
+    "qs": [
+      [
+        "이야기의 첫 장면에 나온 문장은 무엇인가요?",
+        [
+          "Jiwoo got the map.",
+          "Mina and Jiwoo had a picnic.",
+          "Mina made a list."
+        ],
+        1
+      ],
+      [
+        "이야기 중간에 있었던 일은 무엇인가요?",
+        [
+          "Jiwoo got the map.",
+          "Mina and Jiwoo had a picnic.",
+          "They made a plan."
+        ],
+        0
+      ],
+      [
+        "이야기가 끝나는 문장은 무엇인가요?",
+        [
+          "Mina made a list.",
+          "Jiwoo got the map.",
+          "They made a plan."
+        ],
+        2
+      ]
+    ],
+    "ws": [
+      [
+        "너는 소풍하러 가야 해?",
+        "Do you have to go on a picnic?"
+      ],
+      [
+        "너는 여행하러 가는 게 필요해?",
+        "Do you need to go on a trip?"
+      ],
+      [
+        "너는 돈 벌어야 해?",
+        "Do you have to make money?"
+      ],
+      [
+        "너는 명단을 작성하는 게 필요해?",
+        "Do you need to make a list?"
+      ],
+      [
+        "너는 계획 세워야 해?",
+        "Do you have to make a plan?"
+      ]
+    ],
+    "verbs": [
+      [
+        "light",
+        "lit",
+        "lit",
+        "불을 켜다 / 밝히다",
+        ""
+      ],
+      [
+        "말 등) · ride",
+        "rode",
+        "ridden",
+        "타다(자전거",
+        ""
+      ],
+      [
+        "shake",
+        "shook",
+        "shaken",
+        "흔들다 / 떨다",
+        ""
+      ],
+      [
+        "shrink",
+        "shrank",
+        "shrunk",
+        "줄어들다 / 오그라들다",
+        ""
+      ],
+      [
+        "spill",
+        "spilt",
+        "spilt",
+        "엎지르다 / 쏟다",
+        ""
+      ]
+    ],
+    "vocab": [
+      [
+        "make a cake",
+        "케이크를 만들다"
+      ],
+      [
+        "make a mistake",
+        "실수하다"
+      ],
+      [
+        "make a decision",
+        "결정을 내리다"
+      ],
+      [
+        "make a plan",
+        "계획을 세우다"
+      ],
+      [
+        "make a choice",
+        "선택하다"
+      ]
+    ],
+    "metadata": {
+      "day": 29,
+      "story_title": "A Plan for a Picnic",
+      "edition": "3개 사용자 ZIP 기반 자료 정합 버전 v2",
+      "source_status": "영작 5개: 원문 일빵빵 그대로 / 새 표현 5개: 원문 단어 앱 그대로 / 문법 참고: 문법 앱 해당 강",
+      "grammar_lesson_title": "새로 소개하는 것과 이미 아는 것",
+      "ilbbang_line_indices": [
+        1,
+        6,
+        11,
+        18,
+        19
+      ],
+      "vocab_indices": [
+        12,
+        13,
+        14,
+        15,
+        16
+      ],
+      "story_mode": "원문 회화 5문장 + 연결 서술 4문장",
+      "qa_status": "영어 연결 서술/번역 교육적 검수 전, 원문 보존 및 허용 어휘 검사"
+    }
+  },
+  {
+    "story": [
+      [
+        "Jiwoo and Mina had a problem.",
+        "지우와 미나에게 문제가 생겼어요."
+      ],
+      [
+        "The teacher saw the dark sky.",
+        "선생님은 어두운 하늘을 보셨어요."
+      ],
+      [
+        "Jiwoo said, \"I may have a problem.\"",
+        "지우가 말했어요. “나는 문제가 생긴 건지도 몰라.”"
+      ],
+      [
+        "Mina said, \"I might have no idea.\"",
+        "미나가 말했어요. “나 (어쩌면) 전혀 모르는지도 몰라.”"
+      ],
+      [
+        "Mina made room for a cake on the table.",
+        "미나는 탁자 위에 케이크를 놓을 공간을 마련했어요."
+      ],
+      [
+        "Jiwoo said, \"I may have no time.\"",
+        "지우가 말했어요. “나 시간이 없는지도 몰라.”"
+      ],
+      [
+        "Mina said, \"I might have a cold.\"",
+        "미나가 말했어요. “나 (어쩌면) 감기 걸린 건지도 몰라.”"
+      ],
+      [
+        "Jiwoo said, \"The girl may do homework.\"",
+        "지우가 말했어요. “그 소녀 숙제하는지도 몰라.”"
+      ],
+      [
+        "Jiwoo gave Mina a note.",
+        "지우는 미나에게 쪽지를 주었어요."
+      ]
+    ],
+    "qs": [
+      [
+        "이야기의 첫 장면에 나온 문장은 무엇인가요?",
+        [
+          "Jiwoo and Mina had a problem.",
+          "The teacher saw the dark sky.",
+          "Mina made room for a cake on the table."
+        ],
+        0
+      ],
+      [
+        "이야기 중간에 있었던 일은 무엇인가요?",
+        [
+          "Jiwoo and Mina had a problem.",
+          "Jiwoo gave Mina a note.",
+          "Mina made room for a cake on the table."
+        ],
+        2
+      ],
+      [
+        "이야기가 끝나는 문장은 무엇인가요?",
+        [
+          "Mina made room for a cake on the table.",
+          "Jiwoo gave Mina a note.",
+          "The teacher saw the dark sky."
+        ],
+        1
+      ]
+    ],
+    "ws": [
+      [
+        "나는 문제가 생긴 건지도 몰라.",
+        "I may have a problem."
+      ],
+      [
+        "나 (어쩌면) 전혀 모르는지도 몰라.",
+        "I might have no idea."
+      ],
+      [
+        "나 시간이 없는지도 몰라.",
+        "I may have no time."
+      ],
+      [
+        "나 (어쩌면) 감기 걸린 건지도 몰라.",
+        "I might have a cold."
+      ],
+      [
+        "그 소녀 숙제하는지도 몰라.",
+        "The girl may do homework."
+      ]
+    ],
+    "verbs": [
+      [
+        "shrink",
+        "shrank",
+        "shrunk",
+        "줄어들다 / 오그라들다",
+        ""
+      ],
+      [
+        "spill",
+        "spilt",
+        "spilt",
+        "엎지르다 / 쏟다",
+        ""
+      ],
+      [
+        "split",
+        "split",
+        "split",
+        "쪼개다 / 나누다",
+        ""
+      ],
+      [
+        "spoil",
+        "spoilt",
+        "spoilt",
+        "망치다 / 버릇없게 키우다",
+        ""
+      ],
+      [
+        "spring",
+        "sprang",
+        "sprung",
+        "튀어 오르다 / 생기다",
+        ""
+      ]
+    ],
+    "vocab": [
+      [
+        "make a reservation",
+        "예약하다"
+      ],
+      [
+        "have a drink",
+        "음료를 마시다"
+      ],
+      [
+        "have a shower",
+        "샤워하다"
+      ],
+      [
+        "have a bath",
+        "목욕하다"
+      ],
+      [
+        "have a rest",
+        "휴식하다"
+      ]
+    ],
+    "metadata": {
+      "day": 30,
+      "story_title": "A Problem and a Cake",
+      "edition": "3개 사용자 ZIP 기반 자료 정합 버전 v2",
+      "source_status": "영작 5개: 원문 일빵빵 그대로 / 새 표현 5개: 원문 단어 앱 그대로 / 문법 참고: 문법 앱 해당 강",
+      "grammar_lesson_title": "be동사 실수를 찾아 고치기",
+      "ilbbang_line_indices": [
+        1,
+        4,
+        5,
+        10,
+        15
+      ],
+      "vocab_indices": [
+        1,
+        17,
+        18,
+        19,
+        20
+      ],
+      "story_mode": "원문 회화 5문장 + 연결 서술 4문장",
+      "qa_status": "영어 연결 서술/번역 교육적 검수 전, 원문 보존 및 허용 어휘 검사"
+    }
   }
 ]</script>
 <script id="rwRecordingV8">(function(){
@@ -2944,17 +7809,17 @@ const rwStartKey=()=>`rwStartDateV9:${encodeURIComponent(chosen.id||'no-profile'
 function rwSavedStart(){let v='';try{v=localStorage.getItem(rwStartKey())||localStorage.getItem('ilbbangSeq600Start')||'';}catch(e){}return /^\d{4}-\d{2}-\d{2}$/.test(v)?v:todayISO();}
 function rwUpdateScheduleProgress(n=0,total=9){
  const day=Number(R('Day').value),id=chosen.id;
- let count=0;for(let i=1;i<=2;i++){try{if(id&&localStorage.getItem(completionKey(i)))count++;}catch(e){}}
+ let count=0;for(let i=1;i<=30;i++){try{if(id&&localStorage.getItem(completionKey(i)))count++;}catch(e){}}
  const currentDone=Boolean(id&&(()=>{try{return localStorage.getItem(completionKey(day));}catch(e){return null;}})());
  const part=currentDone?0:Math.min(1,(Number(n)||0)/(Number(total)||9));
- const fraction=Math.min(1,(count+part)/2);
+ const fraction=Math.min(1,(count+part)/30);
  document.getElementById('rwProgressBar').style.width=(fraction*100)+'%';
- document.getElementById('rwProgressLabel').textContent=`읽기·쓰기 완료 ${count}/2 DAY · 현재 DAY ${day} 녹음 ${n}/${total}문장`;
- R('PrevDay').disabled=day<=1;R('NextDay').disabled=day>=2;
+ document.getElementById('rwProgressLabel').textContent=`읽기·쓰기 완료 ${count}/30 DAY · 현재 DAY ${day} 녹음 ${n}/${total}문장`;
+ R('PrevDay').disabled=day<=1;R('NextDay').disabled=day>=30;
 }
 window.rwUpdateScheduleProgress=rwUpdateScheduleProgress;
-function rwChooseDay(day){R('Day').value=String(Math.min(2,Math.max(1,day)));render();}
-function rwTodayDay(){const start=R('StartDate').value||rwSavedStart(),a=new Date(start+'T12:00:00'),b=new Date(todayISO()+'T12:00:00');return Math.min(2,Math.max(1,Math.floor((b-a)/86400000)+1));}
+function rwChooseDay(day){R('Day').value=String(Math.min(30,Math.max(1,day)));render();}
+function rwTodayDay(){const start=R('StartDate').value||rwSavedStart(),a=new Date(start+'T12:00:00'),b=new Date(todayISO()+'T12:00:00');return Math.min(30,Math.max(1,Math.floor((b-a)/86400000)+1));}
 function rwLoadStart(){R('StartDate').value=rwSavedStart();R('StartStatus').textContent='';}
 R('Apply').onclick=()=>{const value=R('StartDate').value;if(!value){R('StartStatus').textContent='학습 시작일을 선택해 주세요.';return;}try{localStorage.setItem(rwStartKey(),value);R('StartStatus').textContent='학습 시작일을 저장했어요.';}catch(e){R('StartStatus').textContent='저장 공간을 확인해 주세요.';}rwChooseDay(rwTodayDay());};
 R('Today').onclick=()=>rwChooseDay(rwTodayDay());
@@ -2970,13 +7835,17 @@ function render(){
  stopVoice();const day=Number(R('Day').value),p=getPerson(),l=lessons[day-1],en=p==='jiwoo'?'Jiwoo':'Minseo';
  if(!l)return;
  R('ProfileName').textContent=chosen.name+' · '+(p==='jiwoo'?'지우':'민서')+' 이야기';
- R('DayBadge').textContent='DAY '+day+' / 2';
+ R('DayBadge').textContent='DAY '+day+' / 30';
  document.getElementById('dateLabel').textContent=new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'});
- const hero=R('Hero');hero.src='./readwrite/images/'+p+day+'.jpg';
- hero.onerror=()=>{hero.alt='삽화를 찾을 수 없어요. 이미지 폴더를 확인해 주세요.'};
+ const hero=R('Hero'),imagePath=([1,2,3,4,5,6,7,8,9,10,26,28,29,30].includes(day)?'./readwrite/images/'+p+day+'.jpg':null);
+ const imgStatus=R('IllustrationStatus');
+ if(imagePath){hero.hidden=false;imgStatus.hidden=true;hero.src=imagePath;}else{hero.hidden=true;hero.removeAttribute('src');imgStatus.hidden=false;imgStatus.textContent='DAY '+day+' 삽화는 원문에 맞춰 재제작 중이에요.';}
+ hero.onerror=()=>{hero.hidden=true;imgStatus.hidden=false;imgStatus.textContent='DAY '+day+' 삽화는 원문 장면에 맞춰 준비 중이에요. 다른 DAY의 그림으로 대신하지 않아요.';};
+ hero.onload=()=>{hero.hidden=false;imgStatus.hidden=true;};
+ R('Download').hidden=day>2;
  R('Download').onclick=()=>{const a=document.createElement('a');a.href='./readwrite/images/'+p+day+'_study.png';a.download='DAY'+day+'_'+en+'_study.png';document.body.appendChild(a);a.click();a.remove();};
- R('Title').textContent='DAY '+day+' · '+(day===1?en+"'s Little Surprise":en+' and the Heart Card');
- R('Subtitle').textContent=day===1?'작은 깜짝 선물':'하트 카드';
+ R('Title').textContent='DAY '+day+' · '+(l.metadata?.story_title||'오늘의 이야기');
+ R('Subtitle').textContent=day>2?'일빵빵·단어복습·문법 원문을 바탕으로 만든 이야기 초안':'원본 DAY 1~2';
  R('Story').innerHTML='<div class="rw-record-progress" data-rw-rec-progress>녹음 기록 확인 중…</div>'+l.story.map((s,i)=>'<div class="rw-sentence rw-story-record-row" data-rw-rec-row="'+i+'"><b>'+(i+1)+'. '+escapeHTML(localize(s[0],p,day))+'</b><div class="rw-ko" hidden>'+escapeHTML(localize(s[1],p,day))+'</div><div class="rw-record-tools"><button type="button" class="rw-small" data-rw-voice="'+i+'">🔊 듣기</button><button type="button" class="rw-small rw-translation-button" data-rw-show-ko="'+i+'" aria-expanded="false">해석 보기</button><button type="button" data-rw-rec-toggle="regular" data-rw-rec-index="'+i+'">🎙 녹음 시작</button></div><span class="rw-rec-msg" data-rw-rec-msg role="status">녹음해서 학습 완료를 준비해요.</span><audio data-rw-rec-audio controls preload="none" hidden></audio></div>').join('');
  R('Story').querySelectorAll('[data-rw-voice]').forEach(b=>b.onclick=()=>saySentence(Number(b.dataset.rwVoice),b));
  R('Story').querySelectorAll('[data-rw-show-ko]').forEach(b=>b.onclick=()=>{const line=b.closest('.rw-sentence'),ko=line.querySelector('.rw-ko');ko.hidden=!ko.hidden;b.textContent=ko.hidden?'해석 보기':'해석 숨기기';b.setAttribute('aria-expanded',String(!ko.hidden));});
@@ -3021,7 +7890,7 @@ try { const data=JSON.parse(document.getElementById('rwEmbeddedLessons').textCon
   "version": 4,
   "total": 150,
   "verified": 2,
-  "notes": "각 권 30편. DAY 1~2 외 148편은 원고 초안이며 해당 권의 원본 교재 어휘/문법 검수 전에는 일일 랜덤 출제되지 않습니다.",
+  "notes": "1권 DAY 3~30 원문 기준 초안: 학습 앱에서 체험 가능, 교육적 영어 검수 전. 다른 권 120편은 잠김.",
   "stories": [
     {
       "id": "b1d01",
@@ -3091,897 +7960,1205 @@ try { const data=JSON.parse(document.getElementById('rwEmbeddedLessons').textCon
       "id": "b1d03",
       "book": 1,
       "day": 3,
-      "title": "Yellow Ribbon",
-      "titleKo": "노란 리본",
+      "title": "DAY 3 · Another Story",
+      "titleKo": "3일차 또 다른 이야기",
       "sentences": [
         [
-          "{name} and Hana wanted to make a small gift.",
-          "{koName}와 하나는 작은 선물을 만들고 싶었어요."
+          "Mina put a book on the desk.",
+          "미나는 책을 책상 위에 놓았어요."
         ],
         [
-          "They found a yellow ribbon in the library.",
-          "두 사람은 도서관에서 노란 리본을 발견했어요."
+          "Jiwoo said, \"I do wash.\"",
+          "지우가 말했어요. “나는 (진짜) 씻거든.”"
         ],
         [
-          "{name} said, \"This is for our friend.\"",
-          "{koName}는 \"이건 우리 친구에게 줄 거야.\"라고 말했어요."
+          "Mina said, \"I do work.\"",
+          "미나가 말했어요. “나는 (진짜) 일하거든.”"
         ],
         [
-          "They put it in a little box.",
-          "둘은 그것을 작은 상자에 넣었어요."
+          "Jiwoo said, \"I do meet.\"",
+          "지우가 말했어요. “나는 (진짜) 만나거든.”"
         ],
         [
-          "Their friend opened the box and smiled.",
-          "친구는 상자를 열고 미소 지었어요."
+          "Jiwoo found a note in the book.",
+          "지우는 책 속에서 쪽지를 찾았어요."
         ]
       ],
       "verified": false,
-      "status": "교재 어휘·문형 검수 대기",
-      "source": "새로 작성한 복습 이야기 원고"
+      "status": "3개 ZIP 원문 연결; 이야기 영어 자연스러움 최종 검수 전",
+      "source": {
+        "ilbbang_day": 3,
+        "ilbbang_line_indices": [
+          41,
+          51,
+          59
+        ],
+        "vocabulary_day": 3,
+        "grammar_lesson": 3
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true
     },
     {
       "id": "b1d04",
       "book": 1,
       "day": 4,
-      "title": "Paper Flower",
-      "titleKo": "종이꽃",
+      "title": "DAY 4 · Another Story",
+      "titleKo": "4일차 또 다른 이야기",
       "sentences": [
         [
-          "After class, {name} met Yuna in the art room.",
-          "{koName}는 수업이 끝난 후 미술실에서 유나를 만났어요."
+          "Jiwoo saw a bag on the desk.",
+          "지우는 책상 위의 가방을 보았어요."
         ],
         [
-          "Yuna showed {name} a paper flower.",
-          "유나가 {koName}에게 종이꽃을 보여 주었어요."
+          "Jiwoo said, \"I don't wash.\"",
+          "지우가 말했어요. “나는 씻지 않아.”"
         ],
         [
-          "\"Can I see it?\" asked {name}.",
-          "{koName}는 \"내가 봐도 돼?\"라고 물었어요."
+          "Mina said, \"I don't clean the room.\"",
+          "미나가 말했어요. “나는 그 방을 청소하지 않아.”"
         ],
         [
-          "Yuna said, \"Of course!\"",
-          "유나는 \"물론이지!\"라고 말했어요."
+          "Jiwoo said, \"I don't play tennis.\"",
+          "지우가 말했어요. “나는 테니스 게임 하지 않아.”"
         ],
         [
-          "They looked at it and made a new plan.",
-          "둘은 그것을 살펴보고 새로운 계획을 세웠어요."
+          "Mina shut the book.",
+          "미나는 책을 닫았어요."
         ]
       ],
       "verified": false,
-      "status": "교재 어휘·문형 검수 대기",
-      "source": "새로 작성한 복습 이야기 원고"
+      "status": "3개 ZIP 원문 연결; 이야기 영어 자연스러움 최종 검수 전",
+      "source": {
+        "ilbbang_day": 4,
+        "ilbbang_line_indices": [
+          61,
+          70,
+          80
+        ],
+        "vocabulary_day": 4,
+        "grammar_lesson": 4
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true
     },
     {
       "id": "b1d05",
       "book": 1,
       "day": 5,
-      "title": "Little Map",
-      "titleKo": "작은 지도",
+      "title": "DAY 5 · Another Story",
+      "titleKo": "5일차 또 다른 이야기",
       "sentences": [
         [
-          "{name} saw a little map in the park.",
-          "{koName}는 공원에서 작은 지도를 보았어요."
+          "Mina made a note after class.",
+          "미나는 수업이 끝나고 쪽지를 만들었어요."
         ],
         [
-          "{name} wanted to give it to Mina.",
-          "{koName}는 그것을 미나에게 주고 싶었어요."
+          "Jiwoo said, \"Do you wash?\"",
+          "지우가 말했어요. “너는 씻니?”"
         ],
         [
-          "But Mina said, \"Let us share it.\"",
-          "그런데 미나는 \"우리 함께 나누자.\"라고 말했어요."
+          "Mina said, \"Do you clean the bedroom?\"",
+          "미나가 말했어요. “너는 그 침실 청소하니?”"
         ],
         [
-          "They showed it to their friends.",
-          "둘은 친구들에게 그것을 보여 주었어요."
+          "Jiwoo said, \"Do you play?\"",
+          "지우가 말했어요. “너는 연주하니?”"
         ],
         [
-          "Everyone smiled at the little surprise.",
-          "모두 작은 깜짝 선물을 보고 미소 지었어요."
+          "Jiwoo took the note home.",
+          "지우는 쪽지를 집으로 가져갔어요."
         ]
       ],
       "verified": false,
-      "status": "교재 어휘·문형 검수 대기",
-      "source": "새로 작성한 복습 이야기 원고"
+      "status": "3개 ZIP 원문 연결; 이야기 영어 자연스러움 최종 검수 전",
+      "source": {
+        "ilbbang_day": 5,
+        "ilbbang_line_indices": [
+          81,
+          90,
+          99
+        ],
+        "vocabulary_day": 5,
+        "grammar_lesson": 5
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true
     },
     {
       "id": "b1d06",
       "book": 1,
       "day": 6,
-      "title": "Green Leaf",
-      "titleKo": "초록 나뭇잎",
+      "title": "DAY 6 · Another Story",
+      "titleKo": "6일차 또 다른 이야기",
       "sentences": [
         [
-          "{name} was in the garden with Sora.",
-          "{koName}는 소라와 정원에서 함께 있었어요."
+          "Jiwoo met Mina at home.",
+          "지우는 집에서 미나를 만났어요."
         ],
         [
-          "They saw a green leaf near a bag.",
-          "두 사람은 가방 옆에서 초록 나뭇잎을 보았어요."
+          "Jiwoo said, \"Don't you eat dinner?\"",
+          "지우가 말했어요. “너는 저녁을 먹지 않니?”"
         ],
         [
-          "Sora said, \"Look! It is beautiful.\"",
-          "소라가 \"봐! 정말 예쁘다.\"라고 말했어요."
+          "Mina said, \"Do you write address?\"",
+          "미나가 말했어요. “너는 주소를 쓰니?”"
         ],
         [
-          "{name} took a closer look and smiled.",
-          "{koName}는 가까이에서 살펴보고 미소 지었어요."
+          "Jiwoo said, \"Don't you play baseball?\"",
+          "지우가 말했어요. “너는 야구 게임을 하지 않니?”"
         ],
         [
-          "They put it back and went home together.",
-          "두 사람은 물건을 제자리에 두고 함께 집에 갔어요."
+          "Mina gave Jiwoo a hug.",
+          "미나는 지우를 꼭 안아 주었어요."
         ]
       ],
       "verified": false,
-      "status": "교재 어휘·문형 검수 대기",
-      "source": "새로 작성한 복습 이야기 원고"
+      "status": "3개 ZIP 원문 연결; 이야기 영어 자연스러움 최종 검수 전",
+      "source": {
+        "ilbbang_day": 6,
+        "ilbbang_line_indices": [
+          106,
+          113,
+          120
+        ],
+        "vocabulary_day": 6,
+        "grammar_lesson": 6
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true
     },
     {
       "id": "b1d07",
       "book": 1,
       "day": 7,
-      "title": "New Bookmark",
-      "titleKo": "새 책갈피",
+      "title": "DAY 7 · Another Story",
+      "titleKo": "7일차 또 다른 이야기",
       "sentences": [
         [
-          "{name} met Hana in the library.",
-          "{koName}는 도서관에서 하나를 만났어요."
+          "Mina saw a key in the bag.",
+          "미나는 가방 속 열쇠를 보았어요."
         ],
         [
-          "Hana had a new bookmark in a bag.",
-          "하나의 가방에는 새 책갈피가 있었어요."
+          "Jiwoo said, \"I can come.\"",
+          "지우가 말했어요. “나는 올 수 있다.”"
         ],
         [
-          "But the bag was not there.",
-          "그런데 가방이 보이지 않았어요."
+          "Mina said, \"You can walk.\"",
+          "미나가 말했어요. “너는 걸을 수 있다.”"
         ],
         [
-          "They looked under a chair and found the bag.",
-          "둘은 의자 아래를 살펴보다가 가방을 찾았어요."
+          "Jiwoo said, \"You can sleep.\"",
+          "지우가 말했어요. “너는 잘 수 있다.”"
         ],
         [
-          "Hana said, \"Thank you!\" and they laughed.",
-          "하나가 \"고마워!\"라고 말했고 두 사람은 웃었어요."
+          "Jiwoo opened the door.",
+          "지우는 문을 열었어요."
         ]
       ],
       "verified": false,
-      "status": "교재 어휘·문형 검수 대기",
-      "source": "새로 작성한 복습 이야기 원고"
+      "status": "3개 ZIP 원문 연결; 이야기 영어 자연스러움 최종 검수 전",
+      "source": {
+        "ilbbang_day": 7,
+        "ilbbang_line_indices": [
+          122,
+          133,
+          140
+        ],
+        "vocabulary_day": 7,
+        "grammar_lesson": 7
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true
     },
     {
       "id": "b1d08",
       "book": 1,
       "day": 8,
-      "title": "Paper Boat",
-      "titleKo": "종이배",
+      "title": "DAY 8 · Another Story",
+      "titleKo": "8일차 또 다른 이야기",
       "sentences": [
         [
-          "{name} and Yuna wanted to make a small gift.",
-          "{koName}와 유나는 작은 선물을 만들고 싶었어요."
+          "Jiwoo made a song.",
+          "지우는 노래를 만들었어요."
         ],
         [
-          "They found a paper boat beside the river.",
-          "두 사람은 강가에서 종이배를 발견했어요."
+          "Jiwoo said, \"I can't come today.\"",
+          "지우가 말했어요. “나는 오늘 올 수 없어.”"
         ],
         [
-          "{name} said, \"This is for our friend.\"",
-          "{koName}는 \"이건 우리 친구에게 줄 거야.\"라고 말했어요."
+          "Mina said, \"You can't come today.\"",
+          "미나가 말했어요. “너는 오늘 올 수 없어.”"
         ],
         [
-          "They put it in a little box.",
-          "둘은 그것을 작은 상자에 넣었어요."
+          "Jiwoo said, \"You can't sleep tonight.\"",
+          "지우가 말했어요. “너는 오늘 밤 잘 수 없어.”"
         ],
         [
-          "Their friend opened the box and smiled.",
-          "친구는 상자를 열고 미소 지었어요."
+          "Mina began to sing.",
+          "미나는 노래를 부르기 시작했어요."
         ]
       ],
       "verified": false,
-      "status": "교재 어휘·문형 검수 대기",
-      "source": "새로 작성한 복습 이야기 원고"
+      "status": "3개 ZIP 원문 연결; 이야기 영어 자연스러움 최종 검수 전",
+      "source": {
+        "ilbbang_day": 8,
+        "ilbbang_line_indices": [
+          142,
+          152,
+          160
+        ],
+        "vocabulary_day": 8,
+        "grammar_lesson": 8
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true
     },
     {
       "id": "b1d09",
       "book": 1,
       "day": 9,
-      "title": "Small Painting",
-      "titleKo": "작은 그림",
+      "title": "DAY 9 · Another Story",
+      "titleKo": "9일차 또 다른 이야기",
       "sentences": [
         [
-          "After class, {name} met Mina at school.",
-          "{koName}는 수업이 끝난 후 학교에서 미나를 만났어요."
+          "Mina put a book on the chair.",
+          "미나는 책을 의자 위에 놓았어요."
         ],
         [
-          "Mina showed {name} a small painting.",
-          "미나가 {koName}에게 작은 그림을 보여 주었어요."
+          "Jiwoo said, \"Can you come to the office?\"",
+          "지우가 말했어요. “너는 그 회사로 올 수 있니?”"
         ],
         [
-          "\"Can I see it?\" asked {name}.",
-          "{koName}는 \"내가 봐도 돼?\"라고 물었어요."
+          "Mina said, \"Can I live in the house?\"",
+          "미나가 말했어요. “내가 그 집에서 살 수 있을까?”"
         ],
         [
-          "Mina said, \"Of course!\"",
-          "미나는 \"물론이지!\"라고 말했어요."
+          "Jiwoo said, \"Can I sleep on the chair?\"",
+          "지우가 말했어요. “내가 그 의자에서 잘 수 있을까?”"
         ],
         [
-          "They looked at it and made a new plan.",
-          "둘은 그것을 살펴보고 새로운 계획을 세웠어요."
+          "Jiwoo went to the library.",
+          "지우는 도서관에 갔어요."
         ]
       ],
       "verified": false,
-      "status": "교재 어휘·문형 검수 대기",
-      "source": "새로 작성한 복습 이야기 원고"
+      "status": "3개 ZIP 원문 연결; 이야기 영어 자연스러움 최종 검수 전",
+      "source": {
+        "ilbbang_day": 9,
+        "ilbbang_line_indices": [
+          163,
+          172,
+          180
+        ],
+        "vocabulary_day": 9,
+        "grammar_lesson": 9
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true
     },
     {
       "id": "b1d10",
       "book": 1,
       "day": 10,
-      "title": "Silver Bell",
-      "titleKo": "은빛 방울",
+      "title": "DAY 10 · Another Story",
+      "titleKo": "10일차 또 다른 이야기",
       "sentences": [
         [
-          "{name} saw a silver bell in the music room.",
-          "{koName}는 음악실에서 은빛 방울을 보았어요."
+          "Jiwoo had a snack.",
+          "지우는 간식을 먹었어요."
         ],
         [
-          "{name} wanted to give it to Sora.",
-          "{koName}는 그것을 소라에게 주고 싶었어요."
+          "Jiwoo said, \"Can't you go?\"",
+          "지우가 말했어요. “너는 갈 수 없니?”"
         ],
         [
-          "But Sora said, \"Let us share it.\"",
-          "그런데 소라는 \"우리 함께 나누자.\"라고 말했어요."
+          "Mina said, \"Can't you drive to the airport?\"",
+          "미나가 말했어요. “너는 그 공항으로 운전해 갈 수 없니?”"
         ],
         [
-          "They showed it to their friends.",
-          "둘은 친구들에게 그것을 보여 주었어요."
+          "Jiwoo said, \"Can't you sleep on the sofa?\"",
+          "지우가 말했어요. “너는 그 소파에서 잘 수 없니?”"
         ],
         [
-          "Everyone smiled at the little surprise.",
-          "모두 작은 깜짝 선물을 보고 미소 지었어요."
+          "Mina saw the menu.",
+          "미나는 메뉴를 보았어요."
         ]
       ],
       "verified": false,
-      "status": "교재 어휘·문형 검수 대기",
-      "source": "새로 작성한 복습 이야기 원고"
+      "status": "3개 ZIP 원문 연결; 이야기 영어 자연스러움 최종 검수 전",
+      "source": {
+        "ilbbang_day": 10,
+        "ilbbang_line_indices": [
+          181,
+          190,
+          200
+        ],
+        "vocabulary_day": 10,
+        "grammar_lesson": 10
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true
     },
     {
       "id": "b1d11",
       "book": 1,
       "day": 11,
-      "title": "Old Postcard",
-      "titleKo": "오래된 엽서",
+      "title": "DAY 11 · Another Story",
+      "titleKo": "11일차 또 다른 이야기",
       "sentences": [
         [
-          "{name} was at home with Hana.",
-          "{koName}는 하나와 집에서 함께 있었어요."
+          "Mina gave Jiwoo a book.",
+          "미나는 지우에게 책을 주었어요."
         ],
         [
-          "They saw an old postcard near a bag.",
-          "두 사람은 가방 옆에서 오래된 엽서를 보았어요."
+          "Jiwoo said, \"I will have.\"",
+          "지우가 말했어요. “나는 가질 것이다.”"
         ],
         [
-          "Hana said, \"Look! It is beautiful.\"",
-          "하나가 \"봐! 정말 예쁘다.\"라고 말했어요."
+          "Mina said, \"You will buy.\"",
+          "미나가 말했어요. “너는 살 것이다.”"
         ],
         [
-          "{name} took a closer look and smiled.",
-          "{koName}는 가까이에서 살펴보고 미소 지었어요."
+          "Jiwoo said, \"You will learn.\"",
+          "지우가 말했어요. “너는 배울 것이다.”"
         ],
         [
-          "They put it back and went home together.",
-          "두 사람은 물건을 제자리에 두고 함께 집에 갔어요."
+          "Jiwoo took the bag home.",
+          "지우는 가방을 집에 가져갔어요."
         ]
       ],
       "verified": false,
-      "status": "교재 어휘·문형 검수 대기",
-      "source": "새로 작성한 복습 이야기 원고"
+      "status": "3개 ZIP 원문 연결; 이야기 영어 자연스러움 최종 검수 전",
+      "source": {
+        "ilbbang_day": 11,
+        "ilbbang_line_indices": [
+          204,
+          213,
+          220
+        ],
+        "vocabulary_day": 11,
+        "grammar_lesson": 11
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true
     },
     {
       "id": "b1d12",
       "book": 1,
       "day": 12,
-      "title": "Colorful Stone",
-      "titleKo": "알록달록 돌멩이",
+      "title": "DAY 12 · Another Story",
+      "titleKo": "12일차 또 다른 이야기",
       "sentences": [
         [
-          "{name} met Yuna in the park.",
-          "{koName}는 공원에서 유나를 만났어요."
+          "Jiwoo found a textbook.",
+          "지우는 교과서를 찾았어요."
         ],
         [
-          "Yuna had a colorful stone in a bag.",
-          "유나의 가방에는 알록달록 돌멩이가 있었어요."
+          "Jiwoo said, \"I will not (won't) open.\"",
+          "지우가 말했어요. “나는 열지 않을 거야.”"
         ],
         [
-          "But the bag was not there.",
-          "그런데 가방이 보이지 않았어요."
+          "Mina said, \"I will not (won't) visit the house.\"",
+          "미나가 말했어요. “나는 그 집을 방문하지 않을 거야.”"
         ],
         [
-          "They looked under a chair and found the bag.",
-          "둘은 의자 아래를 살펴보다가 가방을 찾았어요."
+          "Jiwoo said, \"I will not (won't) learn.\"",
+          "지우가 말했어요. “나는 배우지 않을 거야.”"
         ],
         [
-          "Yuna said, \"Thank you!\" and they laughed.",
-          "유나가 \"고마워!\"라고 말했고 두 사람은 웃었어요."
+          "Mina put the textbook on the desk.",
+          "미나는 교과서를 책상 위에 놓았어요."
         ]
       ],
       "verified": false,
-      "status": "교재 어휘·문형 검수 대기",
-      "source": "새로 작성한 복습 이야기 원고"
+      "status": "3개 ZIP 원문 연결; 이야기 영어 자연스러움 최종 검수 전",
+      "source": {
+        "ilbbang_day": 12,
+        "ilbbang_line_indices": [
+          221,
+          230,
+          239
+        ],
+        "vocabulary_day": 12,
+        "grammar_lesson": 12
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true
     },
     {
       "id": "b1d13",
       "book": 1,
       "day": 13,
-      "title": "Tiny Shell",
-      "titleKo": "작은 조개껍데기",
+      "title": "DAY 13 · Another Story",
+      "titleKo": "13일차 또 다른 이야기",
       "sentences": [
         [
-          "{name} and Mina wanted to make a small gift.",
-          "{koName}와 미나는 작은 선물을 만들고 싶었어요."
+          "Mina showed Jiwoo a card.",
+          "미나는 지우에게 카드를 보여주었어요."
         ],
         [
-          "They found a tiny shell at the beach.",
-          "두 사람은 해변에서 작은 조개껍데기를 발견했어요."
+          "Jiwoo said, \"Will you marry?\"",
+          "지우가 말했어요. “너는 결혼할 거니?”"
         ],
         [
-          "{name} said, \"This is for our friend.\"",
-          "{koName}는 \"이건 우리 친구에게 줄 거야.\"라고 말했어요."
+          "Mina said, \"Will you buy?\"",
+          "미나가 말했어요. “너는 살 거니?”"
         ],
         [
-          "They put it in a little box.",
-          "둘은 그것을 작은 상자에 넣었어요."
+          "Jiwoo said, \"Will you learn?\"",
+          "지우가 말했어요. “너는 배울 거니?”"
         ],
         [
-          "Their friend opened the box and smiled.",
-          "친구는 상자를 열고 미소 지었어요."
+          "Jiwoo saw the doctor.",
+          "지우는 의사를 보았어요."
         ]
       ],
       "verified": false,
-      "status": "교재 어휘·문형 검수 대기",
-      "source": "새로 작성한 복습 이야기 원고"
+      "status": "3개 ZIP 원문 연결; 이야기 영어 자연스러움 최종 검수 전",
+      "source": {
+        "ilbbang_day": 13,
+        "ilbbang_line_indices": [
+          241,
+          253,
+          260
+        ],
+        "vocabulary_day": 13,
+        "grammar_lesson": 13
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true
     },
     {
       "id": "b1d14",
       "book": 1,
       "day": 14,
-      "title": "Paper Star",
-      "titleKo": "종이별",
+      "title": "DAY 14 · Another Story",
+      "titleKo": "14일차 또 다른 이야기",
       "sentences": [
         [
-          "After class, {name} met Sora in the classroom.",
-          "{koName}는 수업이 끝난 후 교실에서 소라를 만났어요."
+          "Jiwoo had a map.",
+          "지우는 지도를 가지고 있었어요."
         ],
         [
-          "Sora showed {name} a paper star.",
-          "소라가 {koName}에게 종이별을 보여 주었어요."
+          "Jiwoo said, \"Won't you marry?\"",
+          "지우가 말했어요. “너는 결혼하지 않을 거니?”"
         ],
         [
-          "\"Can I see it?\" asked {name}.",
-          "{koName}는 \"내가 봐도 돼?\"라고 물었어요."
+          "Mina said, \"Won't you try the job?\"",
+          "미나가 말했어요. “너는 그 일을 시도해 보지 않을 거니?”"
         ],
         [
-          "Sora said, \"Of course!\"",
-          "소라는 \"물론이지!\"라고 말했어요."
+          "Jiwoo said, \"Won't you put the bag?\"",
+          "지우가 말했어요. “너는 그 가방을 놓지 않을 거니?”"
         ],
         [
-          "They looked at it and made a new plan.",
-          "둘은 그것을 살펴보고 새로운 계획을 세웠어요."
+          "Mina saw a boat.",
+          "미나는 배를 보았어요."
         ]
       ],
       "verified": false,
-      "status": "교재 어휘·문형 검수 대기",
-      "source": "새로 작성한 복습 이야기 원고"
+      "status": "3개 ZIP 원문 연결; 이야기 영어 자연스러움 최종 검수 전",
+      "source": {
+        "ilbbang_day": 14,
+        "ilbbang_line_indices": [
+          261,
+          270,
+          280
+        ],
+        "vocabulary_day": 14,
+        "grammar_lesson": 14
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true
     },
     {
       "id": "b1d15",
       "book": 1,
       "day": 15,
-      "title": "Funny Sticker",
-      "titleKo": "재미있는 스티커",
+      "title": "DAY 15 · Another Story",
+      "titleKo": "15일차 또 다른 이야기",
       "sentences": [
         [
-          "{name} saw a funny sticker at school.",
-          "{koName}는 학교에서 재미있는 스티커를 보았어요."
+          "Mina had a small cap.",
+          "미나는 작은 모자를 가지고 있었어요."
         ],
         [
-          "{name} wanted to give it to Hana.",
-          "{koName}는 그것을 하나에게 주고 싶었어요."
+          "Jiwoo said, \"I did have dinner.\"",
+          "지우가 말했어요. “나는 (진짜) 저녁 먹었거든.”"
         ],
         [
-          "But Hana said, \"Let us share it.\"",
-          "그런데 하나는 \"우리 함께 나누자.\"라고 말했어요."
+          "Mina said, \"I did walk together.\"",
+          "미나가 말했어요. “나는 (진짜) 함께 걸었거든.”"
         ],
         [
-          "They showed it to their friends.",
-          "둘은 친구들에게 그것을 보여 주었어요."
+          "Jiwoo said, \"I did sleep tonight.\"",
+          "지우가 말했어요. “나는 (진짜) 오늘 밤 잤거든.”"
         ],
         [
-          "Everyone smiled at the little surprise.",
-          "모두 작은 깜짝 선물을 보고 미소 지었어요."
+          "Jiwoo put the cap in the bag.",
+          "지우는 모자를 가방에 넣었어요."
         ]
       ],
       "verified": false,
-      "status": "교재 어휘·문형 검수 대기",
-      "source": "새로 작성한 복습 이야기 원고"
+      "status": "3개 ZIP 원문 연결; 이야기 영어 자연스러움 최종 검수 전",
+      "source": {
+        "ilbbang_day": 15,
+        "ilbbang_line_indices": [
+          283,
+          293,
+          300
+        ],
+        "vocabulary_day": 15,
+        "grammar_lesson": 15
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true
     },
     {
       "id": "b1d16",
       "book": 1,
       "day": 16,
-      "title": "Lost Ticket",
-      "titleKo": "잃어버린 표",
+      "title": "DAY 16 · Another Story",
+      "titleKo": "16일차 또 다른 이야기",
       "sentences": [
         [
-          "{name} was at the station with Yuna.",
-          "{koName}는 유나와 역에서 함께 있었어요."
+          "Jiwoo saw a plant.",
+          "지우는 식물을 보았어요."
         ],
         [
-          "They saw a train ticket near a bag.",
-          "두 사람은 가방 옆에서 기차표를 보았어요."
+          "Jiwoo said, \"I didn't take a test.\"",
+          "지우가 말했어요. “나는 시험을 치르지 않았어.”"
         ],
         [
-          "Yuna said, \"Look! It is beautiful.\"",
-          "유나가 \"봐! 정말 예쁘다.\"라고 말했어요."
+          "Mina said, \"I didn't have dinner.\"",
+          "미나가 말했어요. “나는 저녁을 먹지 않았어.”"
         ],
         [
-          "{name} took a closer look and smiled.",
-          "{koName}는 가까이에서 살펴보고 미소 지었어요."
+          "Jiwoo said, \"I didn't have a job.\"",
+          "지우가 말했어요. “나는 직업이 없었어.”"
         ],
         [
-          "They put it back and went home together.",
-          "두 사람은 물건을 제자리에 두고 함께 집에 갔어요."
+          "Mina put a stone beside the plant.",
+          "미나는 식물 옆에 돌을 놓았어요."
         ]
       ],
       "verified": false,
-      "status": "교재 어휘·문형 검수 대기",
-      "source": "새로 작성한 복습 이야기 원고"
+      "status": "3개 ZIP 원문 연결; 이야기 영어 자연스러움 최종 검수 전",
+      "source": {
+        "ilbbang_day": 16,
+        "ilbbang_line_indices": [
+          303,
+          313,
+          320
+        ],
+        "vocabulary_day": 16,
+        "grammar_lesson": 16
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true
     },
     {
       "id": "b1d17",
       "book": 1,
       "day": 17,
-      "title": "Purple Notebook",
-      "titleKo": "보라색 공책",
+      "title": "DAY 17 · Another Story",
+      "titleKo": "17일차 또 다른 이야기",
       "sentences": [
         [
-          "{name} met Mina in the library.",
-          "{koName}는 도서관에서 미나를 만났어요."
+          "Mina drew a picture.",
+          "미나는 그림을 그렸어요."
         ],
         [
-          "Mina had a purple notebook in a bag.",
-          "미나의 가방에는 보라색 공책이 있었어요."
+          "Jiwoo said, \"Did you get an email?\"",
+          "지우가 말했어요. “너는 이메일을 받았니?”"
         ],
         [
-          "But the bag was not there.",
-          "그런데 가방이 보이지 않았어요."
+          "Mina said, \"Did you take a taxi?\"",
+          "미나가 말했어요. “너는 택시를 탔니?”"
         ],
         [
-          "They looked under a chair and found the bag.",
-          "둘은 의자 아래를 살펴보다가 가방을 찾았어요."
+          "Jiwoo said, \"Did you take exercise?\"",
+          "지우가 말했어요. “너는 운동을 했니?”"
         ],
         [
-          "Mina said, \"Thank you!\" and they laughed.",
-          "미나가 \"고마워!\"라고 말했고 두 사람은 웃었어요."
+          "Jiwoo showed the picture to Mina.",
+          "지우는 그 그림을 미나에게 보여주었어요."
         ]
       ],
       "verified": false,
-      "status": "교재 어휘·문형 검수 대기",
-      "source": "새로 작성한 복습 이야기 원고"
+      "status": "3개 ZIP 원문 연결; 이야기 영어 자연스러움 최종 검수 전",
+      "source": {
+        "ilbbang_day": 17,
+        "ilbbang_line_indices": [
+          323,
+          332,
+          340
+        ],
+        "vocabulary_day": 17,
+        "grammar_lesson": 17
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true
     },
     {
       "id": "b1d18",
       "book": 1,
       "day": 18,
-      "title": "Paper Crown",
-      "titleKo": "종이 왕관",
+      "title": "DAY 18 · Another Story",
+      "titleKo": "18일차 또 다른 이야기",
       "sentences": [
         [
-          "{name} and Sora wanted to make a small gift.",
-          "{koName}와 소라는 작은 선물을 만들고 싶었어요."
+          "Jiwoo had a ticket.",
+          "지우는 표를 가지고 있었어요."
         ],
         [
-          "They found a paper crown at the party.",
-          "두 사람은 파티에서 종이 왕관을 발견했어요."
+          "Jiwoo said, \"Did you go to church?\"",
+          "지우가 말했어요. “너는 예배를 드렸니?”"
         ],
         [
-          "{name} said, \"This is for our friend.\"",
-          "{koName}는 \"이건 우리 친구에게 줄 거야.\"라고 말했어요."
+          "Mina said, \"Didn't you go abroad?\"",
+          "미나가 말했어요. “너는 외국에 안 갔었니?”"
         ],
         [
-          "They put it in a little box.",
-          "둘은 그것을 작은 상자에 넣었어요."
+          "Jiwoo said, \"Didn't you go camping?\"",
+          "지우가 말했어요. “너는 캠핑하러 안 갔었니?”"
         ],
         [
-          "Their friend opened the box and smiled.",
-          "친구는 상자를 열고 미소 지었어요."
+          "Mina went to the theater.",
+          "미나는 극장에 갔어요."
         ]
       ],
       "verified": false,
-      "status": "교재 어휘·문형 검수 대기",
-      "source": "새로 작성한 복습 이야기 원고"
+      "status": "3개 ZIP 원문 연결; 이야기 영어 자연스러움 최종 검수 전",
+      "source": {
+        "ilbbang_day": 18,
+        "ilbbang_line_indices": [
+          343,
+          352,
+          360
+        ],
+        "vocabulary_day": 18,
+        "grammar_lesson": 18
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true
     },
     {
       "id": "b1d19",
       "book": 1,
       "day": 19,
-      "title": "Little Flag",
-      "titleKo": "작은 깃발",
+      "title": "DAY 19 · Another Story",
+      "titleKo": "19일차 또 다른 이야기",
       "sentences": [
         [
-          "After class, {name} met Hana on the playground.",
-          "{koName}는 수업이 끝난 후 운동장에서 하나를 만났어요."
+          "Mina got a gift.",
+          "미나는 선물을 받았어요."
         ],
         [
-          "Hana showed {name} a little flag.",
-          "하나가 {koName}에게 작은 깃발을 보여 주었어요."
+          "Jiwoo said, \"I could go tomorrow.\"",
+          "지우가 말했어요. “나는 내일은 갈 수도 있어.”"
         ],
         [
-          "\"Can I see it?\" asked {name}.",
-          "{koName}는 \"내가 봐도 돼?\"라고 물었어요."
+          "Mina said, \"I could live later.\"",
+          "미나가 말했어요. “나는 나중에는 살 수도 있어.”"
         ],
         [
-          "Hana said, \"Of course!\"",
-          "하나는 \"물론이지!\"라고 말했어요."
+          "Jiwoo said, \"I could sleep three weeks later.\"",
+          "지우가 말했어요. “나는 3주 후에는 잘 수도 있어.”"
         ],
         [
-          "They looked at it and made a new plan.",
-          "둘은 그것을 살펴보고 새로운 계획을 세웠어요."
+          "Jiwoo smiled at Mina.",
+          "지우는 미나를 향해 미소 지었어요."
         ]
       ],
       "verified": false,
-      "status": "교재 어휘·문형 검수 대기",
-      "source": "새로 작성한 복습 이야기 원고"
+      "status": "3개 ZIP 원문 연결; 이야기 영어 자연스러움 최종 검수 전",
+      "source": {
+        "ilbbang_day": 19,
+        "ilbbang_line_indices": [
+          362,
+          372,
+          380
+        ],
+        "vocabulary_day": 19,
+        "grammar_lesson": 19
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true
     },
     {
       "id": "b1d20",
       "book": 1,
       "day": 20,
-      "title": "Wooden Toy",
-      "titleKo": "나무 장난감",
+      "title": "DAY 20 · Another Story",
+      "titleKo": "20일차 또 다른 이야기",
       "sentences": [
         [
-          "{name} saw a wooden toy at home.",
-          "{koName}는 집에서 나무 장난감을 보았어요."
+          "Jiwoo saw a baseball game.",
+          "지우는 야구 경기를 보았어요."
         ],
         [
-          "{name} wanted to give it to Yuna.",
-          "{koName}는 그것을 유나에게 주고 싶었어요."
+          "Jiwoo said, \"I couldn't wash my face.\"",
+          "지우가 말했어요. “나는 세수할 수 없었어.”"
         ],
         [
-          "But Yuna said, \"Let us share it.\"",
-          "그런데 유나는 \"우리 함께 나누자.\"라고 말했어요."
+          "Mina said, \"I couldn't clean the room before.\"",
+          "미나가 말했어요. “나는 전에는 방을 청소할 수 없었어.”"
         ],
         [
-          "They showed it to their friends.",
-          "둘은 친구들에게 그것을 보여 주었어요."
+          "Jiwoo said, \"I couldn't play tennis.\"",
+          "지우가 말했어요. “나는 테니스 칠 수 없었어.”"
         ],
         [
-          "Everyone smiled at the little surprise.",
-          "모두 작은 깜짝 선물을 보고 미소 지었어요."
+          "Mina took a bat.",
+          "미나는 방망이를 집어 들었어요."
         ]
       ],
       "verified": false,
-      "status": "교재 어휘·문형 검수 대기",
-      "source": "새로 작성한 복습 이야기 원고"
+      "status": "3개 ZIP 원문 연결; 이야기 영어 자연스러움 최종 검수 전",
+      "source": {
+        "ilbbang_day": 20,
+        "ilbbang_line_indices": [
+          381,
+          390,
+          399
+        ],
+        "vocabulary_day": 20,
+        "grammar_lesson": 20
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true
     },
     {
       "id": "b1d21",
       "book": 1,
       "day": 21,
-      "title": "Orange Pencil",
-      "titleKo": "주황색 연필",
+      "title": "DAY 21 · Another Story",
+      "titleKo": "21일차 또 다른 이야기",
       "sentences": [
         [
-          "{name} was in the classroom with Mina.",
-          "{koName}는 미나와 교실에서 함께 있었어요."
+          "Mina found a robot.",
+          "미나는 로봇을 찾았어요."
         ],
         [
-          "They saw an orange pencil near a bag.",
-          "두 사람은 가방 옆에서 주황색 연필을 보았어요."
+          "Jiwoo said, \"Can you wash my car?\"",
+          "지우가 말했어요. “너 내 차를 세차할 수 있어?”"
         ],
         [
-          "Mina said, \"Look! It is beautiful.\"",
-          "미나가 \"봐! 정말 예쁘다.\"라고 말했어요."
+          "Mina said, \"Can you walk together?\"",
+          "미나가 말했어요. “너 함께 걸을 수 있니?”"
         ],
         [
-          "{name} took a closer look and smiled.",
-          "{koName}는 가까이에서 살펴보고 미소 지었어요."
+          "Jiwoo said, \"Could you work hard?\"",
+          "지우가 말했어요. “열심히 일해 주시겠어요?”"
         ],
         [
-          "They put it back and went home together.",
-          "두 사람은 물건을 제자리에 두고 함께 집에 갔어요."
+          "Jiwoo showed Mina a computer.",
+          "지우는 미나에게 컴퓨터를 보여주었어요."
         ]
       ],
       "verified": false,
-      "status": "교재 어휘·문형 검수 대기",
-      "source": "새로 작성한 복습 이야기 원고"
+      "status": "3개 ZIP 원문 연결; 이야기 영어 자연스러움 최종 검수 전",
+      "source": {
+        "ilbbang_day": 21,
+        "ilbbang_line_indices": [
+          401,
+          413,
+          420
+        ],
+        "vocabulary_day": 21,
+        "grammar_lesson": 21
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true
     },
     {
       "id": "b1d22",
       "book": 1,
       "day": 22,
-      "title": "Small Photo",
-      "titleKo": "작은 사진",
+      "title": "DAY 22 · Another Story",
+      "titleKo": "22일차 또 다른 이야기",
       "sentences": [
         [
-          "{name} met Sora in the hallway.",
-          "{koName}는 복도에서 소라를 만났어요."
+          "Jiwoo went to the store.",
+          "지우는 가게에 갔어요."
         ],
         [
-          "Sora had a small photo in a bag.",
-          "소라의 가방에는 작은 사진이 있었어요."
+          "Jiwoo said, \"I would go this month.\"",
+          "지우가 말했어요. “나는 이번 달에는 (아마) 갈 거야.”"
         ],
         [
-          "But the bag was not there.",
-          "그런데 가방이 보이지 않았어요."
+          "Mina said, \"I would live every month.\"",
+          "미나가 말했어요. “나는 매달 살곤 했었어.”"
         ],
         [
-          "They looked under a chair and found the bag.",
-          "둘은 의자 아래를 살펴보다가 가방을 찾았어요."
+          "Jiwoo said, \"I would sleep every week.\"",
+          "지우가 말했어요. “나는 매주 자곤 했었어.”"
         ],
         [
-          "Sora said, \"Thank you!\" and they laughed.",
-          "소라가 \"고마워!\"라고 말했고 두 사람은 웃었어요."
+          "Mina got a book.",
+          "미나는 책을 받았어요."
         ]
       ],
       "verified": false,
-      "status": "교재 어휘·문형 검수 대기",
-      "source": "새로 작성한 복습 이야기 원고"
+      "status": "3개 ZIP 원문 연결; 이야기 영어 자연스러움 최종 검수 전",
+      "source": {
+        "ilbbang_day": 22,
+        "ilbbang_line_indices": [
+          422,
+          431,
+          439
+        ],
+        "vocabulary_day": 22,
+        "grammar_lesson": 22
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true
     },
     {
       "id": "b1d23",
       "book": 1,
       "day": 23,
-      "title": "Blue Envelope",
-      "titleKo": "파란 봉투",
+      "title": "DAY 23 · Another Story",
+      "titleKo": "23일차 또 다른 이야기",
       "sentences": [
         [
-          "{name} and Hana wanted to make a small gift.",
-          "{koName}와 하나는 작은 선물을 만들고 싶었어요."
+          "Mina saw a book on the desk.",
+          "미나는 책상 위의 책을 보았어요."
         ],
         [
-          "They found a blue envelope at the post office.",
-          "두 사람은 우체국에서 파란 봉투를 발견했어요."
+          "Jiwoo said, \"I won't close the window.\"",
+          "지우가 말했어요. “나는 창문을 닫지 않을 거야.”"
         ],
         [
-          "{name} said, \"This is for our friend.\"",
-          "{koName}는 \"이건 우리 친구에게 줄 거야.\"라고 말했어요."
+          "Mina said, \"I wouldn't start the test.\"",
+          "미나가 말했어요. “나는 (앞으로) 그 시험을 시작하지 않을 거야.”"
         ],
         [
-          "They put it in a little box.",
-          "둘은 그것을 작은 상자에 넣었어요."
+          "Jiwoo said, \"I wouldn't learn the language.\"",
+          "지우가 말했어요. “나는 (앞으로) 그 언어를 배우지 않을 거야.”"
         ],
         [
-          "Their friend opened the box and smiled.",
-          "친구는 상자를 열고 미소 지었어요."
+          "Jiwoo put the book in the bag.",
+          "지우는 책을 가방에 넣었어요."
         ]
       ],
       "verified": false,
-      "status": "교재 어휘·문형 검수 대기",
-      "source": "새로 작성한 복습 이야기 원고"
+      "status": "3개 ZIP 원문 연결; 이야기 영어 자연스러움 최종 검수 전",
+      "source": {
+        "ilbbang_day": 23,
+        "ilbbang_line_indices": [
+          443,
+          452,
+          460
+        ],
+        "vocabulary_day": 23,
+        "grammar_lesson": 23
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true
     },
     {
       "id": "b1d24",
       "book": 1,
       "day": 24,
-      "title": "Paper Airplane",
-      "titleKo": "종이비행기",
+      "title": "DAY 24 · Another Story",
+      "titleKo": "24일차 또 다른 이야기",
       "sentences": [
         [
-          "After class, {name} met Yuna on the playground.",
-          "{koName}는 수업이 끝난 후 운동장에서 유나를 만났어요."
+          "Jiwoo gave Mina a flower.",
+          "지우는 미나에게 꽃을 주었어요."
         ],
         [
-          "Yuna showed {name} a paper airplane.",
-          "유나가 {koName}에게 종이비행기를 보여 주었어요."
+          "Jiwoo said, \"Will you marry the girl?\"",
+          "지우가 말했어요. “너는 그녀와 결혼할 거니?”"
         ],
         [
-          "\"Can I see it?\" asked {name}.",
-          "{koName}는 \"내가 봐도 돼?\"라고 물었어요."
+          "Mina said, \"Would you try the job?\"",
+          "미나가 말했어요. “그 일 시도해 보시겠어요?”"
         ],
         [
-          "Yuna said, \"Of course!\"",
-          "유나는 \"물론이지!\"라고 말했어요."
+          "Jiwoo said, \"Will you put the bag?\"",
+          "지우가 말했어요. “너는 그 가방을 놓을 거니?”"
         ],
         [
-          "They looked at it and made a new plan.",
-          "둘은 그것을 살펴보고 새로운 계획을 세웠어요."
+          "Mina had a gift.",
+          "미나는 선물을 가지고 있었어요."
         ]
       ],
       "verified": false,
-      "status": "교재 어휘·문형 검수 대기",
-      "source": "새로 작성한 복습 이야기 원고"
+      "status": "3개 ZIP 원문 연결; 이야기 영어 자연스러움 최종 검수 전",
+      "source": {
+        "ilbbang_day": 24,
+        "ilbbang_line_indices": [
+          461,
+          470,
+          479
+        ],
+        "vocabulary_day": 24,
+        "grammar_lesson": 24
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true
     },
     {
       "id": "b1d25",
       "book": 1,
       "day": 25,
-      "title": "Little Poem",
-      "titleKo": "짧은 시",
+      "title": "DAY 25 · Another Story",
+      "titleKo": "25일차 또 다른 이야기",
       "sentences": [
         [
-          "{name} saw a short poem in the library.",
-          "{koName}는 도서관에서 짧은 시를 보았어요."
+          "Jiwoo met a doctor.",
+          "지우는 의사를 만났어요."
         ],
         [
-          "{name} wanted to give it to Mina.",
-          "{koName}는 그것을 미나에게 주고 싶었어요."
+          "Jiwoo said, \"You must go to bed.\"",
+          "지우가 말했어요. “너는 (반드시) 자러 가야 해.”"
         ],
         [
-          "But Mina said, \"Let us share it.\"",
-          "그런데 미나는 \"우리 함께 나누자.\"라고 말했어요."
+          "Mina said, \"You must stop there.\"",
+          "미나가 말했어요. “너는 (반드시) 거기서 멈춰야 해.”"
         ],
         [
-          "They showed it to their friends.",
-          "둘은 친구들에게 그것을 보여 주었어요."
+          "Jiwoo said, \"You must not try more.\"",
+          "지우가 말했어요. “너는 (반드시) 더 해 보면 안 돼.”"
         ],
         [
-          "Everyone smiled at the little surprise.",
-          "모두 작은 깜짝 선물을 보고 미소 지었어요."
+          "Mina took a seat.",
+          "미나는 자리에 앉았어요."
         ]
       ],
       "verified": false,
-      "status": "교재 어휘·문형 검수 대기",
-      "source": "새로 작성한 복습 이야기 원고"
+      "status": "3개 ZIP 원문 연결; 이야기 영어 자연스러움 최종 검수 전",
+      "source": {
+        "ilbbang_day": 25,
+        "ilbbang_line_indices": [
+          481,
+          491,
+          500
+        ],
+        "vocabulary_day": 25,
+        "grammar_lesson": 25
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true
     },
     {
       "id": "b1d26",
       "book": 1,
       "day": 26,
-      "title": "Striped Scarf",
-      "titleKo": "줄무늬 목도리",
+      "title": "DAY 26 · Another Story",
+      "titleKo": "26일차 또 다른 이야기",
       "sentences": [
         [
-          "{name} was in the school yard with Sora.",
-          "{koName}는 소라와 학교 운동장에서 함께 있었어요."
+          "Jiwoo and Mina had homework.",
+          "지우와 미나는 숙제가 있었어요."
         ],
         [
-          "They saw a striped scarf near a bag.",
-          "두 사람은 가방 옆에서 줄무늬 목도리를 보았어요."
+          "Jiwoo said, \"You should make again.\"",
+          "지우가 말했어요. “너는 다시 만들어야 해.”"
         ],
         [
-          "Sora said, \"Look! It is beautiful.\"",
-          "소라가 \"봐! 정말 예쁘다.\"라고 말했어요."
+          "Mina said, \"You shouldn't check homework.\"",
+          "미나가 말했어요. “너는 숙제 체크해서는 안 돼.”"
         ],
         [
-          "{name} took a closer look and smiled.",
-          "{koName}는 가까이에서 살펴보고 미소 지었어요."
+          "Jiwoo said, \"You shouldn't drive later.\"",
+          "지우가 말했어요. “너는 나중에 운전해서는 안 돼.”"
         ],
         [
-          "They put it back and went home together.",
-          "두 사람은 물건을 제자리에 두고 함께 집에 갔어요."
+          "Mina can check the homework.",
+          "미나는 숙제를 확인할 수 있어요."
         ]
       ],
       "verified": false,
-      "status": "교재 어휘·문형 검수 대기",
-      "source": "새로 작성한 복습 이야기 원고"
+      "status": "3개 ZIP 원문 연결; 이야기 영어 자연스러움 최종 검수 전",
+      "source": {
+        "ilbbang_day": 26,
+        "ilbbang_line_indices": [
+          503,
+          512,
+          520
+        ],
+        "vocabulary_day": 26,
+        "grammar_lesson": 26
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true
     },
     {
       "id": "b1d27",
       "book": 1,
       "day": 27,
-      "title": "Tiny Button",
-      "titleKo": "작은 단추",
+      "title": "DAY 27 · Another Story",
+      "titleKo": "27일차 또 다른 이야기",
       "sentences": [
         [
-          "{name} met Hana at home.",
-          "{koName}는 집에서 하나를 만났어요."
+          "Mina got a ticket.",
+          "미나는 표를 받았어요."
         ],
         [
-          "Hana had a tiny button in a bag.",
-          "하나의 가방에는 작은 단추가 있었어요."
+          "Jiwoo said, \"You need to take a car.\"",
+          "지우가 말했어요. “너는 차를 탈 필요가 있어.”"
         ],
         [
-          "But the bag was not there.",
-          "그런데 가방이 보이지 않았어요."
+          "Mina said, \"You need to take a class.\"",
+          "미나가 말했어요. “너는 수업을 들을 필요가 있어.”"
         ],
         [
-          "They looked under a chair and found the bag.",
-          "둘은 의자 아래를 살펴보다가 가방을 찾았어요."
+          "Jiwoo said, \"You need to take a holiday.\"",
+          "지우가 말했어요. “너는 휴가를 떠날 필요가 있어.”"
         ],
         [
-          "Hana said, \"Thank you!\" and they laughed.",
-          "하나가 \"고마워!\"라고 말했고 두 사람은 웃었어요."
+          "Jiwoo took a bus.",
+          "지우는 버스를 탔어요."
         ]
       ],
       "verified": false,
-      "status": "교재 어휘·문형 검수 대기",
-      "source": "새로 작성한 복습 이야기 원고"
+      "status": "3개 ZIP 원문 연결; 이야기 영어 자연스러움 최종 검수 전",
+      "source": {
+        "ilbbang_day": 27,
+        "ilbbang_line_indices": [
+          522,
+          532,
+          540
+        ],
+        "vocabulary_day": 27,
+        "grammar_lesson": 27
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true
     },
     {
       "id": "b1d28",
       "book": 1,
       "day": 28,
-      "title": "Flower Drawing",
-      "titleKo": "꽃 그림",
+      "title": "DAY 28 · Another Story",
+      "titleKo": "28일차 또 다른 이야기",
       "sentences": [
         [
-          "{name} and Yuna wanted to make a small gift.",
-          "{koName}와 유나는 작은 선물을 만들고 싶었어요."
+          "Jiwoo had a book.",
+          "지우는 책을 가지고 있었어요."
         ],
         [
-          "They found a flower drawing in the art room.",
-          "두 사람은 미술실에서 꽃 그림을 발견했어요."
+          "Jiwoo said, \"You don't have to get a discount.\"",
+          "지우가 말했어요. “너는 할인을 받지 않아도 돼.”"
         ],
         [
-          "{name} said, \"This is for our friend.\"",
-          "{koName}는 \"이건 우리 친구에게 줄 거야.\"라고 말했어요."
+          "Mina said, \"You don't need to get a seat.\"",
+          "미나가 말했어요. “너는 자리를 잡을 필요가 없어.”"
         ],
         [
-          "They put it in a little box.",
-          "둘은 그것을 작은 상자에 넣었어요."
+          "Jiwoo said, \"You don't have to get a message.\"",
+          "지우가 말했어요. “너는 메시지를 받지 않아도 돼.”"
         ],
         [
-          "Their friend opened the box and smiled.",
-          "친구는 상자를 열고 미소 지었어요."
+          "Mina got a message.",
+          "미나는 메시지를 받았어요."
         ]
       ],
       "verified": false,
-      "status": "교재 어휘·문형 검수 대기",
-      "source": "새로 작성한 복습 이야기 원고"
+      "status": "3개 ZIP 원문 연결; 이야기 영어 자연스러움 최종 검수 전",
+      "source": {
+        "ilbbang_day": 28,
+        "ilbbang_line_indices": [
+          541,
+          550,
+          559
+        ],
+        "vocabulary_day": 28,
+        "grammar_lesson": 28
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true
     },
     {
       "id": "b1d29",
       "book": 1,
       "day": 29,
-      "title": "New Keyring",
-      "titleKo": "새 열쇠고리",
+      "title": "DAY 29 · Another Story",
+      "titleKo": "29일차 또 다른 이야기",
       "sentences": [
         [
-          "After class, {name} met Mina at school.",
-          "{koName}는 수업이 끝난 후 학교에서 미나를 만났어요."
+          "Mina made a plan.",
+          "미나는 계획을 세웠어요."
         ],
         [
-          "Mina showed {name} a new keyring.",
-          "미나가 {koName}에게 새 열쇠고리를 보여 주었어요."
+          "Jiwoo said, \"Do you need to go on a picnic?\"",
+          "지우가 말했어요. “너는 소풍하러 가는 게 필요해?”"
         ],
         [
-          "\"Can I see it?\" asked {name}.",
-          "{koName}는 \"내가 봐도 돼?\"라고 물었어요."
+          "Mina said, \"Do you need to go on a diet?\"",
+          "미나가 말했어요. “너는 다이어트 시작하는 게 필요해?”"
         ],
         [
-          "Mina said, \"Of course!\"",
-          "미나는 \"물론이지!\"라고 말했어요."
+          "Jiwoo said, \"Do you need to make a plan?\"",
+          "지우가 말했어요. “너는 계획 세우는 게 필요해?”"
         ],
         [
-          "They looked at it and made a new plan.",
-          "둘은 그것을 살펴보고 새로운 계획을 세웠어요."
+          "Jiwoo got the map.",
+          "지우는 지도를 가져왔어요."
         ]
       ],
       "verified": false,
-      "status": "교재 어휘·문형 검수 대기",
-      "source": "새로 작성한 복습 이야기 원고"
+      "status": "3개 ZIP 원문 연결; 이야기 영어 자연스러움 최종 검수 전",
+      "source": {
+        "ilbbang_day": 29,
+        "ilbbang_line_indices": [
+          562,
+          570,
+          580
+        ],
+        "vocabulary_day": 29,
+        "grammar_lesson": 29
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true
     },
     {
       "id": "b1d30",
       "book": 1,
       "day": 30,
-      "title": "Little Gift Bag",
-      "titleKo": "작은 선물 봉투",
+      "title": "DAY 30 · Another Story",
+      "titleKo": "30일차 또 다른 이야기",
       "sentences": [
         [
-          "{name} saw a little gift bag at the community center.",
-          "{koName}는 동네 문화센터에서 작은 선물 봉투를 보았어요."
+          "Jiwoo had a problem.",
+          "지우는 문제가 있었어요."
         ],
         [
-          "{name} wanted to give it to Sora.",
-          "{koName}는 그것을 소라에게 주고 싶었어요."
+          "Jiwoo said, \"I might have a problem.\"",
+          "지우가 말했어요. “나는 (어쩌면) 문제가 생긴 건지도 몰라.”"
         ],
         [
-          "But Sora said, \"Let us share it.\"",
-          "그런데 소라는 \"우리 함께 나누자.\"라고 말했어요."
+          "Mina said, \"The man might do the laundry.\"",
+          "미나가 말했어요. “그 남자 (어쩌면) 빨래하는지도 몰라.”"
         ],
         [
-          "They showed it to their friends.",
-          "둘은 친구들에게 그것을 보여 주었어요."
+          "Jiwoo said, \"She might do a paper.\"",
+          "지우가 말했어요. “그 여자 (어쩌면) 리포트 쓰는지도 몰라.”"
         ],
         [
-          "Everyone smiled at the little surprise.",
-          "모두 작은 깜짝 선물을 보고 미소 지었어요."
+          "Mina gave Jiwoo a note.",
+          "미나는 지우에게 쪽지를 주었어요."
         ]
       ],
       "verified": false,
-      "status": "교재 어휘·문형 검수 대기",
-      "source": "새로 작성한 복습 이야기 원고"
+      "status": "3개 ZIP 원문 연결; 이야기 영어 자연스러움 최종 검수 전",
+      "source": {
+        "ilbbang_day": 30,
+        "ilbbang_line_indices": [
+          582,
+          592,
+          600
+        ],
+        "vocabulary_day": 30,
+        "grammar_lesson": 30
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true
     },
     {
       "id": "b2d01",
@@ -7824,8 +13001,7 @@ try { const data=JSON.parse(document.getElementById('rwEmbeddedLessons').textCon
       "source": "새로 작성한 복습 이야기 원고"
     }
   ]
-}
-</script>
+}</script>
 <script>/* 읽기·쓰기 v11 안정화: 기존 rwReviewsV4 데이터 보존, 1·3·7·14·30일 및 DAY 기반 복습. */
 (()=>{'use strict';
 const $=id=>document.getElementById(id);
@@ -7864,7 +13040,7 @@ function grade(kind,day,index,choice){if(!context().profileId)return;const d=rea
  reviewStatus();reviewWords();cards();
 }
 function toggleWriting(day,index){const d=read(),k=`${day}:${index}`;grade('writing',day,index,d.writing[k]?'correct':'wrong');}
-function eligible(){const ctx=context();if(!ctx.profileId)return [];return bank.filter(s=>s.book===1&&s.verified&&previousStudyDone(s.day));}
+function eligible(){const ctx=context();if(!ctx.profileId)return [];return bank.filter(s=>s.book===1&&(s.verified||s.releaseForTest===true)&&previousStudyDone(s.day));}
 function pick(){const list=eligible();if(!list.length)return null;const d=read(),today=date(),saved=d.daily[today];if(saved&&list.some(s=>s.id===saved))return list.find(s=>s.id===saved);
  const prev=d.daily[date(-1)],options=list.length>1?list.filter(s=>s.id!==prev):list;
  const min=Math.min(...options.map(s=>Number(d.seen[s.id]||0)));const least=options.filter(s=>Number(d.seen[s.id]||0)===min);
@@ -7874,7 +13050,7 @@ function stopAudio(){try{speechSynthesis.cancel();}catch(e){}if(speaking){speaki
 function speak(s,b){if(!('speechSynthesis' in window)){alert('이 기기에서 음성 듣기를 지원하지 않아요.');return;}if(speaking===b){stopAudio();return;}stopAudio();const u=new SpeechSynthesisUtterance(s);u.lang='en-US';u.rate=.7;speaking=b;b.textContent='■ 중지';u.onend=u.onerror=()=>{if(speaking===b){b.textContent='🔊 듣기';speaking=null;}};speechSynthesis.speak(u);}
 function story(){const target=$('rwRandomStory'),panel=$('rwRandomPanel');if(!context().profileId||!bank.length){panel.hidden=true;target.innerHTML='';return;}
  const list=eligible();panel.hidden=!list.length;if(!list.length){window.rwStoryRecorder?.cancel('random');target.innerHTML='';return;}
- $('rwRandomIntro').textContent=`검수 완료 ${bank.filter(s=>s.verified).length}편 · 현재 복습 가능 ${list.length}편`;
+ $('rwRandomIntro').textContent=`1권 30편 원문 연결(3~30은 최종 검수 전) · 현재 복습 가능 ${list.length}편`;
  const s=pick();if(!s)return;const person=typeof context().personForDay==='function'?context().personForDay(s.day):context().person;
  const completed=read().reads[date()]===s.id;
  target.innerHTML=`<div class="rw-review-story-head"><div><span class="rw-review-status">1권 DAY ${s.day}</span><h3>${esc(s.title)}</h3><p class="rw-muted">${esc(s.titleKo)}</p></div></div>`+
@@ -7920,10 +13096,10 @@ refresh();
 const $=id=>document.getElementById(id);
 let view=new Date();view=new Date(view.getFullYear(),view.getMonth(),1);
 function fmt(iso){if(!iso)return '';const d=new Date(iso);if(!Number.isFinite(d.getTime()))return '';return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
-function getCompleted(){const c=window.rwReviewGetContext?.()||{};if(!c.profileId)return [];const found=[];for(let day=1;day<=2;day++){try{const iso=localStorage.getItem(`rwCompletedV1:${c.profileId}:${day}`);if(iso)found.push({day,date:fmt(iso)});}catch(e){}}return found;}
+function getCompleted(){const c=window.rwReviewGetContext?.()||{};if(!c.profileId)return [];const found=[];for(let day=1;day<=30;day++){try{const iso=localStorage.getItem(`rwCompletedV1:${c.profileId}:${day}`);if(iso)found.push({day,date:fmt(iso)});}catch(e){}}return found;}
 function refresh(){const c=window.rwReviewGetContext?.()||{},done=getCompleted(),dates={};done.forEach(x=>(dates[x.date]||=[]).push(x.day));
- $('rwProgressSummary').textContent=c.profileId?`DAY 1~2 테스트 · ${done.length}/2 완료 · ${c.profileName||'현재 프로필'}`:'먼저 프로필을 선택해 주세요.';
- const progress=$('rwDayProgress');progress.innerHTML=Array.from({length:30},(_,i)=>{const n=i+1,finished=done.some(x=>x.day===n);return n<=2?`<button type="button" data-rw-cal-day="${n}" class="${finished?'rw-day-complete':''}">${finished?'✓ ':''}${n}</button>`:`<span title="추가 예정 DAY ${n}">${n}</span>`;}).join('');
+ $('rwProgressSummary').textContent=c.profileId?`DAY 1~30 · ${done.length}/30 완료 · ${c.profileName||'현재 프로필'}`:'먼저 프로필을 선택해 주세요.';
+ const progress=$('rwDayProgress');progress.innerHTML=Array.from({length:30},(_,i)=>{const n=i+1,finished=done.some(x=>x.day===n);return n<=30?`<button type="button" data-rw-cal-day="${n}" class="${finished?'rw-day-complete':''}">${finished?'✓ ':''}${n}</button>`:`<span title="추가 예정 DAY ${n}">${n}</span>`;}).join('');
  progress.querySelectorAll('[data-rw-cal-day]').forEach(btn=>btn.onclick=()=>{const day=btn.dataset.rwCalDay;$('rwDay').value=day;$('rwDay').dispatchEvent(new Event('change'));$('rwApp').scrollIntoView({behavior:'smooth',block:'start'});});
  const y=view.getFullYear(),m=view.getMonth(),first=new Date(y,m,1).getDay(),last=new Date(y,m+1,0).getDate();
  $('rwMonthTitle').textContent=`${y}년 ${m+1}월`;
@@ -7932,7 +13108,7 @@ function refresh(){const c=window.rwReviewGetContext?.()||{},done=getCompleted()
  const today=fmt(new Date());
  for(let d=1;d<=last;d++){const dt=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;let cls=dates[dt]?' rw-cal-done':'';if(dt===today)cls+=' rw-cal-today';days.push(`<div class="${cls}">${d}${dates[dt]?`<small>✓ DAY ${dates[dt].join(', ')}</small>`:''}</div>`);}
  $('rwMonthGrid').innerHTML=days.join('');
- $('rwCalendarStatus').textContent=done.length?`저장된 학습 완료: ${done.map(x=>`DAY ${x.day} (${x.date})`).join(' · ')}`:'아직 완료 기록이 없어요. DAY 1 또는 DAY 2를 완료하면 날짜가 표시돼요.';
+ $('rwCalendarStatus').textContent=done.length?`저장된 학습 완료: ${done.map(x=>`DAY ${x.day} (${x.date})`).join(' · ')}`:'아직 완료 기록이 없어요. DAY를 완료하면 날짜가 표시돼요.';
 }
 $('rwMonthPrev').onclick=()=>{view=new Date(view.getFullYear(),view.getMonth()-1,1);refresh();};
 $('rwMonthNext').onclick=()=>{view=new Date(view.getFullYear(),view.getMonth()+1,1);refresh();};
@@ -7984,7 +13160,7 @@ window.rwResetReadWriteForProfile=async function(profileId){
   const deletedRecordings=await removeProfileAudio(profileId);
   const encoded=encodeURIComponent(profileId);
   const keys=[`rwReviewsV4:${encoded}`, `rwStartDateV9:${encoded}`];
-  for(let i=1;i<=2;i++){
+  for(let i=1;i<=30;i++){
     keys.push(`rwCompletedV1:${profileId}:${i}`,`rwStoryChoiceV1:${profileId}:${i}`);
   }
   // Test storage availability before deleting to avoid falsely reporting success.

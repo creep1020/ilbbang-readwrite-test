@@ -1,0 +1,61 @@
+﻿DAY,프로필,원문 주요 장면,검수 상태,사유,후보 해상도,앱 표시,이미지 파일
+1,jiwoo,파란 선물 상자를 서로 건네고 쪽지 읽기,장면 일치 후보·최종 검수 전,내용 대체로 일치. 얼굴 닮음·세부 사건·화질은 최종 승인 전,1672x941,예,readwrite/images/jiwoo1.jpg
+1,minseo,파란 선물 상자를 서로 건네고 쪽지 읽기,장면 일치 후보·최종 검수 전,내용 대체로 일치. 얼굴 닮음·세부 사건·화질은 최종 승인 전,1672x941,예,readwrite/images/minseo1.jpg
+2,jiwoo,빨간 하트 카드 만들어 선생님께 전달,장면 일치 후보·최종 검수 전,내용 대체로 일치. 얼굴 닮음·세부 사건·화질은 최종 승인 전,1672x941,예,readwrite/images/jiwoo2.jpg
+2,minseo,빨간 하트 카드 만들어 선생님께 전달,장면 일치 후보·최종 검수 전,내용 대체로 일치. 얼굴 닮음·세부 사건·화질은 최종 승인 전,1586x992,예,readwrite/images/minseo2.jpg
+3,jiwoo,책과 하트 그림을 나눔,장면 일치 후보·최종 검수 전,내용 대체로 일치. 얼굴 닮음·세부 사건·화질은 최종 승인 전,836x470,예,readwrite/images/jiwoo3.jpg
+3,minseo,책과 하트 그림을 나눔,장면 일치 후보·최종 검수 전,내용 대체로 일치. 얼굴 닮음·세부 사건·화질은 최종 승인 전,836x470,예,readwrite/images/minseo3.jpg
+4,jiwoo,가방 속 쪽지 발견,장면 일치 후보·최종 검수 전,내용 대체로 일치. 얼굴 닮음·세부 사건·화질은 최종 승인 전,836x471,예,readwrite/images/jiwoo4.jpg
+4,minseo,가방 속 쪽지 발견,장면 일치 후보·최종 검수 전,내용 대체로 일치. 얼굴 닮음·세부 사건·화질은 최종 승인 전,836x471,예,readwrite/images/minseo4.jpg
+5,jiwoo,미나의 카드와 책 교환,장면 일치 후보·최종 검수 전,내용 대체로 일치. 얼굴 닮음·세부 사건·화질은 최종 승인 전,652x395,예,readwrite/images/jiwoo5.jpg
+5,minseo,미나의 카드와 책 교환,장면 일치 후보·최종 검수 전,내용 대체로 일치. 얼굴 닮음·세부 사건·화질은 최종 승인 전,652x395,예,readwrite/images/minseo5.jpg
+6,jiwoo,생일 카드와 친구,장면 일치 후보·최종 검수 전,내용 대체로 일치. 얼굴 닮음·세부 사건·화질은 최종 승인 전,652x389,예,readwrite/images/jiwoo6.jpg
+6,minseo,생일 카드와 친구,장면 일치 후보·최종 검수 전,내용 대체로 일치. 얼굴 닮음·세부 사건·화질은 최종 승인 전,652x389,예,readwrite/images/minseo6.jpg
+7,jiwoo,의자 위 열쇠와 가방,장면 일치 후보·최종 검수 전,내용 대체로 일치. 얼굴 닮음·세부 사건·화질은 최종 승인 전,652x395,예,readwrite/images/jiwoo7.jpg
+7,minseo,의자 위 열쇠와 가방,장면 일치 후보·최종 검수 전,내용 대체로 일치. 얼굴 닮음·세부 사건·화질은 최종 승인 전,652x395,예,readwrite/images/minseo7.jpg
+8,jiwoo,미나의 노래와 주인공의 책,장면 일치 후보·최종 검수 전,내용 대체로 일치. 얼굴 닮음·세부 사건·화질은 최종 승인 전,1672x941,예,readwrite/images/jiwoo8.jpg
+8,minseo,미나의 노래와 주인공의 책,장면 일치 후보·최종 검수 전,내용 대체로 일치. 얼굴 닮음·세부 사건·화질은 최종 승인 전,1280x1280,예,readwrite/images/minseo8.jpg
+9,jiwoo,책을 들고 도서관으로 이동,장면 일치 후보·최종 검수 전,내용 대체로 일치. 얼굴 닮음·세부 사건·화질은 최종 승인 전,1280x1280,예,readwrite/images/jiwoo9.jpg
+9,minseo,책을 들고 도서관으로 이동,장면 일치 후보·최종 검수 전,내용 대체로 일치. 얼굴 닮음·세부 사건·화질은 최종 승인 전,1280x1280,예,readwrite/images/minseo9.jpg
+10,jiwoo,복도·점심·선생님,장면 일치 후보·최종 검수 전,내용 대체로 일치. 얼굴 닮음·세부 사건·화질은 최종 승인 전,1672x470,예,readwrite/images/jiwoo10.jpg
+10,minseo,복도·점심·선생님,장면 일치 후보·최종 검수 전,내용 대체로 일치. 얼굴 닮음·세부 사건·화질은 최종 승인 전,1672x468,예,readwrite/images/minseo10.jpg
+11,jiwoo,무거운 가방을 들고 학교에 가기,재작업 필요: 앱 표시 제외,"기존 그림은 책 장터로, 원문 무거운 가방과 불일치",1448x1086,아니요,illustration_candidates/jiwoo11.jpg
+11,minseo,무거운 가방을 들고 학교에 가기,재작업 필요: 앱 표시 제외,"기존 그림은 책 장터로, 원문 무거운 가방과 불일치",1448x1086,아니요,illustration_candidates/minseo11.jpg
+12,jiwoo,"숙제와 교과서, 문 열지 않기",재작업 필요: 앱 표시 제외,"기존 그림은 창문/종이 날림으로, 원문 숙제/교과서와 불일치",1448x1086,아니요,illustration_candidates/jiwoo12.jpg
+12,minseo,"숙제와 교과서, 문 열지 않기",재작업 필요: 앱 표시 제외,"기존 그림은 창문/종이 날림으로, 원문 숙제/교과서와 불일치",1448x1086,아니요,illustration_candidates/minseo12.jpg
+13,jiwoo,카드에 있는 의사와 선생님,재작업 필요: 앱 표시 제외,"기존 그림은 할아버지 카드로, 원문 의사 카드와 불일치",1448x1086,아니요,illustration_candidates/jiwoo13.jpg
+13,minseo,카드에 있는 의사와 선생님,재작업 필요: 앱 표시 제외,"기존 그림은 할아버지 카드로, 원문 의사 카드와 불일치",1448x1086,아니요,illustration_candidates/minseo13.jpg
+14,jiwoo,"지도와 배 그림, 꽃 건네기",재작업 필요: 앱 표시 제외,"기존 그림은 음악 공연으로, 원문 지도/배와 불일치",1448x1086,아니요,illustration_candidates/jiwoo14.jpg
+14,minseo,"지도와 배 그림, 꽃 건네기",재작업 필요: 앱 표시 제외,"기존 그림은 음악 공연으로, 원문 지도/배와 불일치",1448x1086,아니요,illustration_candidates/minseo14.jpg
+15,jiwoo,가방 속 모자와 아침 식사,재작업 필요: 앱 표시 제외,"기존 그림은 케이크로, 원문 모자/가방과 불일치",1448x1086,아니요,illustration_candidates/jiwoo15.jpg
+15,minseo,가방 속 모자와 아침 식사,재작업 필요: 앱 표시 제외,"기존 그림은 케이크로, 원문 모자/가방과 불일치",1448x1086,아니요,illustration_candidates/minseo15.jpg
+16,jiwoo,식물·달·책 이야기,재작업 필요: 앱 표시 제외,"기존 그림은 공원 그림 그리기로, 원문 식물/달과 불일치",1448x540,아니요,illustration_candidates/jiwoo16.jpg
+16,minseo,식물·달·책 이야기,재작업 필요: 앱 표시 제외,"기존 그림은 공원 그림 그리기로, 원문 식물/달과 불일치",1448x540,아니요,illustration_candidates/minseo16.jpg
+17,jiwoo,그림 스케치와 전시실 방문,재작업 필요: 앱 표시 제외,"기존 그림은 도서관 공연표로, 원문 스케치/전시실과 불일치",441x441,아니요,illustration_candidates/jiwoo17.jpg
+17,minseo,그림 스케치와 전시실 방문,재작업 필요: 앱 표시 제외,"기존 그림은 도서관 공연표로, 원문 스케치/전시실과 불일치",441x440,아니요,illustration_candidates/minseo17.jpg
+18,jiwoo,극장 표를 들고 역에 가기,재작업 필요: 앱 표시 제외,"기존 그림은 가정의 카드로, 원문 극장 표/역과 불일치",437x441,아니요,illustration_candidates/jiwoo18.jpg
+18,minseo,극장 표를 들고 역에 가기,재작업 필요: 앱 표시 제외,"기존 그림은 가정의 카드로, 원문 극장 표/역과 불일치",437x440,아니요,illustration_candidates/minseo18.jpg
+19,jiwoo,선물과 슬픈 표정,재작업 필요: 앱 표시 제외,"기존 그림은 다리 건너기로, 원문 선물과 슬픔과 불일치",437x441,아니요,illustration_candidates/jiwoo19.jpg
+19,minseo,선물과 슬픈 표정,재작업 필요: 앱 표시 제외,"기존 그림은 다리 건너기로, 원문 선물과 슬픔과 불일치",437x440,아니요,illustration_candidates/minseo19.jpg
+20,jiwoo,야구 경기 관람,재작업 필요: 앱 표시 제외,"기존 그림은 음악 공연으로, 원문 야구 경기와 불일치",441x441,아니요,illustration_candidates/jiwoo20.jpg
+20,minseo,야구 경기 관람,재작업 필요: 앱 표시 제외,"기존 그림은 음악 공연으로, 원문 야구 경기와 불일치",441x440,아니요,illustration_candidates/minseo20.jpg
+21,jiwoo,로봇과 컴퓨터,재작업 필요: 앱 표시 제외,"기존 그림은 교실 정리로, 원문 로봇/컴퓨터와 불일치",352x441,아니요,illustration_candidates/jiwoo21.jpg
+21,minseo,로봇과 컴퓨터,재작업 필요: 앱 표시 제외,"기존 그림은 교실 정리로, 원문 로봇/컴퓨터와 불일치",352x440,아니요,illustration_candidates/minseo21.jpg
+22,jiwoo,가게에서 책 고르기,재작업 필요: 앱 표시 제외,"기존 그림은 공원 벤치로, 원문 가게/책과 불일치",349x441,아니요,illustration_candidates/jiwoo22.jpg
+22,minseo,가게에서 책 고르기,재작업 필요: 앱 표시 제외,"기존 그림은 공원 벤치로, 원문 가게/책과 불일치",349x440,아니요,illustration_candidates/minseo22.jpg
+23,jiwoo,책상 위 책과 도서관,재작업 필요: 앱 표시 제외,"기존 그림은 비바람 교실로, 원문 도서관 이야기와 불일치",348x441,아니요,illustration_candidates/jiwoo23.jpg
+23,minseo,책상 위 책과 도서관,재작업 필요: 앱 표시 제외,"기존 그림은 비바람 교실로, 원문 도서관 이야기와 불일치",348x440,아니요,illustration_candidates/minseo23.jpg
+24,jiwoo,꽃과 선물을 친구에게 건네기,재작업 필요: 앱 표시 제외,"기존 그림은 교사께 꽃 전달로, 원문 친구에게 선물 전달과 불일치",349x441,아니요,illustration_candidates/jiwoo24.jpg
+24,minseo,꽃과 선물을 친구에게 건네기,재작업 필요: 앱 표시 제외,"기존 그림은 교사께 꽃 전달로, 원문 친구에게 선물 전달과 불일치",349x440,아니요,illustration_candidates/minseo24.jpg
+25,jiwoo,학교에 온 의사·작은 가방,재작업 필요: 앱 표시 제외,"기존 그림은 조용한 도서관으로, 원문 학교 의사와 불일치",352x441,아니요,illustration_candidates/jiwoo25.jpg
+25,minseo,학교에 온 의사·작은 가방,재작업 필요: 앱 표시 제외,"기존 그림은 조용한 도서관으로, 원문 학교 의사와 불일치",352x440,아니요,illustration_candidates/minseo25.jpg
+26,jiwoo,숙제와 쪽지 함께 확인,장면 일치 후보·최종 검수 전,내용 대체로 일치. 얼굴 닮음·세부 사건·화질은 최종 승인 전,512x512,예,readwrite/images/jiwoo26.jpg
+26,minseo,숙제와 쪽지 함께 확인,장면 일치 후보·최종 검수 전,내용 대체로 일치. 얼굴 닮음·세부 사건·화질은 최종 승인 전,1672x941,예,readwrite/images/minseo26.jpg
+27,jiwoo,역에서 미나가 표를 들고 버스 타기,재작업 필요: 앱 표시 제외,표를 들고 있는 사람이 원문과 달라 보류,512x512,아니요,illustration_candidates/jiwoo27.jpg
+27,minseo,역에서 미나가 표를 들고 버스 타기,재작업 필요: 앱 표시 제외,표를 들고 있는 사람이 원문과 달라 보류,300x444,아니요,illustration_candidates/minseo27.jpg
+28,jiwoo,교실에서 책과 쪽지 교환,장면 일치 후보·최종 검수 전,내용 대체로 일치. 얼굴 닮음·세부 사건·화질은 최종 승인 전,512x512,예,readwrite/images/jiwoo28.jpg
+28,minseo,교실에서 책과 쪽지 교환,장면 일치 후보·최종 검수 전,내용 대체로 일치. 얼굴 닮음·세부 사건·화질은 최종 승인 전,300x444,예,readwrite/images/minseo28.jpg
+29,jiwoo,소풍 목록과 계획,장면 일치 후보·최종 검수 전,내용 대체로 일치. 얼굴 닮음·세부 사건·화질은 최종 승인 전,512x512,예,readwrite/images/jiwoo29.jpg
+29,minseo,소풍 목록과 계획,장면 일치 후보·최종 검수 전,내용 대체로 일치. 얼굴 닮음·세부 사건·화질은 최종 승인 전,300x444,예,readwrite/images/minseo29.jpg
+30,jiwoo,비 오는 교실에서 케이크와 쪽지,장면 일치 후보·최종 검수 전,내용 대체로 일치. 얼굴 닮음·세부 사건·화질은 최종 승인 전,512x512,예,readwrite/images/jiwoo30.jpg
+30,minseo,비 오는 교실에서 케이크와 쪽지,장면 일치 후보·최종 검수 전,내용 대체로 일치. 얼굴 닮음·세부 사건·화질은 최종 승인 전,301x444,예,readwrite/images/minseo30.jpg
