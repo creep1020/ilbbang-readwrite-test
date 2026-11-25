@@ -25,7 +25,7 @@ messaging.onBackgroundMessage(payload => {
     badge: './icon-192.png',
     tag: payload.data?.tag || 'ilbbang-family',
     data: {
-      url: payload.fcmOptions?.link || 'https://creep1020.github.io/I-ll-bang-1/'
+      url: payload.fcmOptions?.link || './'
     }
   };
 
@@ -33,12 +33,13 @@ messaging.onBackgroundMessage(payload => {
 });
 
 // v10: 최신 HTML 배포본 우선 적용
-const CACHE = 'ilppang-seq-v10-fcm';
+const CACHE = 'ilppang-seq-rw-v2';
 
 const FILES = [
   './',
   './index.html',
   './manifest.webmanifest',
+  './readwrite/lessons.json',
   './icon-192.png',
   './icon-512.png'
 ];

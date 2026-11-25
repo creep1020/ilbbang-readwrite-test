@@ -1,8 +1,8 @@
 {
   "id": "./",
-  "name": "일빵빵 1권 순차 학습",
-  "short_name": "일빵빵 순차",
-  "description": "하루 20문장씩 600문장 학습",
+  "name": "영어 이야기 읽기·쓰기",
+  "short_name": "영어 읽기·쓰기",
+  "description": "일빵빵 기반 영어 이야기 읽기·쓰기 DAY 1~2 통합 테스트",
   "lang": "ko-KR",
   "start_url": "./",
   "scope": "./",

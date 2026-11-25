@@ -1,0 +1,20 @@
+영어 읽기·쓰기 통합 테스트 v2 - 파일 교체 안내
+
+저장소: creep1020/ilbbang-readwrite-test
+
+1. index.html          → 저장소 맨 위 /index.html (기존 파일 교체)
+2. sw.js               → 저장소 맨 위 /sw.js (기존 파일 교체)
+3. manifest.webmanifest → 저장소 맨 위 /manifest.webmanifest (기존 파일 교체)
+
+기존 readwrite/lessons.json, readwrite/images/*, characters/*, 아이콘, Firebase 계정 파일은 그대로 유지합니다.
+이번 업데이트는 원래 일빵빵 1권 앱 저장소가 아니라 테스트 저장소에만 올려 주세요.
+
+변경점:
+- 원래 문장 20개와 복습/말하기/보기 설정 화면을 감춤 (코드 및 데이터 보존)
+- 계정/프로필 선택 바로 아래에 DAY 1~2 읽기·쓰기 내용 직접 표시 (iframe 제거)
+- 민서/지우 프로필 동기화 개선 (Firebase 프로필 업데이트 완료 이벤트 활용)
+- 불규칙동사 4열 표 정렬 개선
+- 제목/날짜/테스트 열기 버튼 정리
+- 학습 완료 기록은 로컬 저장만; Firebase 별 연동 미구현
+
+이 버전은 기존 일빵빵 원본 소스를 수정하거나 지우지 않습니다.
