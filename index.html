@@ -6,7 +6,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#fbf8f0">
-<title>영어 읽기·쓰기 DAY 1~2 · v8</title>
+<title>영어 읽기·쓰기 DAY 1~2 · v9</title>
 <style>
 :root{color-scheme:light;--paper:#fbf8f0;--ink:#28251f;--muted:#827b70;--line:#e7dfd2;--accent:#486b55;--soft:#edf3eb}
 *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif}
@@ -215,6 +215,20 @@ button{cursor:pointer}button:disabled{opacity:.4;cursor:default}.primary{backgro
 #rwApp #rwDone:disabled,#rwApp #rwRandomDone:disabled{opacity:.53;background:#7d8e80;cursor:not-allowed}
 #rwApp .rw-expression{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) auto auto}
 #rwApp .rw-writing-tools{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+
+/* v9: familiar Ilbbang date/day controls, adapted to reading and writing, not original 20 sentences. */
+#rwApp #rwSchedulePanel{margin:0 0 14px;padding:16px 15px;background:#fff;border:1px solid var(--line);border-radius:16px}
+#rwApp .rw-schedule .controls{gap:8px;align-items:center;justify-content:flex-start;flex-wrap:wrap}
+#rwApp .rw-schedule label{font-size:13px;color:var(--muted);white-space:nowrap}
+#rwApp .rw-schedule input[type="date"]{min-width:0;flex:1 1 175px;max-width:270px;padding:10px 11px}
+#rwApp .rw-schedule button,#rwApp .rw-schedule select{font-size:15px;line-height:1.4;padding:11px 13px;min-height:44px;margin:0}
+#rwApp .rw-schedule select{min-width:104px;max-width:154px}
+#rwApp .rw-schedule-today{margin-top:10px}
+#rwApp .rw-schedule-days,#rwApp .rw-schedule-next{margin-top:10px}
+#rwApp .rw-schedule .progress{margin:12px 0 6px;height:7px}
+#rwApp #rwStartStatus:empty{display:none}
+#rwApp .rw-story-record-row{display:block!important}
+@media(max-width:400px){#rwApp #rwSchedulePanel{padding:13px 11px}#rwApp .rw-schedule button,#rwApp .rw-schedule select{padding:10px 11px}}
 </style></head>
  <script>
 if ('serviceWorker' in navigator) {
@@ -241,40 +255,46 @@ if ('serviceWorker' in navigator) {
 <div class="status" style="margin-top:10px">프로필마다 학습 진도, 완료 기록, 연속 학습, 별 포인트, 배지와 복습 목록이 분리됩니다. 기존 기록은 첫 프로필로 보존해 옮깁니다.</div>
 </section>
 <section id="rwApp" aria-label="읽기와 쓰기 학습">
-  <div class="rw-section rw-review-box" id="rwRandomPanel">
+  <div class="panel rw-schedule" id="rwSchedulePanel">
+    <div class="controls rw-schedule-first"><label for="rwStartDate">학습 시작일</label><input type="date" id="rwStartDate"><button type="button" id="rwApply">적용</button></div>
+    <div class="controls rw-schedule-today"><button type="button" id="rwToday">오늘의 DAY</button></div>
+    <div class="controls rw-schedule-days"><button type="button" id="rwPrevDay">← 이전 DAY</button><select id="rwDay" aria-label="읽기 쓰기 DAY 선택"><option value="1">DAY 1</option><option value="2">DAY 2</option></select></div>
+    <div class="controls rw-schedule-next"><button type="button" id="rwNextDay">다음 DAY →</button></div>
+    <div class="progress"><span id="rwProgressBar"></span></div>
+    <div class="small" id="rwProgressLabel">녹음 기록을 확인하는 중이에요.</div>
+    <div class="small" id="rwStartStatus" role="status"></div>
+  </div>
+  <div class="rw-section rw-review-box" id="rwRandomPanel" hidden>
       <strong>📚 오늘의 랜덤 복습 이야기</strong>
       <p class="rw-muted" id="rwRandomIntro">150편 이야기 목록을 불러오는 중이에요.</p>
       <div id="rwRandomStory" aria-live="polite"><p class="rw-muted">복습 이야기를 불러오는 중이에요.</p></div>
       <p class="rw-muted">하루 한 편을 프로필별로 고정해 보여줘요. 다음 날에는 가능한 다른 이야기를 우선 선택해요.</p>
       <div id="rwReviewWords" class="rw-due-words" hidden></div>
     </div>
-  <div class="rw-top" id="rwTodayStoryHeader">
-    <div class="rw-flex"><strong>📖 오늘의 정규 이야기 <span class="rw-version">v8</span></strong><span id="rwProfileName" class="rw-pill">프로필을 선택해 주세요</span></div>
-    <div class="rw-flex rw-day-selector">
-      <label for="rwDay">학습 DAY</label><select id="rwDay" aria-label="읽기 쓰기 DAY 선택"><option value="1">DAY 1</option><option value="2">DAY 2</option></select>
-      <span id="rwDoneStatus" class="rw-muted">학습 전</span>
-    </div>
-  </div>
-  <div id="rwLoginHint" class="rw-note">위에서 가족 계정에 로그인하고 프로필을 선택하면 해당 주인공의 이야기가 나와요.</div>
-<div id="rwStudy" hidden>
-    <img id="rwHero" class="rw-hero" alt="오늘의 이야기 삽화" loading="eager">
-    <button id="rwDownload" type="button" class="rw-download">📥 전체 학습 이미지 저장</button>
-    <h2 id="rwTitle" class="rw-title"></h2><p id="rwSubtitle" class="rw-muted rw-subtitle"></p>
-    <div class="rw-section"><strong>📖 영어 이야기</strong><p class="rw-muted">영어 문장을 듣고 직접 녹음해요. 녹음을 완료해야 다음 문장이 열립니다. 마이크를 켜고 녹음 종료까지 눌러 주세요.</p><div id="rwStory"></div></div>
-    <div class="rw-section"><strong>🧠 이야기 이해하기</strong><div id="rwQuiz"></div></div>
-    <div class="rw-section"><strong>✏️ 영작 5문제</strong><p class="rw-muted">공책에 직접 쓴 뒤 모범답안과 비교하고 정답·오답을 표시해요. 사진 자동채점은 사용하지 않아요.</p><div id="rwWriting"></div></div>
-    <div class="rw-section"><strong>🔄 불규칙동사 복습</strong><div class="rw-table-wrap"><table class="rw-verbs" aria-label="불규칙동사 표"><colgroup><col><col><col><col></colgroup><thead><tr><th>원형</th><th>과거형</th><th>과거분사</th><th>뜻</th></tr></thead><tbody id="rwVerbs"></tbody></table></div></div>
-    <div class="rw-section"><strong>✨ 오늘의 새 표현</strong><div id="rwVocab"></div></div>
-    <div class="rw-section"><strong>⭐ 학습 완료</strong><p class="rw-muted">영어 이야기 9문장을 모두 녹음하면 학습 완료 버튼이 열려요. 기록은 프로필별로 이 기기에 저장됩니다.</p><button id="rwDone" class="rw-done" type="button">오늘 학습 완료하기</button><p id="rwDoneMsg" class="rw-muted" role="status"></p></div>
-        <div class="rw-section rw-review-box" id="rwMistakePanel">
+        <div class="rw-section rw-review-box" id="rwMistakePanel" hidden>
       <div class="rw-flex"><strong>✏️ 영작 오답 복습</strong><span id="rwReviewTotal" class="rw-pill">등록 0개</span></div>
       <p class="rw-muted">공책에 쓴 답과 모범답안을 비교한 뒤 오답으로 표시한 문장만 다시 연습해요. 모르는 새 표현은 위 복습 이야기 아래에 표시돼요.</p>
       <div class="rw-review-tabs"><button id="rwReviewDue" type="button" class="rw-small rw-tab-active">오늘 복습</button><button id="rwReviewAll" type="button" class="rw-small">전체 카드</button></div>
       <div id="rwReviewCards" aria-live="polite"></div>
       <p id="rwReviewMarkMsg" class="rw-muted" role="status"></p>
       <p id="rwReviewStorageMsg" class="rw-muted" role="alert"></p>
-      <p class="rw-muted">영작 오답은 다음 날 다시 확인하고, 이후 맞혔을 때 복습 간격을 늘려요.</p>
+      <p class="rw-muted">영작 오답은 다음 DAY부터 다시 확인하고, 이후 맞혔을 때 복습 간격을 늘려요.</p>
     </div>
+  <div class="rw-top" id="rwTodayStoryHeader">
+    <div class="rw-flex"><strong>📖 오늘의 정규 이야기 <span class="rw-version">v9</span></strong><span id="rwProfileName" class="rw-pill">프로필을 선택해 주세요</span></div>
+    <div class="rw-flex"><span id="rwDoneStatus" class="rw-muted">학습 전</span></div>
+  </div>
+  <div id="rwLoginHint" class="rw-note">위에서 가족 계정에 로그인하고 프로필을 선택하면 해당 주인공의 이야기가 나와요.</div>
+<div id="rwStudy" hidden>
+    <img id="rwHero" class="rw-hero" alt="오늘의 이야기 삽화" loading="eager">
+    <button id="rwDownload" type="button" class="rw-download">📥 전체 학습 이미지 저장</button>
+    <h2 id="rwTitle" class="rw-title"></h2><p id="rwSubtitle" class="rw-muted rw-subtitle"></p>
+    <div class="rw-section"><strong>📖 영어 이야기</strong><p class="rw-muted">모든 문장은 처음부터 볼 수 있어요. 문장마다 녹음한 뒤 종료를 눌러 저장하세요. 9문장 녹음을 완료해야 오늘 학습 완료 버튼이 열려요.</p><div id="rwStory"></div></div>
+    <div class="rw-section"><strong>🧠 이야기 이해하기</strong><div id="rwQuiz"></div></div>
+    <div class="rw-section"><strong>✏️ 영작 5문제</strong><p class="rw-muted">공책에 직접 쓴 뒤 모범답안과 비교하고 정답·오답을 표시해요. 사진 자동채점은 사용하지 않아요.</p><div id="rwWriting"></div></div>
+    <div class="rw-section"><strong>🔄 불규칙동사 복습</strong><div class="rw-table-wrap"><table class="rw-verbs" aria-label="불규칙동사 표"><colgroup><col><col><col><col></colgroup><thead><tr><th>원형</th><th>과거형</th><th>과거분사</th><th>뜻</th></tr></thead><tbody id="rwVerbs"></tbody></table></div></div>
+    <div class="rw-section"><strong>✨ 오늘의 새 표현</strong><div id="rwVocab"></div></div>
+    <div class="rw-section"><strong>⭐ 학습 완료</strong><p class="rw-muted">9문장은 모두 미리 읽을 수 있고, 녹음을 모두 마친 후에만 오늘 학습 완료 버튼을 누를 수 있어요. 기록은 프로필별로 이 기기에 저장됩니다.</p><button id="rwDone" class="rw-done" type="button">오늘 학습 완료하기</button><p id="rwDoneMsg" class="rw-muted" role="status"></p></div>
   <div class="rw-section rw-review-box" id="rwCalendarPanel">
   <strong>🗓️ 나의 읽기·쓰기 학습 달력</strong>
   <p class="rw-muted">학습 완료 날짜와 DAY 진도를 프로필별로 저장해요.</p>
@@ -2829,13 +2849,12 @@ function cancel(kind){if(active&&active.kind===kind){active.cancelled=true;try{i
 function complete(kind){const s=states[kind];return Boolean(s?.ready&&s.records.length===s.meta.count&&s.records.every(r=>r&&r.blob?.size>0));}
 function update(kind){
  const scope=root[kind](),s=states[kind];if(!scope||!s)return;
- const firstMissing=s.ready?s.records.findIndex(x=>!x):-1;
- const next=s.ready?(firstMissing<0?s.meta.count:firstMissing):0;
- const done=s.ready&&next===s.meta.count;
+ const done=complete(kind);
+ const recorded=s.records.filter(Boolean).length;
  const head=scope.querySelector('[data-rw-rec-progress]');
- if(head)head.textContent=s.error?`⚠️ ${s.error}`:(s.ready?`🎙 문장 녹음 ${s.records.filter(Boolean).length} / ${s.meta.count} · ${done?'모든 문장 완료!':'녹음을 마쳐야 다음 문장이 열려요.'}`:'기존 녹음 기록 확인 중…');
+ if(head)head.textContent=s.error?`⚠️ ${s.error}`:(s.ready?`🎙 문장 녹음 ${recorded} / ${s.meta.count} · ${done?'모든 문장 완료!':'문장은 모두 볼 수 있어요. 녹음 완료 후 학습 완료할 수 있어요.'}`:'기존 녹음 기록 확인 중…');
  scope.querySelectorAll('[data-rw-rec-row]').forEach(row=>{
-  const i=Number(row.dataset.rwRecRow);row.hidden=i>next;
+  const i=Number(row.dataset.rwRecRow);row.hidden=false;
   const b=row.querySelector('[data-rw-rec-toggle]');const audio=row.querySelector('[data-rw-rec-audio]');const m=row.querySelector('[data-rw-rec-msg]');const v=s.records[i];const current=active&&active.kind===kind&&active.index===i&&active.state===s;
   if(!b||!audio||!m)return;
   b.disabled=!s.ready||Boolean(active&&!current);
@@ -2846,11 +2865,12 @@ function update(kind){
    if(audio.src!==s.urls[i])audio.src=s.urls[i];
    audio.hidden=false;
    if(!current){m.textContent='✅ 녹음 저장 완료 · 아래에서 내 목소리를 들을 수 있어요.';m.classList.remove('rw-record-err');}
-  }else{audio.hidden=true;audio.removeAttribute('src');if(!current){m.textContent=i===next?'마이크 버튼을 눌러 녹음한 뒤 종료해 주세요.':'녹음 완료 후 열려요.';m.classList.remove('rw-record-err');}}
+  }else{audio.hidden=true;audio.removeAttribute('src');if(!current){m.textContent='마이크 버튼을 눌러 녹음한 뒤 종료해 주세요.';m.classList.remove('rw-record-err');}}
   if(current){m.textContent=active.stopRequested?'음성 저장 중…':'🔴 녹음 중입니다. 영어로 읽고 녹음 종료를 눌러 주세요.';m.classList.remove('rw-record-err');}
  });
  if(kind==='regular'){
   const b=document.getElementById('rwDone');if(b)b.disabled=!done;
+  window.rwUpdateScheduleProgress?.(recorded,s.meta.count);
  }else{const b=document.getElementById('rwRandomDone');if(b)b.disabled=!done;}
 }
 async function prepare(kind,meta){
@@ -2953,6 +2973,30 @@ function saySentence(i,button){
  activeVoice=button;button.textContent='■ 중지';window.speechSynthesis.speak(req);
 }
 function completionKey(day){return 'rwCompletedV1:'+chosen.id+':'+day;}
+
+function todayISO(){const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');}
+const rwStartKey=()=>`rwStartDateV9:${encodeURIComponent(chosen.id||'no-profile')}`;
+function rwSavedStart(){let v='';try{v=localStorage.getItem(rwStartKey())||localStorage.getItem('ilbbangSeq600Start')||'';}catch(e){}return /^\d{4}-\d{2}-\d{2}$/.test(v)?v:todayISO();}
+function rwUpdateScheduleProgress(n=0,total=9){
+ const day=Number(R('Day').value),id=chosen.id;
+ let count=0;for(let i=1;i<=2;i++){try{if(id&&localStorage.getItem(completionKey(i)))count++;}catch(e){}}
+ const currentDone=Boolean(id&&(()=>{try{return localStorage.getItem(completionKey(day));}catch(e){return null;}})());
+ const part=currentDone?0:Math.min(1,(Number(n)||0)/(Number(total)||9));
+ const fraction=Math.min(1,(count+part)/2);
+ document.getElementById('rwProgressBar').style.width=(fraction*100)+'%';
+ document.getElementById('rwProgressLabel').textContent=`읽기·쓰기 완료 ${count}/2 DAY · 현재 DAY ${day} 녹음 ${n}/${total}문장`;
+ R('PrevDay').disabled=day<=1;R('NextDay').disabled=day>=2;
+}
+window.rwUpdateScheduleProgress=rwUpdateScheduleProgress;
+function rwChooseDay(day){R('Day').value=String(Math.min(2,Math.max(1,day)));render();}
+function rwTodayDay(){const start=R('StartDate').value||rwSavedStart(),a=new Date(start+'T12:00:00'),b=new Date(todayISO()+'T12:00:00');return Math.min(2,Math.max(1,Math.floor((b-a)/86400000)+1));}
+function rwLoadStart(){R('StartDate').value=rwSavedStart();R('StartStatus').textContent='';}
+R('Apply').onclick=()=>{const value=R('StartDate').value;if(!value){R('StartStatus').textContent='학습 시작일을 선택해 주세요.';return;}try{localStorage.setItem(rwStartKey(),value);R('StartStatus').textContent='학습 시작일을 저장했어요.';}catch(e){R('StartStatus').textContent='저장 공간을 확인해 주세요.';}rwChooseDay(rwTodayDay());};
+R('Today').onclick=()=>rwChooseDay(rwTodayDay());
+R('PrevDay').onclick=()=>rwChooseDay(Number(R('Day').value)-1);
+R('NextDay').onclick=()=>rwChooseDay(Number(R('Day').value)+1);
+rwLoadStart();
+
 function render(){
  if(!lessons.length)return;
  const ready=Boolean(chosen.id&&chosen.name);
@@ -2968,7 +3012,7 @@ function render(){
  R('Download').onclick=()=>{const a=document.createElement('a');a.href='./readwrite/images/'+p+day+'_study.png';a.download='DAY'+day+'_'+en+'_study.png';document.body.appendChild(a);a.click();a.remove();};
  R('Title').textContent='DAY '+day+' · '+(day===1?en+"'s Little Surprise":en+' and the Heart Card');
  R('Subtitle').textContent=day===1?'작은 깜짝 선물':'하트 카드';
- R('Story').innerHTML='<div class="rw-record-progress" data-rw-rec-progress>녹음 기록 확인 중…</div>'+l.story.map((s,i)=>'<div class="rw-sentence rw-story-record-row" data-rw-rec-row="'+i+'" '+(i?'hidden':'')+'><b>'+(i+1)+'. '+escapeHTML(localize(s[0],p,day))+'</b><div class="rw-ko" hidden>'+escapeHTML(localize(s[1],p,day))+'</div><div class="rw-record-tools"><button type="button" class="rw-small" data-rw-voice="'+i+'">🔊 듣기</button><button type="button" class="rw-small rw-translation-button" data-rw-show-ko="'+i+'" aria-expanded="false">해석 보기</button><button type="button" data-rw-rec-toggle="regular" data-rw-rec-index="'+i+'">🎙 녹음 시작</button></div><span class="rw-rec-msg" data-rw-rec-msg role="status">녹음 후 다음 문장이 열려요.</span><audio data-rw-rec-audio controls preload="none" hidden></audio></div>').join('');
+ R('Story').innerHTML='<div class="rw-record-progress" data-rw-rec-progress>녹음 기록 확인 중…</div>'+l.story.map((s,i)=>'<div class="rw-sentence rw-story-record-row" data-rw-rec-row="'+i+'"><b>'+(i+1)+'. '+escapeHTML(localize(s[0],p,day))+'</b><div class="rw-ko" hidden>'+escapeHTML(localize(s[1],p,day))+'</div><div class="rw-record-tools"><button type="button" class="rw-small" data-rw-voice="'+i+'">🔊 듣기</button><button type="button" class="rw-small rw-translation-button" data-rw-show-ko="'+i+'" aria-expanded="false">해석 보기</button><button type="button" data-rw-rec-toggle="regular" data-rw-rec-index="'+i+'">🎙 녹음 시작</button></div><span class="rw-rec-msg" data-rw-rec-msg role="status">녹음해서 학습 완료를 준비해요.</span><audio data-rw-rec-audio controls preload="none" hidden></audio></div>').join('');
  R('Story').querySelectorAll('[data-rw-voice]').forEach(b=>b.onclick=()=>saySentence(Number(b.dataset.rwVoice),b));
  R('Story').querySelectorAll('[data-rw-show-ko]').forEach(b=>b.onclick=()=>{const line=b.closest('.rw-sentence'),ko=line.querySelector('.rw-ko');ko.hidden=!ko.hidden;b.textContent=ko.hidden?'해석 보기':'해석 숨기기';b.setAttribute('aria-expanded',String(!ko.hidden));});
  window.rwStoryRecorder?.prepare('regular',{profile:chosen.id,story:'day-'+day,person:p,count:l.story.length});
@@ -2979,15 +3023,15 @@ function render(){
  R('Verbs').innerHTML=l.verbs.map(v=>'<tr><td>'+escapeHTML(v[0])+'</td><td>'+escapeHTML(v[1])+'</td><td>'+escapeHTML(v[2])+'</td><td>'+escapeHTML(v[3])+' · '+escapeHTML(v[4])+'</td></tr>').join('');
  R('Vocab').innerHTML=l.vocab.map((v,i)=>'<div class="rw-expression"><b>'+escapeHTML(v[0])+'</b><span>'+escapeHTML(v[1])+'</span><button type="button" class="rw-small" data-rw-vocab="'+i+'" data-rw-vocab-choice="know" aria-pressed="false">알아요</button><button type="button" class="rw-small" data-rw-vocab="'+i+'" data-rw-vocab-choice="unknown" aria-pressed="false">몰라요</button></div>').join('');
  const key=completionKey(day);let done=false;try{done=Boolean(localStorage.getItem(key));}catch(e){}
- R('DoneStatus').textContent=done?'✓ 완료':'학습 전';R('DoneMsg').textContent='';R('Done').disabled=true;
- R('Done').onclick=()=>{if(!window.rwStoryRecorder?.complete('regular')){R('DoneMsg').textContent='영어 이야기의 모든 문장을 녹음하면 학습 완료할 수 있어요.';return;}try{localStorage.setItem(key,new Date().toISOString());R('DoneStatus').textContent='✓ 완료';R('DoneMsg').textContent='✓ 완료! 아래 학습 달력에 기록했어요.';window.dispatchEvent(new Event('rw:lesson'));document.getElementById('rwCalendarPanel')?.scrollIntoView({behavior:'smooth',block:'start'});}catch(e){R('DoneMsg').textContent='저장에 실패했어요. 브라우저 저장 공간을 확인해 주세요.';}};
+ R('DoneStatus').textContent=done?'✓ 완료':'학습 전';R('DoneMsg').textContent='';R('Done').disabled=true;rwUpdateScheduleProgress(0,l.story.length);
+ R('Done').onclick=()=>{if(!window.rwStoryRecorder?.complete('regular')){R('DoneMsg').textContent='영어 이야기의 모든 문장을 녹음하면 학습 완료할 수 있어요.';return;}try{localStorage.setItem(key,new Date().toISOString());R('DoneStatus').textContent='✓ 완료';R('DoneMsg').textContent='✓ 완료! 아래 학습 달력에 기록했어요.';rwUpdateScheduleProgress(l.story.length,l.story.length);window.dispatchEvent(new Event('rw:lesson'));document.getElementById('rwCalendarPanel')?.scrollIntoView({behavior:'smooth',block:'start'});}catch(e){R('DoneMsg').textContent='저장에 실패했어요. 브라우저 저장 공간을 확인해 주세요.';}};
 window.dispatchEvent(new Event('rw:lesson'));
 }
 function setProfile(data){
  if(!data||!data.id)return;
  const next={id:String(data.id),name:String(data.name||'프로필').trim()};
  if(next.id===chosen.id&&next.name===chosen.name)return;
- chosen=next;render();window.dispatchEvent(new Event('rw:profile'));
+ chosen=next;rwLoadStart();render();window.dispatchEvent(new Event('rw:profile'));
 }
 function syncSelector(){
  const sel=document.getElementById('profileSelect');
@@ -3000,7 +3044,7 @@ function syncSelector(){
 window.rwReviewGetContext=()=>({profileId:chosen.id,profileName:chosen.name,person:chosen.id?getPerson():'jiwoo',day:Number(R('Day').value)});
 window.rwReviewGetLessons=()=>lessons;
 window.ilbbangOnProfileUpdated=setProfile;
-R('Day').addEventListener('change',render);
+R('Day').addEventListener('change',()=>{render();});
 R('Writing').addEventListener('click',e=>{const b=e.target.closest('[data-rw-mark-w]');if(!b)return;const d=Number(R('Day').value),i=Number(b.dataset.rwMarkW);window.rwReviewEngine?.toggleWriting(d,i);});
 R('Vocab').addEventListener('click',e=>{const b=e.target.closest('[data-rw-vocab-choice]');if(!b)return;window.rwReviewEngine?.mark('expression',Number(R('Day').value),Number(b.dataset.rwVocab),b.dataset.rwVocabChoice==='unknown'?'wrong':'correct');});
 // A small fallback handles older browser events and login initialization.
@@ -7835,41 +7879,42 @@ function entries(d){return [...Object.entries(d.writing).map(([k,v])=>({...v,kin
 function grade(kind,day,index,choice){if(!context().profileId)return;const d=read(),bucket=kind==='writing'?d.writing:d.expressions,k=`${day}:${index}`,source=item(kind,day,index);if(!source)return;
  if(choice==='wrong'){bucket[k]={...source,step:0,next:date(1)};if(kind==='expression')d.knownExpressions[k]=false;}
  else {delete bucket[k];if(kind==='expression')d.knownExpressions[k]=true;}
- if(save(d)){$('rwReviewMarkMsg').textContent=choice==='wrong'?(kind==='writing'?'영작 오답에 저장했어요. 다음 날부터 복습해요.':'몰랐던 표현으로 저장했어요. 다음 학습일에 이야기와 함께 복습해요.'):(kind==='writing'?'정답으로 바꿨어요. 오답 목록에서 제외했어요.':'알아요로 저장했어요. 표현 복습 목록에서 제외했어요.');}
- updateStatus();renderCards();renderReviewWords();$('rwMistakePanel').hidden=!Object.values(read().writing).some(x=>x.next&&x.next<=date());
+ if(save(d)){$('rwReviewMarkMsg').textContent=choice==='wrong'?(kind==='writing'?'영작 오답에 저장했어요. 다음 DAY부터 복습해요.':'몰랐던 표현으로 저장했어요. 다음 학습일에 이야기와 함께 복습해요.'):(kind==='writing'?'정답으로 바꿨어요. 오답 목록에서 제외했어요.':'알아요로 저장했어요. 표현 복습 목록에서 제외했어요.');}
+ updateStatus();renderCards();renderReviewWords();$('rwMistakePanel').hidden=!Object.values(read().writing).some(isDue);
 }
 function toggleWriting(day,index){if(!context().profileId)return;const d=read(),k=`${day}:${index}`;grade('writing',day,index,d.writing[k]?'correct':'wrong');}
-function updateStatus(){const d=read(),cards=entries(d),due=cards.filter(x=>!x.next||x.next<=date());$('rwReviewTotal').textContent=`영작 오답 ${Object.keys(d.writing).length}개 · 오늘 ${due.filter(x=>x.kind==='writing').length}개`;
+function updateStatus(){const d=read(),cards=entries(d),due=cards.filter(isDue);$('rwReviewTotal').textContent=`영작 오답 ${Object.keys(d.writing).length}개 · 오늘 ${due.filter(x=>x.kind==='writing').length}개`;
  document.querySelectorAll('[data-rw-mark-w]').forEach(b=>{const wrong=!!d.writing[`${context().day}:${b.dataset.rwMarkW}`];b.textContent=wrong?'❌ 오답':'✅ 정답이에요';b.setAttribute('aria-pressed',String(wrong));});
  document.querySelectorAll('[data-rw-vocab-choice]').forEach(b=>{const k=`${context().day}:${b.dataset.rwVocab}`,unknown=!!d.expressions[k],known=d.knownExpressions?.[k]===true,chosen=b.dataset.rwVocabChoice==='unknown'?unknown:known;b.classList.toggle(b.dataset.rwVocabChoice==='unknown'?'rw-unknown-selected':'rw-know-selected',chosen);b.setAttribute('aria-pressed',String(chosen));});}
 function stopAudio(){try{speechSynthesis.cancel();}catch(e){}if(speaking){speaking.textContent='🔊 듣기';speaking=null;}}
 function talk(s,b){if(!('speechSynthesis' in window))return alert('이 기기는 듣기를 지원하지 않아요.');if(speaking===b){stopAudio();return;}stopAudio();let u=new SpeechSynthesisUtterance(s);u.lang='en-US';u.rate=.7;speaking=b;b.textContent='■ 중지';u.onend=u.onerror=()=>{if(speaking===b){b.textContent='🔊 듣기';speaking=null;}};speechSynthesis.speak(u);}
 function completionDate(day){const id=context().profileId,stamp=id&&safeGet(`rwCompletedV1:${id}:${day}`);if(!stamp)return '';const d=new Date(stamp);if(Number.isNaN(d.getTime()))return '';return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');}
-function eligible(){const id=context().profileId;if(!id)return[];return bank.filter(s=>s.book===1&&s.verified&&completionDate(s.day)&&completionDate(s.day)<date());}
+function eligible(){const id=context().profileId;if(!id)return[];const current=context().day;return bank.filter(s=>s.book===1&&s.verified&&(s.day<current||(completionDate(s.day)&&completionDate(s.day)<date())));}
 function safeGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function isDue(v){return !!v&&((v.day<context().day&&Number(v.step||0)===0)||!v.next||v.next<=date());}
 function pick(){const candidates=eligible();if(!candidates.length)return null;const d=read(),t=date(),saved=d.daily[t];if(saved&&candidates.some(s=>s.id===saved))return candidates.find(s=>s.id===saved);
  const prev=d.daily[date(-1)];const options=candidates.length>1?candidates.filter(s=>s.id!==prev):candidates;const min=Math.min(...options.map(s=>d.seen[s.id]||0));const least=options.filter(s=>(d.seen[s.id]||0)===min);const found=least[Math.floor(Math.random()*least.length)];d.daily[t]=found.id;d.seen[found.id]=(d.seen[found.id]||0)+1;save(d);return found;}
-function story(){const el=$('rwRandomStory');if(!context().profileId){el.innerHTML='<p class="rw-muted">먼저 학습 프로필을 선택해 주세요.</p>';return;}
+function story(){const el=$('rwRandomStory');if(!context().profileId){$('rwRandomPanel').hidden=true;el.innerHTML='<p class="rw-muted">먼저 학습 프로필을 선택해 주세요.</p>';return;}
  if(!bank.length){el.innerHTML='<p class="rw-muted">이야기를 불러오는 중이에요.</p>';return;}
- const allowed=eligible();if(!allowed.length)window.rwStoryRecorder?.cancel('random');$('rwRandomPanel').hidden=!allowed.length; $('rwRandomIntro').textContent=`검수 완료 ${bank.filter(s=>s.verified).length}편 중 현재 복습 가능 ${allowed.length}편 · DAY 완료 다음 날부터 표시`;
+ const allowed=eligible();if(!allowed.length)window.rwStoryRecorder?.cancel('random');$('rwRandomPanel').hidden=!allowed.length; $('rwRandomIntro').textContent=`검수 완료 ${bank.filter(s=>s.verified).length}편 중 현재 복습 가능 ${allowed.length}편 · DAY 2부터 DAY 1 복습`;
  const s=pick();if(!s){el.innerHTML='';return;}
  const readDone=read().reads[date()]===s.id;
  el.innerHTML=`<div class="rw-review-story-head"><div><span class="rw-review-status">1권 DAY ${s.day}</span><h3>${esc(s.title)}</h3><p class="rw-muted">${esc(s.titleKo)}</p></div></div>`+
- `<div class="rw-record-progress" data-rw-rec-progress>녹음 기록 확인 중…</div>`+s.sentences.map((pair,i)=>`<div class="rw-review-story-line rw-story-record-row" data-rw-rec-row="${i}" ${i?'hidden':''}><b>${i+1}. ${esc(personText(pair[0]))}</b><p class="rw-ko" hidden>${esc(personText(pair[1]))}</p><div class="rw-record-tools"><button class="rw-small" type="button" data-rw-voice="${i}">🔊 듣기</button><button class="rw-small rw-translation-button" type="button" data-rw-random-ko="${i}" aria-expanded="false">해석 보기</button><button type="button" data-rw-rec-toggle="random" data-rw-rec-index="${i}">🎙 녹음 시작</button></div><span class="rw-rec-msg" data-rw-rec-msg role="status">녹음 후 다음 문장이 열려요.</span><audio data-rw-rec-audio controls preload="none" hidden></audio></div>`).join('')+
+ `<div class="rw-record-progress" data-rw-rec-progress>녹음 기록 확인 중…</div>`+s.sentences.map((pair,i)=>`<div class="rw-review-story-line rw-story-record-row" data-rw-rec-row="${i}"><b>${i+1}. ${esc(personText(pair[0]))}</b><p class="rw-ko" hidden>${esc(personText(pair[1]))}</p><div class="rw-record-tools"><button class="rw-small" type="button" data-rw-voice="${i}">🔊 듣기</button><button class="rw-small rw-translation-button" type="button" data-rw-random-ko="${i}" aria-expanded="false">해석 보기</button><button type="button" data-rw-rec-toggle="random" data-rw-rec-index="${i}">🎙 녹음 시작</button></div><span class="rw-rec-msg" data-rw-rec-msg role="status">녹음해서 복습 완료를 준비해요.</span><audio data-rw-rec-audio controls preload="none" hidden></audio></div>`).join('')+
  `<div class="rw-review-actions"><button id="rwRandomDone" class="rw-done" type="button">${readDone?'✓ 오늘 읽기 완료':'✓ 복습 이야기 읽었어요'}</button><span class="rw-muted" id="rwRandomDoneMsg"></span></div>`;
  el.querySelectorAll('[data-rw-random-ko]').forEach(b=>b.onclick=()=>{const ko=b.closest('.rw-review-story-line').querySelector('.rw-ko');ko.hidden=!ko.hidden;b.textContent=ko.hidden?'해석 보기':'해석 숨기기';b.setAttribute('aria-expanded',String(!ko.hidden));});
  el.querySelectorAll('[data-rw-voice]').forEach(b=>b.onclick=()=>talk(personText(s.sentences[Number(b.dataset.rwVoice)][0]),b));
  $('rwRandomDone').onclick=()=>{if(!window.rwStoryRecorder?.complete('random')){ $('rwRandomDoneMsg').textContent='5문장을 모두 녹음한 뒤 완료해 주세요.';return;}let d=read();d.reads[date()]=s.id;if(save(d)){$('rwRandomDone').textContent='✓ 오늘 읽기 완료';$('rwRandomDoneMsg').textContent='이 프로필에 저장했어요.';}};
  window.rwStoryRecorder?.prepare('random',{profile:context().profileId,story:date()+'-'+s.id,person:context().person,count:s.sentences.length});
 }
-function renderReviewWords(){const el=$('rwReviewWords');if(!el)return;const d=read(),due=entries(d).filter(v=>v.kind==='expressions'&&(!v.next||v.next<=date())).sort((a,b)=>a.day-b.day);if(!due.length||$('rwRandomPanel').hidden){el.hidden=true;el.innerHTML='';return;}el.hidden=false;
+function renderReviewWords(){const el=$('rwReviewWords');if(!el)return;const d=read(),due=entries(d).filter(v=>v.kind==='expressions'&&isDue(v)).sort((a,b)=>a.day-b.day);if(!due.length||$('rwRandomPanel').hidden){el.hidden=true;el.innerHTML='';return;}el.hidden=false;
  el.innerHTML='<strong>📝 지난번 몰랐던 표현 복습 · '+due.length+'개</strong><p class="rw-muted">어제까지 몰랐던 표현을 이야기와 함께 확인해요.</p>'+due.map((v,i)=>'<div class="rw-due-word"><div class="rw-word-text"><strong>DAY '+v.day+' · '+esc(personText(v.question))+'</strong><div>'+esc(personText(v.answer))+'</div></div><button type="button" class="rw-small" data-rw-due-word="'+i+'" data-rw-due-answer="know">알아요</button><button type="button" class="rw-small" data-rw-due-word="'+i+'" data-rw-due-answer="unknown">몰라요</button></div>').join('');
  el.querySelectorAll('[data-rw-due-word]').forEach(b=>b.onclick=()=>{const v=due[Number(b.dataset.rwDueWord)];if(v)grade('expression',v.day,v.index,b.dataset.rwDueAnswer==='know'?'correct':'wrong');});}
 function reviewCard(d,v){const bucket=v.kind==='writing'?d.writing:d.expressions;return bucket[v.id];}
 function renderCards(){const el=$('rwReviewCards');if(!context().profileId){el.innerHTML='<p class="rw-muted">먼저 학습 프로필을 선택해 주세요.</p>';return;}
- const d=read(),list=entries(d).filter(v=>v.kind==='writing').sort((a,b)=>(a.next||'').localeCompare(b.next||'')),show=filter==='today'?list.filter(v=>!v.next||v.next<=date()):list;
+ const d=read(),list=entries(d).filter(v=>v.kind==='writing').sort((a,b)=>(a.next||'').localeCompare(b.next||'')),show=filter==='today'?list.filter(isDue):list;
  $('rwReviewDue').classList.toggle('rw-tab-active',filter==='today');$('rwReviewAll').classList.toggle('rw-tab-active',filter==='all');
- if(!show.length){el.innerHTML='<div class="rw-note">'+(list.length?'오늘 복습할 카드는 없어요. 「전체 카드」에서 미리 볼 수 있어요.':'DAY 영작에서 ‘오답’으로 표시하면 다음 날부터 이곳에 나타나요.')+'</div>';return;}
+ if(!show.length){el.innerHTML='<div class="rw-note">'+(list.length?'오늘 복습할 카드는 없어요. 「전체 카드」에서 미리 볼 수 있어요.':'DAY 1 영작에서 ‘오답’으로 표시하면 DAY 2 복습에 나타나요.')+'</div>';return;}
  el.innerHTML=show.map((v,i)=>`<article class="rw-review-card"><div class="rw-review-card-top"><b>${v.kind==='writing'?'✏️ 영작 오답':'🔖 어려운 표현'} · DAY ${v.day}</b><span class="rw-muted">${v.next>date()?'다음 '+v.next:'오늘 복습'}</span></div><p class="rw-review-prompt">${esc(personText(v.question))}</p><div class="rw-review-reveal" hidden>${esc(personText(v.answer))}</div><button class="rw-small" type="button" data-reveal="${i}">정답 보기</button> <button class="rw-small" type="button" data-right="${i}">✅ 맞혔어요</button> <button class="rw-small" type="button" data-again="${i}">🔁 다시 복습</button></article>`).join('');
  show.forEach((v,i)=>{const card=el.children[i],ans=card.querySelector('.rw-review-reveal');card.querySelector('[data-reveal]').onclick=e=>{ans.hidden=!ans.hidden;e.currentTarget.textContent=ans.hidden?'정답 보기':'정답 숨기기';};
   function next(right){const data=read(),b=v.kind==='writing'?data.writing:data.expressions,old=b[v.id];if(!old)return;
@@ -7880,7 +7925,7 @@ function renderCards(){const el=$('rwReviewCards');if(!context().profileId){el.i
   card.querySelector('[data-right]').onclick=()=>next(true);card.querySelector('[data-again]').onclick=()=>next(false);
  });
 }
-function refresh(){stopAudio();updateStatus();story();renderReviewWords();renderCards();const items=read().writing;const hasAny=Object.values(items).some(x=>x.next&&x.next<=date());$('rwMistakePanel').hidden=!hasAny;}
+function refresh(){stopAudio();updateStatus();story();renderReviewWords();renderCards();const items=read().writing;const hasAny=Object.values(items).some(isDue);$('rwMistakePanel').hidden=!hasAny;}
 window.rwReviewEngine={mark:(kind,day,index,action)=>grade(kind,day,index,action),toggleWriting,refresh,diagnostics:()=>({stories:bank.length,verified:bank.filter(s=>s.verified).length,profile:context().profileId})};
 $('rwReviewDue').onclick=()=>{filter='today';renderCards();};$('rwReviewAll').onclick=()=>{filter='all';renderCards();};
 window.addEventListener('rw:profile',refresh);window.addEventListener('rw:lesson',refresh);
