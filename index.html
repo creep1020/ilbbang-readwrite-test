@@ -6,7 +6,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#fbf8f0">
-<title>영어 이야기 읽기·쓰기 · 복습·달력 v5</title>
+<title>읽기·쓰기 · 복습 이야기 먼저 · v6</title>
 <style>
 :root{color-scheme:light;--paper:#fbf8f0;--ink:#28251f;--muted:#827b70;--line:#e7dfd2;--accent:#486b55;--soft:#edf3eb}
 *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif}
@@ -169,6 +169,17 @@ button{cursor:pointer}button:disabled{opacity:.4;cursor:default}.primary{backgro
 #rwApp .rw-month-grid small{font-size:9px;display:block;color:#316747;line-height:1.2;margin-top:3px;white-space:normal}
 #rwApp #rwCalendarPanel{scroll-margin-top:12px}
 #rwApp #rwMistakePanel,#rwApp #rwRandomPanel,#rwApp #rwWriting{scroll-margin-top:12px}
+
+/* v6 no-cost reading routine: random review FIRST, regular lesson SECOND, per-line translation */
+#rwApp #rwRandomPanel{margin-top:4px;margin-bottom:16px;background:#fff;border-color:#d5e2d2}
+#rwApp #rwRandomPanel>strong{display:block;font-size:18px;margin-bottom:6px}
+#rwApp #rwTodayStoryHeader{border-color:#d6dfd0}
+#rwApp .rw-sentence-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:5px}
+#rwApp .rw-sentence-actions button.rw-small{margin-top:5px}
+#rwApp .rw-translation-button{background:#f6f8f2;border-color:#cbd8c8;color:#315f43}
+#rwApp .rw-sentence .rw-ko[hidden]{display:none!important}
+#rwApp .rw-review-story-line .rw-ko[hidden]{display:none!important}
+#rwApp #rwCalendarPanel{margin-top:16px}
 </style></head>
  <script>
 if ('serviceWorker' in navigator) {
@@ -195,31 +206,40 @@ if ('serviceWorker' in navigator) {
 <div class="status" style="margin-top:10px">프로필마다 학습 진도, 완료 기록, 연속 학습, 별 포인트, 배지와 복습 목록이 분리됩니다. 기존 기록은 첫 프로필로 보존해 옮깁니다.</div>
 </section>
 <section id="rwApp" aria-label="읽기와 쓰기 학습">
-  <div class="rw-top">
-    <div class="rw-flex"><strong>📚 오늘의 이야기</strong><span id="rwProfileName" class="rw-pill">프로필을 선택해 주세요</span></div>
+  <div class="rw-section rw-review-box" id="rwRandomPanel">
+      <strong>📚 오늘의 랜덤 복습 이야기</strong>
+      <p class="rw-muted" id="rwRandomIntro">150편 이야기 목록을 불러오는 중이에요.</p>
+      <div id="rwRandomStory" aria-live="polite"><p class="rw-muted">복습 이야기를 불러오는 중이에요.</p></div>
+      <p class="rw-muted">하루 한 편을 프로필별로 고정해 보여줘요. 다음 날에는 가능한 다른 이야기를 우선 선택해요.</p>
+    </div>
+  <div class="rw-top" id="rwTodayStoryHeader">
+    <div class="rw-flex"><strong>📖 오늘의 정규 이야기</strong><span id="rwProfileName" class="rw-pill">프로필을 선택해 주세요</span></div>
     <div class="rw-flex rw-day-selector">
       <label for="rwDay">학습 DAY</label><select id="rwDay" aria-label="읽기 쓰기 DAY 선택"><option value="1">DAY 1</option><option value="2">DAY 2</option></select>
       <span id="rwDoneStatus" class="rw-muted">학습 전</span>
     </div>
   </div>
   <div id="rwLoginHint" class="rw-note">위에서 가족 계정에 로그인하고 프로필을 선택하면 해당 주인공의 이야기가 나와요.</div>
-<nav id="rwQuickNav" class="rw-quicknav" aria-label="읽기 쓰기 바로가기">
-<button type="button" data-rw-go="rwWriting">✏️ 영작</button>
-<button type="button" data-rw-go="rwMistakePanel">🔁 오답 복습</button>
-<button type="button" data-rw-go="rwRandomPanel">📖 랜덤 이야기</button>
-<button type="button" data-rw-go="rwCalendarPanel">🗓️ 학습 달력</button>
-</nav>
-  <div id="rwStudy" hidden>
+<div id="rwStudy" hidden>
     <img id="rwHero" class="rw-hero" alt="오늘의 이야기 삽화" loading="eager">
     <button id="rwDownload" type="button" class="rw-download">📥 전체 학습 이미지 저장</button>
     <h2 id="rwTitle" class="rw-title"></h2><p id="rwSubtitle" class="rw-muted rw-subtitle"></p>
-    <div class="rw-section"><div class="rw-flex"><strong>📖 영어 이야기</strong><label class="rw-check"><input id="rwShowKo" type="checkbox" checked> 해석 보기</label></div><div id="rwStory"></div></div>
+    <div class="rw-section"><strong>📖 영어 이야기</strong><p class="rw-muted">각 문장 아래의 해석 보기 버튼을 눌러 확인해요.</p><div id="rwStory"></div></div>
     <div class="rw-section"><strong>🧠 이야기 이해하기</strong><div id="rwQuiz"></div></div>
-    <div class="rw-section"><strong>✏️ 영작 5문제</strong><p class="rw-muted">공책에 직접 쓰고 정답을 확인하세요.</p><div id="rwWriting"></div></div>
+    <div class="rw-section"><strong>✏️ 영작 5문제</strong><p class="rw-muted">공책에 직접 쓴 뒤 모범답안과 비교하고 정답·오답을 표시해요. 사진 자동채점은 사용하지 않아요.</p><div id="rwWriting"></div></div>
     <div class="rw-section"><strong>🔄 불규칙동사 복습</strong><div class="rw-table-wrap"><table class="rw-verbs" aria-label="불규칙동사 표"><colgroup><col><col><col><col></colgroup><thead><tr><th>원형</th><th>과거형</th><th>과거분사</th><th>뜻</th></tr></thead><tbody id="rwVerbs"></tbody></table></div></div>
     <div class="rw-section"><strong>✨ 오늘의 새 표현</strong><div id="rwVocab"></div></div>
     <div class="rw-section"><strong>⭐ 학습 완료</strong><p class="rw-muted">읽기·쓰기 완료 기록은 프로필별로 이 기기에 따로 저장돼요.</p><button id="rwDone" class="rw-done" type="button">오늘 학습 완료하기</button><p id="rwDoneMsg" class="rw-muted" role="status"></p></div>
-    <div class="rw-section rw-review-box" id="rwCalendarPanel">
+        <div class="rw-section rw-review-box" id="rwMistakePanel">
+      <div class="rw-flex"><strong>🔁 영작 오답·어려운 표현 복습</strong><span id="rwReviewTotal" class="rw-pill">등록 0개</span></div>
+      <p class="rw-muted">공책에 쓴 답과 모범답안을 비교한 뒤 오답으로 표시한 문장을 다시 연습해요.</p>
+      <div class="rw-review-tabs"><button id="rwReviewDue" type="button" class="rw-small rw-tab-active">오늘 복습</button><button id="rwReviewAll" type="button" class="rw-small">전체 카드</button></div>
+      <div id="rwReviewCards" aria-live="polite"></div>
+      <p id="rwReviewMarkMsg" class="rw-muted" role="status"></p>
+      <p id="rwReviewStorageMsg" class="rw-muted" role="alert"></p>
+      <p class="rw-muted">재복습 간격: 다음 날 → 3일 → 7일 → 14일 → 30일 · 5회 성공하면 목록에서 제외돼요.</p>
+    </div>
+  <div class="rw-section rw-review-box" id="rwCalendarPanel">
   <strong>🗓️ 나의 읽기·쓰기 학습 달력</strong>
   <p class="rw-muted">학습 완료 날짜와 DAY 진도를 프로필별로 저장해요.</p>
   <div id="rwProgressSummary" class="rw-progress-summary" role="status">DAY 1~2 진도를 확인하는 중이에요.</div>
@@ -232,21 +252,6 @@ if ('serviceWorker' in navigator) {
   <div class="rw-month-grid" id="rwMonthGrid" aria-label="월별 학습 기록"></div>
   <p class="rw-muted" id="rwCalendarStatus" role="status">✓ 표시된 날짜는 읽기·쓰기 학습을 완료한 날이에요.</p>
 </div>
-<div class="rw-section rw-review-box" id="rwRandomPanel">
-      <strong>📚 오늘의 랜덤 복습 이야기</strong>
-      <p class="rw-muted" id="rwRandomIntro">150편 이야기 목록을 불러오는 중이에요.</p>
-      <div id="rwRandomStory" aria-live="polite"><p class="rw-muted">복습 이야기를 불러오는 중이에요.</p></div>
-      <p class="rw-muted">하루 한 편을 프로필별로 고정해 보여줘요. 다음 날에는 가능한 다른 이야기를 우선 선택해요.</p>
-    </div>
-    <div class="rw-section rw-review-box" id="rwMistakePanel">
-      <div class="rw-flex"><strong>🔁 영작 오답·어려운 표현 복습</strong><span id="rwReviewTotal" class="rw-pill">등록 0개</span></div>
-      <p class="rw-muted">공책에 쓴 영어를 스스로 채점해 틀리면 「다시 복습」, 어려운 표현은 「어려워요」를 누르세요.</p>
-      <div class="rw-review-tabs"><button id="rwReviewDue" type="button" class="rw-small rw-tab-active">오늘 복습</button><button id="rwReviewAll" type="button" class="rw-small">전체 카드</button></div>
-      <div id="rwReviewCards" aria-live="polite"></div>
-      <p id="rwReviewMarkMsg" class="rw-muted" role="status"></p>
-      <p id="rwReviewStorageMsg" class="rw-muted" role="alert"></p>
-      <p class="rw-muted">재복습 간격: 다음 날 → 3일 → 7일 → 14일 → 30일 · 5회 성공하면 목록에서 제외돼요.</p>
-    </div>
 
   </div>
   <p id="rwError" class="rw-error" hidden></p>
@@ -2799,9 +2804,9 @@ function render(){
  R('Download').onclick=()=>{const a=document.createElement('a');a.href='./readwrite/images/'+p+day+'_study.png';a.download='DAY'+day+'_'+en+'_study.png';document.body.appendChild(a);a.click();a.remove();};
  R('Title').textContent='DAY '+day+' · '+(day===1?en+"'s Little Surprise":en+' and the Heart Card');
  R('Subtitle').textContent=day===1?'작은 깜짝 선물':'하트 카드';
- R('Story').innerHTML=l.story.map((s,i)=>'<div class="rw-sentence"><b>'+(i+1)+'. '+escapeHTML(localize(s[0],p,day))+'</b><div class="rw-ko">'+escapeHTML(localize(s[1],p,day))+'</div><button type="button" class="rw-small" data-rw-voice="'+i+'">🔊 듣기</button></div>').join('');
+ R('Story').innerHTML=l.story.map((s,i)=>'<div class="rw-sentence"><b>'+(i+1)+'. '+escapeHTML(localize(s[0],p,day))+'</b><div class="rw-ko" hidden>'+escapeHTML(localize(s[1],p,day))+'</div><div class="rw-sentence-actions"><button type="button" class="rw-small" data-rw-voice="'+i+'">🔊 듣기</button><button type="button" class="rw-small rw-translation-button" data-rw-show-ko="'+i+'" aria-expanded="false">해석 보기</button></div></div>').join('');
  R('Story').querySelectorAll('[data-rw-voice]').forEach(b=>b.onclick=()=>saySentence(Number(b.dataset.rwVoice),b));
- R('ShowKo').onchange=()=>R('Story').querySelectorAll('.rw-ko').forEach(e=>e.hidden=!R('ShowKo').checked);R('ShowKo').onchange();
+ R('Story').querySelectorAll('[data-rw-show-ko]').forEach(b=>b.onclick=()=>{const line=b.closest('.rw-sentence'),ko=line.querySelector('.rw-ko');ko.hidden=!ko.hidden;b.textContent=ko.hidden?'해석 보기':'해석 숨기기';b.setAttribute('aria-expanded',String(!ko.hidden));});
  R('Quiz').innerHTML=l.qs.map((q,i)=>'<div class="rw-sentence"><b>'+(i+1)+'. '+escapeHTML(localize(q[0],p,day))+'</b>'+q[1].map((o,j)=>'<button type="button" class="rw-quiz-btn" data-q="'+i+'" data-a="'+j+'">'+escapeHTML(localize(o,p,day))+'</button>').join('')+'<div class="rw-muted" id="rwFeedback'+i+'"></div></div>').join('');
  R('Quiz').querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{const q=Number(b.dataset.q),a=Number(b.dataset.a);const ok=a===l.qs[q][2];R('Feedback'+q).textContent=ok?'정답이에요!':'다시 생각해 보세요.';b.classList.add(ok?'rw-correct':'rw-wrong')});
  R('Writing').innerHTML=l.ws.map((w,i)=>'<div class="rw-writing"><b>'+(i+1)+'. '+escapeHTML(localize(w[0],p,day))+'</b><div class="rw-answer" id="rwAnswer'+i+'" hidden>'+escapeHTML(localize(w[1],p,day))+'</div><button class="rw-small" type="button" data-w="'+i+'">정답 확인</button></div>').join('');
@@ -7683,10 +7688,10 @@ function story(){const el=$('rwRandomStory');if(!context().profileId){el.innerHT
  const allowed=eligible();$('rwRandomIntro').textContent=`전체 150편 중 검수 완료 2편 · 현재 열림 ${allowed.length}편`;
  const s=pick();if(!s){el.innerHTML='<div class="rw-note">DAY 1~2 중 학습을 완료한 DAY의 복습 이야기만 열려요. 정규학습에서 ‘오늘 학습 완료하기’를 먼저 눌러 주세요.</div>';return;}
  const readDone=read().reads[date()]===s.id;
- el.innerHTML=`<div class="rw-review-story-head"><div><span class="rw-review-status">1권 DAY ${s.day}</span><h3>${esc(s.title)}</h3><p class="rw-muted">${esc(s.titleKo)}</p></div><label class="rw-check"><input id="rwRandomShowKo" type="checkbox" ${showKorean?'checked':''}>해석 보기</label></div>`+
- s.sentences.map((pair,i)=>`<div class="rw-review-story-line"><b>${i+1}. ${esc(personText(pair[0]))}</b><p class="rw-ko" ${showKorean?'':'hidden'}>${esc(personText(pair[1]))}</p><button class="rw-small" type="button" data-rw-voice="${i}">🔊 듣기</button></div>`).join('')+
+ el.innerHTML=`<div class="rw-review-story-head"><div><span class="rw-review-status">1권 DAY ${s.day}</span><h3>${esc(s.title)}</h3><p class="rw-muted">${esc(s.titleKo)}</p></div></div>`+
+ s.sentences.map((pair,i)=>`<div class="rw-review-story-line"><b>${i+1}. ${esc(personText(pair[0]))}</b><p class="rw-ko" hidden>${esc(personText(pair[1]))}</p><div class="rw-sentence-actions"><button class="rw-small" type="button" data-rw-voice="${i}">🔊 듣기</button><button class="rw-small rw-translation-button" type="button" data-rw-random-ko="${i}" aria-expanded="false">해석 보기</button></div></div>`).join('')+
  `<div class="rw-review-actions"><button id="rwRandomDone" class="rw-done" type="button">${readDone?'✓ 오늘 읽기 완료':'✓ 오늘 이야기 읽었어요'}</button><span class="rw-muted" id="rwRandomDoneMsg"></span></div>`;
- $('rwRandomShowKo').onchange=e=>{showKorean=e.target.checked;el.querySelectorAll('.rw-review-story-line>.rw-ko').forEach(x=>x.hidden=!showKorean);};
+ el.querySelectorAll('[data-rw-random-ko]').forEach(b=>b.onclick=()=>{const ko=b.closest('.rw-review-story-line').querySelector('.rw-ko');ko.hidden=!ko.hidden;b.textContent=ko.hidden?'해석 보기':'해석 숨기기';b.setAttribute('aria-expanded',String(!ko.hidden));});
  el.querySelectorAll('[data-rw-voice]').forEach(b=>b.onclick=()=>talk(personText(s.sentences[Number(b.dataset.rwVoice)][0]),b));
  $('rwRandomDone').onclick=()=>{let d=read();d.reads[date()]=s.id;if(save(d)){$('rwRandomDone').textContent='✓ 오늘 읽기 완료';$('rwRandomDoneMsg').textContent='이 프로필에 저장했어요.';}};
 }
@@ -7738,7 +7743,7 @@ function refresh(){const c=window.rwReviewGetContext?.()||{},done=getCompleted()
 }
 $('rwMonthPrev').onclick=()=>{view=new Date(view.getFullYear(),view.getMonth()-1,1);refresh();};
 $('rwMonthNext').onclick=()=>{view=new Date(view.getFullYear(),view.getMonth()+1,1);refresh();};
-document.querySelectorAll('[data-rw-go]').forEach(b=>b.onclick=()=>{const target=$(b.dataset.rwGo);const c=window.rwReviewGetContext?.()||{};if(!c.profileId){$('rwLoginHint').scrollIntoView({behavior:'smooth',block:'start'});return;}target?.scrollIntoView({behavior:'smooth',block:'start'});});
+
 window.rwCalendar={refresh};window.addEventListener('rw:lesson',refresh);window.addEventListener('rw:profile',refresh);
 refresh();
 })();</script></body></html>
