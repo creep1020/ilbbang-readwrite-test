@@ -1,0 +1,7 @@
+읽기·쓰기 복습·달력 v5
+1) creep1020/ilbbang-readwrite-test 저장소에서 맨 위 index.html만 새 버전으로 교체
+2) 이미지/캐릭터 폴더는 기존대로 유지. 원본 일빵빵 저장소에는 업로드하지 않음
+3) 접속: https://creep1020.github.io/ilbbang-readwrite-test/?v=5
+4) 기존 v4의 review.js, review-stories.json은 있어도 무방하지만 v5는 사용하지 않음
+5) DAY1/2 이야기 + 복습 원고 150편은 index.html 내부 포함. 148편은 미검수이므로 출제되지 않음
+6) 오답/어려움/학습일은 브라우저 로컬 저장; Firebase 동기화/읽기쓰기 별 적립 미구현

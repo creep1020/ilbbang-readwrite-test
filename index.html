@@ -6,7 +6,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#fbf8f0">
-<title>영어 이야기 읽기·쓰기 · DAY 1~2</title>
+<title>영어 이야기 읽기·쓰기 · 복습·달력 v5</title>
 <style>
 :root{color-scheme:light;--paper:#fbf8f0;--ink:#28251f;--muted:#827b70;--line:#e7dfd2;--accent:#486b55;--soft:#edf3eb}
 *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif}
@@ -147,6 +147,28 @@ button{cursor:pointer}button:disabled{opacity:.4;cursor:default}.primary{backgro
 #rwApp .rw-review-mark{display:flex;flex-wrap:wrap;gap:7px;margin:7px 0 0}
 #rwApp .rw-expression .rw-difficult-btn{grid-column:1/-1;justify-self:start;margin:0 0 5px}
 #rwApp .rw-review-card button{margin-right:4px}
+
+/* v5: Read/write controls, due-review navigation, profile calendar. Not applied to legacy rewards. */
+#rwApp .rw-quicknav{position:relative;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0}
+#rwApp .rw-quicknav button{font-size:13px;font-weight:700;padding:11px 6px;border:1px solid #b8cbb8;background:#f0f7ed;color:#2e5842}
+#rwApp .rw-wrong-choice{border-color:#d7a39f!important;background:#fff0ed!important;color:#8d3933!important;font-weight:700}
+#rwApp .rw-review-mark{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+#rwApp .rw-review-mark button{flex:1;min-width:114px}
+#rwApp .rw-progress-summary{margin:12px 0;padding:10px 12px;border:1px solid #cbdcca;background:#eef6eb;border-radius:10px;color:#335b43;font-weight:700;font-size:14px}
+#rwApp .rw-day-progress{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;margin:12px 0 18px}
+#rwApp .rw-day-progress button,#rwApp .rw-day-progress span{width:100%;min-width:0;padding:8px 1px;border:1px solid #e2e3dc;border-radius:8px;text-align:center;font-size:12px;background:#f5f5f2;color:#a0a49d}
+#rwApp .rw-day-progress button:not(:disabled){border-color:#a6c4a9;background:#f0f8f0;color:#2e6440;font-weight:700}
+#rwApp .rw-day-progress button.rw-day-complete{background:#497254;color:white;border-color:#497254}
+#rwApp .rw-month-head{display:flex;align-items:center;justify-content:space-between;gap:9px;margin:12px 0;font-size:14px}
+#rwApp .rw-month-head button{padding:7px 9px;font-size:12px}
+#rwApp .rw-month-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+#rwApp .rw-month-grid>div{min-width:0;min-height:40px;text-align:center;padding:7px 0 4px;border-radius:7px;font-size:12px;background:#faf8f3}
+#rwApp .rw-month-grid>div.rw-weekday{min-height:25px;color:#7b8179;background:transparent;font-size:11px}
+#rwApp .rw-month-grid>div.rw-cal-done{background:#deeddf;color:#245c3a;font-weight:800}
+#rwApp .rw-month-grid>div.rw-cal-today{box-shadow:inset 0 0 0 1.5px #537a5f}
+#rwApp .rw-month-grid small{font-size:9px;display:block;color:#316747;line-height:1.2;margin-top:3px;white-space:normal}
+#rwApp #rwCalendarPanel{scroll-margin-top:12px}
+#rwApp #rwMistakePanel,#rwApp #rwRandomPanel,#rwApp #rwWriting{scroll-margin-top:12px}
 </style></head>
  <script>
 if ('serviceWorker' in navigator) {
@@ -181,6 +203,12 @@ if ('serviceWorker' in navigator) {
     </div>
   </div>
   <div id="rwLoginHint" class="rw-note">위에서 가족 계정에 로그인하고 프로필을 선택하면 해당 주인공의 이야기가 나와요.</div>
+<nav id="rwQuickNav" class="rw-quicknav" aria-label="읽기 쓰기 바로가기">
+<button type="button" data-rw-go="rwWriting">✏️ 영작</button>
+<button type="button" data-rw-go="rwMistakePanel">🔁 오답 복습</button>
+<button type="button" data-rw-go="rwRandomPanel">📖 랜덤 이야기</button>
+<button type="button" data-rw-go="rwCalendarPanel">🗓️ 학습 달력</button>
+</nav>
   <div id="rwStudy" hidden>
     <img id="rwHero" class="rw-hero" alt="오늘의 이야기 삽화" loading="eager">
     <button id="rwDownload" type="button" class="rw-download">📥 전체 학습 이미지 저장</button>
@@ -191,7 +219,20 @@ if ('serviceWorker' in navigator) {
     <div class="rw-section"><strong>🔄 불규칙동사 복습</strong><div class="rw-table-wrap"><table class="rw-verbs" aria-label="불규칙동사 표"><colgroup><col><col><col><col></colgroup><thead><tr><th>원형</th><th>과거형</th><th>과거분사</th><th>뜻</th></tr></thead><tbody id="rwVerbs"></tbody></table></div></div>
     <div class="rw-section"><strong>✨ 오늘의 새 표현</strong><div id="rwVocab"></div></div>
     <div class="rw-section"><strong>⭐ 학습 완료</strong><p class="rw-muted">읽기·쓰기 완료 기록은 프로필별로 이 기기에 따로 저장돼요.</p><button id="rwDone" class="rw-done" type="button">오늘 학습 완료하기</button><p id="rwDoneMsg" class="rw-muted" role="status"></p></div>
-    <div class="rw-section rw-review-box" id="rwRandomPanel">
+    <div class="rw-section rw-review-box" id="rwCalendarPanel">
+  <strong>🗓️ 나의 읽기·쓰기 학습 달력</strong>
+  <p class="rw-muted">학습 완료 날짜와 DAY 진도를 프로필별로 저장해요.</p>
+  <div id="rwProgressSummary" class="rw-progress-summary" role="status">DAY 1~2 진도를 확인하는 중이에요.</div>
+  <div class="rw-day-progress" id="rwDayProgress" aria-label="30일 진도표"></div>
+  <div class="rw-month-head">
+    <button id="rwMonthPrev" type="button" aria-label="이전 달">‹ 이전</button>
+    <strong id="rwMonthTitle">학습 달력</strong>
+    <button id="rwMonthNext" type="button" aria-label="다음 달">다음 ›</button>
+  </div>
+  <div class="rw-month-grid" id="rwMonthGrid" aria-label="월별 학습 기록"></div>
+  <p class="rw-muted" id="rwCalendarStatus" role="status">✓ 표시된 날짜는 읽기·쓰기 학습을 완료한 날이에요.</p>
+</div>
+<div class="rw-section rw-review-box" id="rwRandomPanel">
       <strong>📚 오늘의 랜덤 복습 이야기</strong>
       <p class="rw-muted" id="rwRandomIntro">150편 이야기 목록을 불러오는 중이에요.</p>
       <div id="rwRandomStory" aria-live="polite"><p class="rw-muted">복습 이야기를 불러오는 중이에요.</p></div>
@@ -2374,7 +2415,337 @@ function init(){const growth=$('kekeGrowth'),old=$('kekeStageImage');if(!growth|
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
-</script><script id="readwriteIntegratedV2">(function(){
+</script><script type="application/json" id="rwEmbeddedLessons">[
+  {
+    "story": [
+      [
+        "Jiwoo went to school with a small blue box.",
+        "지우는 작은 파란 상자를 가지고 학교에 갔어요."
+      ],
+      [
+        "She saw Mina and gave her the box.",
+        "지우는 미나를 보고 상자를 건네주었어요."
+      ],
+      [
+        "Mina took the box and said, \"Is this for me?\"",
+        "미나는 상자를 받고 말했어요. \"이거 나 주는 거야?\""
+      ],
+      [
+        "Jiwoo said, \"Yes, but don’t open it now!\"",
+        "지우가 말했어요. \"응, 그런데 지금은 열지 마!\""
+      ],
+      [
+        "Mina put the box in her bag and went to class.",
+        "미나는 상자를 가방에 넣고 수업에 들어갔어요."
+      ],
+      [
+        "After class, Mina opened the box and found a little note.",
+        "수업이 끝난 후 미나는 상자를 열고 작은 쪽지를 발견했어요."
+      ],
+      [
+        "Mina read the note and saw the words, \"You are my best friend!\"",
+        "미나는 쪽지를 읽고 \"너는 내 가장 친한 친구야!\"라는 글을 보았어요."
+      ],
+      [
+        "She smiled at Jiwoo, but Jiwoo did not know that Mina had a surprise for her, too.",
+        "미나는 지우에게 미소 지었지만, 지우는 미나도 자신을 위한 깜짝 선물을 준비했다는 걸 몰랐어요."
+      ],
+      [
+        "Mina gave Jiwoo another little box, and Jiwoo opened it to find a note that said, \"You are my best friend, too!\"",
+        "미나는 지우에게 또 다른 작은 상자를 주었고, 지우는 상자를 열어 \"너도 내 가장 친한 친구야!\"라는 쪽지를 발견했어요."
+      ]
+    ],
+    "qs": [
+      [
+        "What did Jiwoo give Mina?",
+        [
+          "A blue box",
+          "A red bag",
+          "A book"
+        ],
+        0
+      ],
+      [
+        "When did Mina open the box?",
+        [
+          "Before school",
+          "After class",
+          "At home"
+        ],
+        1
+      ],
+      [
+        "What was in the box?",
+        [
+          "A toy",
+          "A note",
+          "A cake"
+        ],
+        1
+      ]
+    ],
+    "ws": [
+      [
+        "지우는 학교에 갔어요.",
+        "Jiwoo went to school."
+      ],
+      [
+        "지우는 미나를 보았어요.",
+        "Jiwoo saw Mina."
+      ],
+      [
+        "지우는 미나에게 상자를 주었어요.",
+        "Jiwoo gave Mina the box."
+      ],
+      [
+        "미나는 작은 쪽지를 발견했어요.",
+        "Mina found a little note."
+      ],
+      [
+        "미나는 지우에게 또 다른 상자를 주었어요.",
+        "Mina gave Jiwoo another box."
+      ]
+    ],
+    "verbs": [
+      [
+        "go",
+        "went",
+        "gone",
+        "가다",
+        "갔다"
+      ],
+      [
+        "see",
+        "saw",
+        "seen",
+        "보다",
+        "봤다"
+      ],
+      [
+        "give",
+        "gave",
+        "given",
+        "주다",
+        "줬다"
+      ],
+      [
+        "take",
+        "took",
+        "taken",
+        "가져가다",
+        "가져갔다"
+      ],
+      [
+        "say",
+        "said",
+        "said",
+        "말하다",
+        "말했다"
+      ],
+      [
+        "find",
+        "found",
+        "found",
+        "찾다",
+        "찾았다"
+      ],
+      [
+        "read",
+        "read",
+        "read",
+        "읽다",
+        "읽었다"
+      ]
+    ],
+    "vocab": [
+      [
+        "surprise",
+        "깜짝 선물, 놀라운 일"
+      ],
+      [
+        "note",
+        "쪽지, 짧은 메모"
+      ],
+      [
+        "another",
+        "또 하나의, 다른 하나의"
+      ],
+      [
+        "after class",
+        "수업이 끝난 후"
+      ],
+      [
+        "best friend",
+        "가장 친한 친구"
+      ]
+    ]
+  },
+  {
+    "story": [
+      [
+        "Jiwoo met Mina after class and saw a red heart on the desk.",
+        "지우는 수업이 끝난 후 미나를 만나 책상 위의 빨간 하트를 봤어요."
+      ],
+      [
+        "Mina said, \"Let’s make a card for our teacher!\"",
+        "미나가 말했어요. \"선생님께 드릴 카드를 만들자!\""
+      ],
+      [
+        "Jiwoo took the red heart and began to make the card.",
+        "지우는 빨간 하트를 집어 들고 카드를 만들기 시작했어요."
+      ],
+      [
+        "\"Write, please,\" said Mina, and Jiwoo wrote, \"Thank you!\"",
+        "\"글을 써 줘.\" 미나가 말하자 지우는 \"감사합니다!\"라고 썼어요."
+      ],
+      [
+        "But the heart fell from the desk, and Jiwoo could not find it.",
+        "그런데 하트가 책상에서 떨어졌고 지우는 그것을 찾을 수 없었어요."
+      ],
+      [
+        "\"Wait, please!\" said Mina, and they looked under the desk together.",
+        "\"잠깐 기다려!\" 미나가 말했고 두 사람은 함께 책상 아래를 살펴봤어요."
+      ],
+      [
+        "Mina found the heart beside Jiwoo’s bag, but the heart was now in two pieces.",
+        "미나는 지우 가방 옆에서 하트를 찾았지만, 하트는 두 조각이 나 있었어요."
+      ],
+      [
+        "Jiwoo felt sad, but Mina said, \"Try again!\" and they made two little hearts instead.",
+        "지우는 슬펐지만 미나는 \"다시 해 봐!\"라고 말했고, 둘은 대신 작은 하트 두 개를 만들었어요."
+      ],
+      [
+        "When the teacher saw the card with two hearts, she smiled and said, \"I have two wonderful friends!\"",
+        "선생님은 하트 두 개가 붙은 카드를 보고 웃으며 \"나에게는 멋진 친구 두 명이 있구나!\"라고 말했어요."
+      ]
+    ],
+    "qs": [
+      [
+        "What did Jiwoo and Mina make?",
+        [
+          "A birthday cake",
+          "A card for their teacher",
+          "A blue box"
+        ],
+        1
+      ],
+      [
+        "Where did Mina find the heart?",
+        [
+          "Beside Jiwoo’s bag",
+          "In her book",
+          "Outside the classroom"
+        ],
+        0
+      ],
+      [
+        "How many hearts were on the finished card?",
+        [
+          "One",
+          "Three",
+          "Two"
+        ],
+        2
+      ]
+    ],
+    "ws": [
+      [
+        "지우는 미나를 만났어요.",
+        "Jiwoo met Mina."
+      ],
+      [
+        "지우는 카드를 만들기 시작했어요.",
+        "Jiwoo began to make the card."
+      ],
+      [
+        "하트가 책상에서 떨어졌어요.",
+        "The heart fell from the desk."
+      ],
+      [
+        "미나는 하트를 찾았어요.",
+        "Mina found the heart."
+      ],
+      [
+        "그들은 작은 하트 두 개를 만들었어요.",
+        "They made two little hearts."
+      ]
+    ],
+    "verbs": [
+      [
+        "meet",
+        "met",
+        "met",
+        "만나다",
+        "만났다"
+      ],
+      [
+        "begin",
+        "began",
+        "begun",
+        "시작하다",
+        "시작했다"
+      ],
+      [
+        "fall",
+        "fell",
+        "fallen",
+        "떨어지다",
+        "떨어졌다"
+      ],
+      [
+        "find",
+        "found",
+        "found",
+        "찾다",
+        "찾았다"
+      ],
+      [
+        "make",
+        "made",
+        "made",
+        "만들다",
+        "만들었다"
+      ],
+      [
+        "write",
+        "wrote",
+        "written",
+        "쓰다",
+        "썼다"
+      ],
+      [
+        "see",
+        "saw",
+        "seen",
+        "보다",
+        "봤다"
+      ]
+    ],
+    "vocab": [
+      [
+        "heart",
+        "하트, 마음"
+      ],
+      [
+        "card",
+        "카드"
+      ],
+      [
+        "teacher",
+        "선생님"
+      ],
+      [
+        "in two pieces",
+        "두 조각으로"
+      ],
+      [
+        "instead",
+        "대신에"
+      ]
+    ]
+  }
+]</script>
+<script id="readwriteIntegratedV2">(function(){
 'use strict';
 const root=document.getElementById('rwApp');
 const R=id=>document.getElementById('rw'+id);
@@ -2435,12 +2806,12 @@ function render(){
  R('Quiz').querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{const q=Number(b.dataset.q),a=Number(b.dataset.a);const ok=a===l.qs[q][2];R('Feedback'+q).textContent=ok?'정답이에요!':'다시 생각해 보세요.';b.classList.add(ok?'rw-correct':'rw-wrong')});
  R('Writing').innerHTML=l.ws.map((w,i)=>'<div class="rw-writing"><b>'+(i+1)+'. '+escapeHTML(localize(w[0],p,day))+'</b><div class="rw-answer" id="rwAnswer'+i+'" hidden>'+escapeHTML(localize(w[1],p,day))+'</div><button class="rw-small" type="button" data-w="'+i+'">정답 확인</button></div>').join('');
  R('Writing').querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>{const el=R('Answer'+b.dataset.w);el.hidden=!el.hidden;b.textContent=el.hidden?'정답 확인':'정답 숨기기';});
- R('Writing').querySelectorAll('.rw-writing').forEach((el,i)=>el.insertAdjacentHTML('beforeend','<div class="rw-review-mark"><button type="button" class="rw-small" data-rw-mark-w="'+i+'" data-rw-mark-action="correct">✅ 맞았어요</button><button type="button" class="rw-small" data-rw-mark-w="'+i+'" data-rw-mark-action="wrong">🔁 다시 복습</button></div>'));
+ R('Writing').querySelectorAll('.rw-writing').forEach((el,i)=>el.insertAdjacentHTML('beforeend','<div class="rw-review-mark"><button type="button" class="rw-small" data-rw-mark-w="'+i+'" data-rw-mark-action="correct">✅ 정답이에요</button><button type="button" class="rw-small rw-wrong-choice" data-rw-mark-w="'+i+'" data-rw-mark-action="wrong">❌ 틀렸어요 · 오답 저장</button></div>'));
  R('Verbs').innerHTML=l.verbs.map(v=>'<tr><td>'+escapeHTML(v[0])+'</td><td>'+escapeHTML(v[1])+'</td><td>'+escapeHTML(v[2])+'</td><td>'+escapeHTML(v[3])+' · '+escapeHTML(v[4])+'</td></tr>').join('');
  R('Vocab').innerHTML=l.vocab.map((v,i)=>'<div class="rw-expression"><b>'+escapeHTML(v[0])+'</b><span>'+escapeHTML(v[1])+'</span><button type="button" class="rw-small rw-difficult-btn" data-rw-difficult="'+i+'">🔖 어려워요</button></div>').join('');
  const key=completionKey(day);let done=false;try{done=Boolean(localStorage.getItem(key));}catch(e){}
  R('DoneStatus').textContent=done?'✓ 완료':'학습 전';R('DoneMsg').textContent='';
- R('Done').onclick=()=>{try{localStorage.setItem(key,new Date().toISOString());R('DoneStatus').textContent='✓ 완료';R('DoneMsg').textContent='완료 기록을 이 기기에 저장했어요.';window.dispatchEvent(new Event('rw:lesson'));}catch(e){R('DoneMsg').textContent='저장에 실패했어요. 브라우저 저장 공간을 확인해 주세요.';}};
+ R('Done').onclick=()=>{try{localStorage.setItem(key,new Date().toISOString());R('DoneStatus').textContent='✓ 완료';R('DoneMsg').textContent='✓ 완료! 아래 학습 달력에 기록했어요.';window.dispatchEvent(new Event('rw:lesson'));document.getElementById('rwCalendarPanel')?.scrollIntoView({behavior:'smooth',block:'start'});}catch(e){R('DoneMsg').textContent='저장에 실패했어요. 브라우저 저장 공간을 확인해 주세요.';}};
 window.dispatchEvent(new Event('rw:lesson'));
 }
 function setProfile(data){
@@ -2467,7 +2838,4907 @@ R('Vocab').addEventListener('click',e=>{const b=e.target.closest('[data-rw-diffi
 const watch=new MutationObserver(()=>{const sel=document.getElementById('profileSelect');if(sel){sel.addEventListener('change',()=>{syncSelector();setTimeout(syncSelector,300);setTimeout(syncSelector,1100);},{passive:true});watch.disconnect();syncSelector();}});
 watch.observe(document.getElementById('cloudPanel'),{childList:true,subtree:true});
 const existing=document.getElementById('profileSelect');if(existing){existing.addEventListener('change',()=>{syncSelector();setTimeout(syncSelector,350);setTimeout(syncSelector,1100);});syncSelector();watch.disconnect();}
-fetch('./readwrite/lessons.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(data=>{
- if(!Array.isArray(data)||data.length<2)throw Error('DAY 1~2 데이터가 없어요.');lessons=data;render();
-}).catch(e=>{R('Error').hidden=false;R('Error').textContent='학습 데이터를 불러올 수 없어요. readwrite/lessons.json 경로를 확인해 주세요. ('+e.message+')';});
-})();</script><script src="./readwrite/review.js?v=4" defer></script></body></html>
+try { const data=JSON.parse(document.getElementById('rwEmbeddedLessons').textContent);if(!Array.isArray(data)||data.length<2)throw new Error('DAY 1~2 데이터 확인 실패');lessons=data;render(); }catch(e){R('Error').hidden=false;R('Error').textContent='학습 데이터 오류: '+e.message;}
+})();</script><script type="application/json" id="rwStoryBankEmbedded">{
+  "version": 4,
+  "total": 150,
+  "verified": 2,
+  "notes": "각 권 30편. DAY 1~2 외 148편은 원고 초안이며 해당 권의 원본 교재 어휘/문법 검수 전에는 일일 랜덤 출제되지 않습니다.",
+  "stories": [
+    {
+      "id": "b1d01",
+      "book": 1,
+      "day": 1,
+      "title": "A Note for a Friend",
+      "titleKo": "친구에게 주는 쪽지",
+      "sentences": [
+        [
+          "{name} went to school with a little note.",
+          "{koName}는 작은 쪽지를 가지고 학교에 갔어요."
+        ],
+        [
+          "Mina saw the note but did not open it.",
+          "미나는 쪽지를 보았지만 열지 않았어요."
+        ],
+        [
+          "After class, {name} gave the note to Mina.",
+          "수업이 끝난 후 {koName}는 미나에게 쪽지를 주었어요."
+        ],
+        [
+          "Mina read it and said, \"You are my best friend, too!\"",
+          "미나는 쪽지를 읽고 \"너도 내 가장 친한 친구야!\"라고 말했어요."
+        ],
+        [
+          "They smiled and went to class together.",
+          "두 사람은 웃으며 함께 교실로 갔어요."
+        ]
+      ],
+      "verified": true,
+      "status": "DAY 1 학습 표현 확인",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b1d02",
+      "book": 1,
+      "day": 2,
+      "title": "The Card on the Desk",
+      "titleKo": "책상 위의 카드",
+      "sentences": [
+        [
+          "{name} met Mina after class.",
+          "{koName}는 수업이 끝난 후 미나를 만났어요."
+        ],
+        [
+          "Mina found a red card beside a bag.",
+          "미나는 가방 옆에서 빨간 카드를 찾았어요."
+        ],
+        [
+          "They saw two little hearts on the card.",
+          "두 사람은 카드 위에서 작은 하트 두 개를 보았어요."
+        ],
+        [
+          "{name} said, \"Let’s give it to our teacher!\"",
+          "{koName}는 \"우리 선생님께 드리자!\"라고 말했어요."
+        ],
+        [
+          "They gave the card to the teacher, and the teacher smiled.",
+          "두 사람은 선생님께 카드를 드렸고 선생님은 미소 지었어요."
+        ]
+      ],
+      "verified": true,
+      "status": "DAY 2 학습 표현 확인",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b1d03",
+      "book": 1,
+      "day": 3,
+      "title": "Yellow Ribbon",
+      "titleKo": "노란 리본",
+      "sentences": [
+        [
+          "{name} and Hana wanted to make a small gift.",
+          "{koName}와 하나는 작은 선물을 만들고 싶었어요."
+        ],
+        [
+          "They found a yellow ribbon in the library.",
+          "두 사람은 도서관에서 노란 리본을 발견했어요."
+        ],
+        [
+          "{name} said, \"This is for our friend.\"",
+          "{koName}는 \"이건 우리 친구에게 줄 거야.\"라고 말했어요."
+        ],
+        [
+          "They put it in a little box.",
+          "둘은 그것을 작은 상자에 넣었어요."
+        ],
+        [
+          "Their friend opened the box and smiled.",
+          "친구는 상자를 열고 미소 지었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b1d04",
+      "book": 1,
+      "day": 4,
+      "title": "Paper Flower",
+      "titleKo": "종이꽃",
+      "sentences": [
+        [
+          "After class, {name} met Yuna in the art room.",
+          "{koName}는 수업이 끝난 후 미술실에서 유나를 만났어요."
+        ],
+        [
+          "Yuna showed {name} a paper flower.",
+          "유나가 {koName}에게 종이꽃을 보여 주었어요."
+        ],
+        [
+          "\"Can I see it?\" asked {name}.",
+          "{koName}는 \"내가 봐도 돼?\"라고 물었어요."
+        ],
+        [
+          "Yuna said, \"Of course!\"",
+          "유나는 \"물론이지!\"라고 말했어요."
+        ],
+        [
+          "They looked at it and made a new plan.",
+          "둘은 그것을 살펴보고 새로운 계획을 세웠어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b1d05",
+      "book": 1,
+      "day": 5,
+      "title": "Little Map",
+      "titleKo": "작은 지도",
+      "sentences": [
+        [
+          "{name} saw a little map in the park.",
+          "{koName}는 공원에서 작은 지도를 보았어요."
+        ],
+        [
+          "{name} wanted to give it to Mina.",
+          "{koName}는 그것을 미나에게 주고 싶었어요."
+        ],
+        [
+          "But Mina said, \"Let us share it.\"",
+          "그런데 미나는 \"우리 함께 나누자.\"라고 말했어요."
+        ],
+        [
+          "They showed it to their friends.",
+          "둘은 친구들에게 그것을 보여 주었어요."
+        ],
+        [
+          "Everyone smiled at the little surprise.",
+          "모두 작은 깜짝 선물을 보고 미소 지었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b1d06",
+      "book": 1,
+      "day": 6,
+      "title": "Green Leaf",
+      "titleKo": "초록 나뭇잎",
+      "sentences": [
+        [
+          "{name} was in the garden with Sora.",
+          "{koName}는 소라와 정원에서 함께 있었어요."
+        ],
+        [
+          "They saw a green leaf near a bag.",
+          "두 사람은 가방 옆에서 초록 나뭇잎을 보았어요."
+        ],
+        [
+          "Sora said, \"Look! It is beautiful.\"",
+          "소라가 \"봐! 정말 예쁘다.\"라고 말했어요."
+        ],
+        [
+          "{name} took a closer look and smiled.",
+          "{koName}는 가까이에서 살펴보고 미소 지었어요."
+        ],
+        [
+          "They put it back and went home together.",
+          "두 사람은 물건을 제자리에 두고 함께 집에 갔어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b1d07",
+      "book": 1,
+      "day": 7,
+      "title": "New Bookmark",
+      "titleKo": "새 책갈피",
+      "sentences": [
+        [
+          "{name} met Hana in the library.",
+          "{koName}는 도서관에서 하나를 만났어요."
+        ],
+        [
+          "Hana had a new bookmark in a bag.",
+          "하나의 가방에는 새 책갈피가 있었어요."
+        ],
+        [
+          "But the bag was not there.",
+          "그런데 가방이 보이지 않았어요."
+        ],
+        [
+          "They looked under a chair and found the bag.",
+          "둘은 의자 아래를 살펴보다가 가방을 찾았어요."
+        ],
+        [
+          "Hana said, \"Thank you!\" and they laughed.",
+          "하나가 \"고마워!\"라고 말했고 두 사람은 웃었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b1d08",
+      "book": 1,
+      "day": 8,
+      "title": "Paper Boat",
+      "titleKo": "종이배",
+      "sentences": [
+        [
+          "{name} and Yuna wanted to make a small gift.",
+          "{koName}와 유나는 작은 선물을 만들고 싶었어요."
+        ],
+        [
+          "They found a paper boat beside the river.",
+          "두 사람은 강가에서 종이배를 발견했어요."
+        ],
+        [
+          "{name} said, \"This is for our friend.\"",
+          "{koName}는 \"이건 우리 친구에게 줄 거야.\"라고 말했어요."
+        ],
+        [
+          "They put it in a little box.",
+          "둘은 그것을 작은 상자에 넣었어요."
+        ],
+        [
+          "Their friend opened the box and smiled.",
+          "친구는 상자를 열고 미소 지었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b1d09",
+      "book": 1,
+      "day": 9,
+      "title": "Small Painting",
+      "titleKo": "작은 그림",
+      "sentences": [
+        [
+          "After class, {name} met Mina at school.",
+          "{koName}는 수업이 끝난 후 학교에서 미나를 만났어요."
+        ],
+        [
+          "Mina showed {name} a small painting.",
+          "미나가 {koName}에게 작은 그림을 보여 주었어요."
+        ],
+        [
+          "\"Can I see it?\" asked {name}.",
+          "{koName}는 \"내가 봐도 돼?\"라고 물었어요."
+        ],
+        [
+          "Mina said, \"Of course!\"",
+          "미나는 \"물론이지!\"라고 말했어요."
+        ],
+        [
+          "They looked at it and made a new plan.",
+          "둘은 그것을 살펴보고 새로운 계획을 세웠어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b1d10",
+      "book": 1,
+      "day": 10,
+      "title": "Silver Bell",
+      "titleKo": "은빛 방울",
+      "sentences": [
+        [
+          "{name} saw a silver bell in the music room.",
+          "{koName}는 음악실에서 은빛 방울을 보았어요."
+        ],
+        [
+          "{name} wanted to give it to Sora.",
+          "{koName}는 그것을 소라에게 주고 싶었어요."
+        ],
+        [
+          "But Sora said, \"Let us share it.\"",
+          "그런데 소라는 \"우리 함께 나누자.\"라고 말했어요."
+        ],
+        [
+          "They showed it to their friends.",
+          "둘은 친구들에게 그것을 보여 주었어요."
+        ],
+        [
+          "Everyone smiled at the little surprise.",
+          "모두 작은 깜짝 선물을 보고 미소 지었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b1d11",
+      "book": 1,
+      "day": 11,
+      "title": "Old Postcard",
+      "titleKo": "오래된 엽서",
+      "sentences": [
+        [
+          "{name} was at home with Hana.",
+          "{koName}는 하나와 집에서 함께 있었어요."
+        ],
+        [
+          "They saw an old postcard near a bag.",
+          "두 사람은 가방 옆에서 오래된 엽서를 보았어요."
+        ],
+        [
+          "Hana said, \"Look! It is beautiful.\"",
+          "하나가 \"봐! 정말 예쁘다.\"라고 말했어요."
+        ],
+        [
+          "{name} took a closer look and smiled.",
+          "{koName}는 가까이에서 살펴보고 미소 지었어요."
+        ],
+        [
+          "They put it back and went home together.",
+          "두 사람은 물건을 제자리에 두고 함께 집에 갔어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b1d12",
+      "book": 1,
+      "day": 12,
+      "title": "Colorful Stone",
+      "titleKo": "알록달록 돌멩이",
+      "sentences": [
+        [
+          "{name} met Yuna in the park.",
+          "{koName}는 공원에서 유나를 만났어요."
+        ],
+        [
+          "Yuna had a colorful stone in a bag.",
+          "유나의 가방에는 알록달록 돌멩이가 있었어요."
+        ],
+        [
+          "But the bag was not there.",
+          "그런데 가방이 보이지 않았어요."
+        ],
+        [
+          "They looked under a chair and found the bag.",
+          "둘은 의자 아래를 살펴보다가 가방을 찾았어요."
+        ],
+        [
+          "Yuna said, \"Thank you!\" and they laughed.",
+          "유나가 \"고마워!\"라고 말했고 두 사람은 웃었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b1d13",
+      "book": 1,
+      "day": 13,
+      "title": "Tiny Shell",
+      "titleKo": "작은 조개껍데기",
+      "sentences": [
+        [
+          "{name} and Mina wanted to make a small gift.",
+          "{koName}와 미나는 작은 선물을 만들고 싶었어요."
+        ],
+        [
+          "They found a tiny shell at the beach.",
+          "두 사람은 해변에서 작은 조개껍데기를 발견했어요."
+        ],
+        [
+          "{name} said, \"This is for our friend.\"",
+          "{koName}는 \"이건 우리 친구에게 줄 거야.\"라고 말했어요."
+        ],
+        [
+          "They put it in a little box.",
+          "둘은 그것을 작은 상자에 넣었어요."
+        ],
+        [
+          "Their friend opened the box and smiled.",
+          "친구는 상자를 열고 미소 지었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b1d14",
+      "book": 1,
+      "day": 14,
+      "title": "Paper Star",
+      "titleKo": "종이별",
+      "sentences": [
+        [
+          "After class, {name} met Sora in the classroom.",
+          "{koName}는 수업이 끝난 후 교실에서 소라를 만났어요."
+        ],
+        [
+          "Sora showed {name} a paper star.",
+          "소라가 {koName}에게 종이별을 보여 주었어요."
+        ],
+        [
+          "\"Can I see it?\" asked {name}.",
+          "{koName}는 \"내가 봐도 돼?\"라고 물었어요."
+        ],
+        [
+          "Sora said, \"Of course!\"",
+          "소라는 \"물론이지!\"라고 말했어요."
+        ],
+        [
+          "They looked at it and made a new plan.",
+          "둘은 그것을 살펴보고 새로운 계획을 세웠어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b1d15",
+      "book": 1,
+      "day": 15,
+      "title": "Funny Sticker",
+      "titleKo": "재미있는 스티커",
+      "sentences": [
+        [
+          "{name} saw a funny sticker at school.",
+          "{koName}는 학교에서 재미있는 스티커를 보았어요."
+        ],
+        [
+          "{name} wanted to give it to Hana.",
+          "{koName}는 그것을 하나에게 주고 싶었어요."
+        ],
+        [
+          "But Hana said, \"Let us share it.\"",
+          "그런데 하나는 \"우리 함께 나누자.\"라고 말했어요."
+        ],
+        [
+          "They showed it to their friends.",
+          "둘은 친구들에게 그것을 보여 주었어요."
+        ],
+        [
+          "Everyone smiled at the little surprise.",
+          "모두 작은 깜짝 선물을 보고 미소 지었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b1d16",
+      "book": 1,
+      "day": 16,
+      "title": "Lost Ticket",
+      "titleKo": "잃어버린 표",
+      "sentences": [
+        [
+          "{name} was at the station with Yuna.",
+          "{koName}는 유나와 역에서 함께 있었어요."
+        ],
+        [
+          "They saw a train ticket near a bag.",
+          "두 사람은 가방 옆에서 기차표를 보았어요."
+        ],
+        [
+          "Yuna said, \"Look! It is beautiful.\"",
+          "유나가 \"봐! 정말 예쁘다.\"라고 말했어요."
+        ],
+        [
+          "{name} took a closer look and smiled.",
+          "{koName}는 가까이에서 살펴보고 미소 지었어요."
+        ],
+        [
+          "They put it back and went home together.",
+          "두 사람은 물건을 제자리에 두고 함께 집에 갔어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b1d17",
+      "book": 1,
+      "day": 17,
+      "title": "Purple Notebook",
+      "titleKo": "보라색 공책",
+      "sentences": [
+        [
+          "{name} met Mina in the library.",
+          "{koName}는 도서관에서 미나를 만났어요."
+        ],
+        [
+          "Mina had a purple notebook in a bag.",
+          "미나의 가방에는 보라색 공책이 있었어요."
+        ],
+        [
+          "But the bag was not there.",
+          "그런데 가방이 보이지 않았어요."
+        ],
+        [
+          "They looked under a chair and found the bag.",
+          "둘은 의자 아래를 살펴보다가 가방을 찾았어요."
+        ],
+        [
+          "Mina said, \"Thank you!\" and they laughed.",
+          "미나가 \"고마워!\"라고 말했고 두 사람은 웃었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b1d18",
+      "book": 1,
+      "day": 18,
+      "title": "Paper Crown",
+      "titleKo": "종이 왕관",
+      "sentences": [
+        [
+          "{name} and Sora wanted to make a small gift.",
+          "{koName}와 소라는 작은 선물을 만들고 싶었어요."
+        ],
+        [
+          "They found a paper crown at the party.",
+          "두 사람은 파티에서 종이 왕관을 발견했어요."
+        ],
+        [
+          "{name} said, \"This is for our friend.\"",
+          "{koName}는 \"이건 우리 친구에게 줄 거야.\"라고 말했어요."
+        ],
+        [
+          "They put it in a little box.",
+          "둘은 그것을 작은 상자에 넣었어요."
+        ],
+        [
+          "Their friend opened the box and smiled.",
+          "친구는 상자를 열고 미소 지었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b1d19",
+      "book": 1,
+      "day": 19,
+      "title": "Little Flag",
+      "titleKo": "작은 깃발",
+      "sentences": [
+        [
+          "After class, {name} met Hana on the playground.",
+          "{koName}는 수업이 끝난 후 운동장에서 하나를 만났어요."
+        ],
+        [
+          "Hana showed {name} a little flag.",
+          "하나가 {koName}에게 작은 깃발을 보여 주었어요."
+        ],
+        [
+          "\"Can I see it?\" asked {name}.",
+          "{koName}는 \"내가 봐도 돼?\"라고 물었어요."
+        ],
+        [
+          "Hana said, \"Of course!\"",
+          "하나는 \"물론이지!\"라고 말했어요."
+        ],
+        [
+          "They looked at it and made a new plan.",
+          "둘은 그것을 살펴보고 새로운 계획을 세웠어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b1d20",
+      "book": 1,
+      "day": 20,
+      "title": "Wooden Toy",
+      "titleKo": "나무 장난감",
+      "sentences": [
+        [
+          "{name} saw a wooden toy at home.",
+          "{koName}는 집에서 나무 장난감을 보았어요."
+        ],
+        [
+          "{name} wanted to give it to Yuna.",
+          "{koName}는 그것을 유나에게 주고 싶었어요."
+        ],
+        [
+          "But Yuna said, \"Let us share it.\"",
+          "그런데 유나는 \"우리 함께 나누자.\"라고 말했어요."
+        ],
+        [
+          "They showed it to their friends.",
+          "둘은 친구들에게 그것을 보여 주었어요."
+        ],
+        [
+          "Everyone smiled at the little surprise.",
+          "모두 작은 깜짝 선물을 보고 미소 지었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b1d21",
+      "book": 1,
+      "day": 21,
+      "title": "Orange Pencil",
+      "titleKo": "주황색 연필",
+      "sentences": [
+        [
+          "{name} was in the classroom with Mina.",
+          "{koName}는 미나와 교실에서 함께 있었어요."
+        ],
+        [
+          "They saw an orange pencil near a bag.",
+          "두 사람은 가방 옆에서 주황색 연필을 보았어요."
+        ],
+        [
+          "Mina said, \"Look! It is beautiful.\"",
+          "미나가 \"봐! 정말 예쁘다.\"라고 말했어요."
+        ],
+        [
+          "{name} took a closer look and smiled.",
+          "{koName}는 가까이에서 살펴보고 미소 지었어요."
+        ],
+        [
+          "They put it back and went home together.",
+          "두 사람은 물건을 제자리에 두고 함께 집에 갔어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b1d22",
+      "book": 1,
+      "day": 22,
+      "title": "Small Photo",
+      "titleKo": "작은 사진",
+      "sentences": [
+        [
+          "{name} met Sora in the hallway.",
+          "{koName}는 복도에서 소라를 만났어요."
+        ],
+        [
+          "Sora had a small photo in a bag.",
+          "소라의 가방에는 작은 사진이 있었어요."
+        ],
+        [
+          "But the bag was not there.",
+          "그런데 가방이 보이지 않았어요."
+        ],
+        [
+          "They looked under a chair and found the bag.",
+          "둘은 의자 아래를 살펴보다가 가방을 찾았어요."
+        ],
+        [
+          "Sora said, \"Thank you!\" and they laughed.",
+          "소라가 \"고마워!\"라고 말했고 두 사람은 웃었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b1d23",
+      "book": 1,
+      "day": 23,
+      "title": "Blue Envelope",
+      "titleKo": "파란 봉투",
+      "sentences": [
+        [
+          "{name} and Hana wanted to make a small gift.",
+          "{koName}와 하나는 작은 선물을 만들고 싶었어요."
+        ],
+        [
+          "They found a blue envelope at the post office.",
+          "두 사람은 우체국에서 파란 봉투를 발견했어요."
+        ],
+        [
+          "{name} said, \"This is for our friend.\"",
+          "{koName}는 \"이건 우리 친구에게 줄 거야.\"라고 말했어요."
+        ],
+        [
+          "They put it in a little box.",
+          "둘은 그것을 작은 상자에 넣었어요."
+        ],
+        [
+          "Their friend opened the box and smiled.",
+          "친구는 상자를 열고 미소 지었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b1d24",
+      "book": 1,
+      "day": 24,
+      "title": "Paper Airplane",
+      "titleKo": "종이비행기",
+      "sentences": [
+        [
+          "After class, {name} met Yuna on the playground.",
+          "{koName}는 수업이 끝난 후 운동장에서 유나를 만났어요."
+        ],
+        [
+          "Yuna showed {name} a paper airplane.",
+          "유나가 {koName}에게 종이비행기를 보여 주었어요."
+        ],
+        [
+          "\"Can I see it?\" asked {name}.",
+          "{koName}는 \"내가 봐도 돼?\"라고 물었어요."
+        ],
+        [
+          "Yuna said, \"Of course!\"",
+          "유나는 \"물론이지!\"라고 말했어요."
+        ],
+        [
+          "They looked at it and made a new plan.",
+          "둘은 그것을 살펴보고 새로운 계획을 세웠어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b1d25",
+      "book": 1,
+      "day": 25,
+      "title": "Little Poem",
+      "titleKo": "짧은 시",
+      "sentences": [
+        [
+          "{name} saw a short poem in the library.",
+          "{koName}는 도서관에서 짧은 시를 보았어요."
+        ],
+        [
+          "{name} wanted to give it to Mina.",
+          "{koName}는 그것을 미나에게 주고 싶었어요."
+        ],
+        [
+          "But Mina said, \"Let us share it.\"",
+          "그런데 미나는 \"우리 함께 나누자.\"라고 말했어요."
+        ],
+        [
+          "They showed it to their friends.",
+          "둘은 친구들에게 그것을 보여 주었어요."
+        ],
+        [
+          "Everyone smiled at the little surprise.",
+          "모두 작은 깜짝 선물을 보고 미소 지었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b1d26",
+      "book": 1,
+      "day": 26,
+      "title": "Striped Scarf",
+      "titleKo": "줄무늬 목도리",
+      "sentences": [
+        [
+          "{name} was in the school yard with Sora.",
+          "{koName}는 소라와 학교 운동장에서 함께 있었어요."
+        ],
+        [
+          "They saw a striped scarf near a bag.",
+          "두 사람은 가방 옆에서 줄무늬 목도리를 보았어요."
+        ],
+        [
+          "Sora said, \"Look! It is beautiful.\"",
+          "소라가 \"봐! 정말 예쁘다.\"라고 말했어요."
+        ],
+        [
+          "{name} took a closer look and smiled.",
+          "{koName}는 가까이에서 살펴보고 미소 지었어요."
+        ],
+        [
+          "They put it back and went home together.",
+          "두 사람은 물건을 제자리에 두고 함께 집에 갔어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b1d27",
+      "book": 1,
+      "day": 27,
+      "title": "Tiny Button",
+      "titleKo": "작은 단추",
+      "sentences": [
+        [
+          "{name} met Hana at home.",
+          "{koName}는 집에서 하나를 만났어요."
+        ],
+        [
+          "Hana had a tiny button in a bag.",
+          "하나의 가방에는 작은 단추가 있었어요."
+        ],
+        [
+          "But the bag was not there.",
+          "그런데 가방이 보이지 않았어요."
+        ],
+        [
+          "They looked under a chair and found the bag.",
+          "둘은 의자 아래를 살펴보다가 가방을 찾았어요."
+        ],
+        [
+          "Hana said, \"Thank you!\" and they laughed.",
+          "하나가 \"고마워!\"라고 말했고 두 사람은 웃었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b1d28",
+      "book": 1,
+      "day": 28,
+      "title": "Flower Drawing",
+      "titleKo": "꽃 그림",
+      "sentences": [
+        [
+          "{name} and Yuna wanted to make a small gift.",
+          "{koName}와 유나는 작은 선물을 만들고 싶었어요."
+        ],
+        [
+          "They found a flower drawing in the art room.",
+          "두 사람은 미술실에서 꽃 그림을 발견했어요."
+        ],
+        [
+          "{name} said, \"This is for our friend.\"",
+          "{koName}는 \"이건 우리 친구에게 줄 거야.\"라고 말했어요."
+        ],
+        [
+          "They put it in a little box.",
+          "둘은 그것을 작은 상자에 넣었어요."
+        ],
+        [
+          "Their friend opened the box and smiled.",
+          "친구는 상자를 열고 미소 지었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b1d29",
+      "book": 1,
+      "day": 29,
+      "title": "New Keyring",
+      "titleKo": "새 열쇠고리",
+      "sentences": [
+        [
+          "After class, {name} met Mina at school.",
+          "{koName}는 수업이 끝난 후 학교에서 미나를 만났어요."
+        ],
+        [
+          "Mina showed {name} a new keyring.",
+          "미나가 {koName}에게 새 열쇠고리를 보여 주었어요."
+        ],
+        [
+          "\"Can I see it?\" asked {name}.",
+          "{koName}는 \"내가 봐도 돼?\"라고 물었어요."
+        ],
+        [
+          "Mina said, \"Of course!\"",
+          "미나는 \"물론이지!\"라고 말했어요."
+        ],
+        [
+          "They looked at it and made a new plan.",
+          "둘은 그것을 살펴보고 새로운 계획을 세웠어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b1d30",
+      "book": 1,
+      "day": 30,
+      "title": "Little Gift Bag",
+      "titleKo": "작은 선물 봉투",
+      "sentences": [
+        [
+          "{name} saw a little gift bag at the community center.",
+          "{koName}는 동네 문화센터에서 작은 선물 봉투를 보았어요."
+        ],
+        [
+          "{name} wanted to give it to Sora.",
+          "{koName}는 그것을 소라에게 주고 싶었어요."
+        ],
+        [
+          "But Sora said, \"Let us share it.\"",
+          "그런데 소라는 \"우리 함께 나누자.\"라고 말했어요."
+        ],
+        [
+          "They showed it to their friends.",
+          "둘은 친구들에게 그것을 보여 주었어요."
+        ],
+        [
+          "Everyone smiled at the little surprise.",
+          "모두 작은 깜짝 선물을 보고 미소 지었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b2d01",
+      "book": 2,
+      "day": 1,
+      "title": "Finding Blue Box",
+      "titleKo": "찾아보는 파란 상자",
+      "sentences": [
+        [
+          "{name} and Mina planned a game at school.",
+          "{koName}와 미나는 학교에서 놀이를 계획했어요."
+        ],
+        [
+          "They needed a blue box to begin.",
+          "시작하려면 파란 상자가 필요했어요."
+        ],
+        [
+          "Suddenly, they could not find it anywhere.",
+          "갑자기 어디에서도 그것을 찾을 수 없었어요."
+        ],
+        [
+          "Instead of giving up, they checked their bags carefully.",
+          "포기하는 대신 두 사람은 가방을 꼼꼼히 살펴봤어요."
+        ],
+        [
+          "They found it and finally started the game.",
+          "마침내 물건을 찾아 놀이를 시작했어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b2d02",
+      "book": 2,
+      "day": 2,
+      "title": "Finding Red Heart",
+      "titleKo": "찾아보는 빨간 하트",
+      "sentences": [
+        [
+          "{name} was carrying a red paper heart in the classroom.",
+          "{koName}는 교실에서 빨간 종이 하트를 가져왔어요."
+        ],
+        [
+          "Sora noticed that something was wrong.",
+          "소라는 무언가 잘못되었다는 걸 알아챘어요."
+        ],
+        [
+          "They checked it together and talked about the problem.",
+          "둘은 함께 확인하고 문제를 이야기했어요."
+        ],
+        [
+          "{name} tried a different way to use it.",
+          "{koName}는 다른 방법으로 그것을 활용해 보았어요."
+        ],
+        [
+          "Their new idea worked, and both friends felt proud.",
+          "새로운 방법이 통하자 두 친구는 뿌듯했어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b2d03",
+      "book": 2,
+      "day": 3,
+      "title": "Finding Yellow Ribbon",
+      "titleKo": "찾아보는 노란 리본",
+      "sentences": [
+        [
+          "{name} and Hana found a yellow ribbon in the library.",
+          "{koName}와 하나는 도서관에서 노란 리본을 발견했어요."
+        ],
+        [
+          "They wondered who had left it there.",
+          "누가 그곳에 두고 갔는지 궁금했어요."
+        ],
+        [
+          "Hana suggested asking people nearby.",
+          "하나는 근처 사람들에게 물어보자고 했어요."
+        ],
+        [
+          "After several questions, they found the owner.",
+          "몇 사람에게 물어본 끝에 주인을 찾았어요."
+        ],
+        [
+          "Returning the item made their day special.",
+          "물건을 돌려주어서 특별한 하루가 되었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b2d04",
+      "book": 2,
+      "day": 4,
+      "title": "Finding Paper Flower",
+      "titleKo": "찾아보는 종이꽃",
+      "sentences": [
+        [
+          "Yuna wanted to use a paper flower in the art room.",
+          "유나는 미술실에서 종이꽃을 활용하고 싶었어요."
+        ],
+        [
+          "{name} had a different idea about it.",
+          "{koName}는 다른 생각을 하고 있었어요."
+        ],
+        [
+          "At first, they could not agree.",
+          "처음에는 서로 의견이 맞지 않았어요."
+        ],
+        [
+          "Then they listened to each other and made one plan.",
+          "그러다 서로의 말을 듣고 하나의 계획을 만들었어요."
+        ],
+        [
+          "They learned that two ideas can be better than one.",
+          "두 가지 생각을 합치면 더 좋을 수 있다는 걸 배웠어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b2d05",
+      "book": 2,
+      "day": 5,
+      "title": "Finding Little Map",
+      "titleKo": "찾아보는 작은 지도",
+      "sentences": [
+        [
+          "{name} was carrying a little map in the park.",
+          "{koName}는 공원에서 작은 지도를 들고 있었어요."
+        ],
+        [
+          "A strong wind surprised {name} and Mina.",
+          "강한 바람이 불어 {koName}와 미나는 깜짝 놀랐어요."
+        ],
+        [
+          "They stopped and looked for a safe place.",
+          "두 사람은 멈춰 서서 안전한 곳을 찾았어요."
+        ],
+        [
+          "Working together, they kept the item from falling.",
+          "함께 힘을 모아 물건이 떨어지지 않게 했어요."
+        ],
+        [
+          "Both friends smiled when the wind became quiet.",
+          "바람이 잠잠해지자 둘은 미소 지었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b2d06",
+      "book": 2,
+      "day": 6,
+      "title": "Finding Green Leaf",
+      "titleKo": "찾아보는 초록 나뭇잎",
+      "sentences": [
+        [
+          "{name} and Sora planned a game in the garden.",
+          "{koName}와 소라는 정원에서 놀이를 계획했어요."
+        ],
+        [
+          "They needed a green leaf to begin.",
+          "시작하려면 초록 나뭇잎이 필요했어요."
+        ],
+        [
+          "Suddenly, they could not find it anywhere.",
+          "갑자기 어디에서도 그것을 찾을 수 없었어요."
+        ],
+        [
+          "Instead of giving up, they checked their bags carefully.",
+          "포기하는 대신 두 사람은 가방을 꼼꼼히 살펴봤어요."
+        ],
+        [
+          "They found it and finally started the game.",
+          "마침내 물건을 찾아 놀이를 시작했어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b2d07",
+      "book": 2,
+      "day": 7,
+      "title": "Finding New Bookmark",
+      "titleKo": "찾아보는 새 책갈피",
+      "sentences": [
+        [
+          "{name} was carrying a new bookmark in the library.",
+          "{koName}는 도서관에서 새 책갈피를 가져왔어요."
+        ],
+        [
+          "Hana noticed that something was wrong.",
+          "하나는 무언가 잘못되었다는 걸 알아챘어요."
+        ],
+        [
+          "They checked it together and talked about the problem.",
+          "둘은 함께 확인하고 문제를 이야기했어요."
+        ],
+        [
+          "{name} tried a different way to use it.",
+          "{koName}는 다른 방법으로 그것을 활용해 보았어요."
+        ],
+        [
+          "Their new idea worked, and both friends felt proud.",
+          "새로운 방법이 통하자 두 친구는 뿌듯했어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b2d08",
+      "book": 2,
+      "day": 8,
+      "title": "Finding Paper Boat",
+      "titleKo": "찾아보는 종이배",
+      "sentences": [
+        [
+          "{name} and Yuna found a paper boat beside the river.",
+          "{koName}와 유나는 강가에서 종이배를 발견했어요."
+        ],
+        [
+          "They wondered who had left it there.",
+          "누가 그곳에 두고 갔는지 궁금했어요."
+        ],
+        [
+          "Yuna suggested asking people nearby.",
+          "유나는 근처 사람들에게 물어보자고 했어요."
+        ],
+        [
+          "After several questions, they found the owner.",
+          "몇 사람에게 물어본 끝에 주인을 찾았어요."
+        ],
+        [
+          "Returning the item made their day special.",
+          "물건을 돌려주어서 특별한 하루가 되었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b2d09",
+      "book": 2,
+      "day": 9,
+      "title": "Finding Small Painting",
+      "titleKo": "찾아보는 작은 그림",
+      "sentences": [
+        [
+          "Mina wanted to use a small painting at school.",
+          "미나는 학교에서 작은 그림을 활용하고 싶었어요."
+        ],
+        [
+          "{name} had a different idea about it.",
+          "{koName}는 다른 생각을 하고 있었어요."
+        ],
+        [
+          "At first, they could not agree.",
+          "처음에는 서로 의견이 맞지 않았어요."
+        ],
+        [
+          "Then they listened to each other and made one plan.",
+          "그러다 서로의 말을 듣고 하나의 계획을 만들었어요."
+        ],
+        [
+          "They learned that two ideas can be better than one.",
+          "두 가지 생각을 합치면 더 좋을 수 있다는 걸 배웠어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b2d10",
+      "book": 2,
+      "day": 10,
+      "title": "Finding Silver Bell",
+      "titleKo": "찾아보는 은빛 방울",
+      "sentences": [
+        [
+          "{name} was carrying a silver bell in the music room.",
+          "{koName}는 음악실에서 은빛 방울을 들고 있었어요."
+        ],
+        [
+          "A strong wind surprised {name} and Sora.",
+          "강한 바람이 불어 {koName}와 소라는 깜짝 놀랐어요."
+        ],
+        [
+          "They stopped and looked for a safe place.",
+          "두 사람은 멈춰 서서 안전한 곳을 찾았어요."
+        ],
+        [
+          "Working together, they kept the item from falling.",
+          "함께 힘을 모아 물건이 떨어지지 않게 했어요."
+        ],
+        [
+          "Both friends smiled when the wind became quiet.",
+          "바람이 잠잠해지자 둘은 미소 지었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b2d11",
+      "book": 2,
+      "day": 11,
+      "title": "Finding Old Postcard",
+      "titleKo": "찾아보는 오래된 엽서",
+      "sentences": [
+        [
+          "{name} and Hana planned a game at home.",
+          "{koName}와 하나는 집에서 놀이를 계획했어요."
+        ],
+        [
+          "They needed an old postcard to begin.",
+          "시작하려면 오래된 엽서가 필요했어요."
+        ],
+        [
+          "Suddenly, they could not find it anywhere.",
+          "갑자기 어디에서도 그것을 찾을 수 없었어요."
+        ],
+        [
+          "Instead of giving up, they checked their bags carefully.",
+          "포기하는 대신 두 사람은 가방을 꼼꼼히 살펴봤어요."
+        ],
+        [
+          "They found it and finally started the game.",
+          "마침내 물건을 찾아 놀이를 시작했어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b2d12",
+      "book": 2,
+      "day": 12,
+      "title": "Finding Colorful Stone",
+      "titleKo": "찾아보는 알록달록 돌멩이",
+      "sentences": [
+        [
+          "{name} was carrying a colorful stone in the park.",
+          "{koName}는 공원에서 알록달록 돌멩이를 가져왔어요."
+        ],
+        [
+          "Yuna noticed that something was wrong.",
+          "유나는 무언가 잘못되었다는 걸 알아챘어요."
+        ],
+        [
+          "They checked it together and talked about the problem.",
+          "둘은 함께 확인하고 문제를 이야기했어요."
+        ],
+        [
+          "{name} tried a different way to use it.",
+          "{koName}는 다른 방법으로 그것을 활용해 보았어요."
+        ],
+        [
+          "Their new idea worked, and both friends felt proud.",
+          "새로운 방법이 통하자 두 친구는 뿌듯했어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b2d13",
+      "book": 2,
+      "day": 13,
+      "title": "Finding Tiny Shell",
+      "titleKo": "찾아보는 작은 조개껍데기",
+      "sentences": [
+        [
+          "{name} and Mina found a tiny shell at the beach.",
+          "{koName}와 미나는 해변에서 작은 조개껍데기를 발견했어요."
+        ],
+        [
+          "They wondered who had left it there.",
+          "누가 그곳에 두고 갔는지 궁금했어요."
+        ],
+        [
+          "Mina suggested asking people nearby.",
+          "미나는 근처 사람들에게 물어보자고 했어요."
+        ],
+        [
+          "After several questions, they found the owner.",
+          "몇 사람에게 물어본 끝에 주인을 찾았어요."
+        ],
+        [
+          "Returning the item made their day special.",
+          "물건을 돌려주어서 특별한 하루가 되었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b2d14",
+      "book": 2,
+      "day": 14,
+      "title": "Finding Paper Star",
+      "titleKo": "찾아보는 종이별",
+      "sentences": [
+        [
+          "Sora wanted to use a paper star in the classroom.",
+          "소라는 교실에서 종이별을 활용하고 싶었어요."
+        ],
+        [
+          "{name} had a different idea about it.",
+          "{koName}는 다른 생각을 하고 있었어요."
+        ],
+        [
+          "At first, they could not agree.",
+          "처음에는 서로 의견이 맞지 않았어요."
+        ],
+        [
+          "Then they listened to each other and made one plan.",
+          "그러다 서로의 말을 듣고 하나의 계획을 만들었어요."
+        ],
+        [
+          "They learned that two ideas can be better than one.",
+          "두 가지 생각을 합치면 더 좋을 수 있다는 걸 배웠어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b2d15",
+      "book": 2,
+      "day": 15,
+      "title": "Finding Funny Sticker",
+      "titleKo": "찾아보는 재미있는 스티커",
+      "sentences": [
+        [
+          "{name} was carrying a funny sticker at school.",
+          "{koName}는 학교에서 재미있는 스티커를 들고 있었어요."
+        ],
+        [
+          "A strong wind surprised {name} and Hana.",
+          "강한 바람이 불어 {koName}와 하나는 깜짝 놀랐어요."
+        ],
+        [
+          "They stopped and looked for a safe place.",
+          "두 사람은 멈춰 서서 안전한 곳을 찾았어요."
+        ],
+        [
+          "Working together, they kept the item from falling.",
+          "함께 힘을 모아 물건이 떨어지지 않게 했어요."
+        ],
+        [
+          "Both friends smiled when the wind became quiet.",
+          "바람이 잠잠해지자 둘은 미소 지었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b2d16",
+      "book": 2,
+      "day": 16,
+      "title": "Finding Lost Ticket",
+      "titleKo": "찾아보는 잃어버린 표",
+      "sentences": [
+        [
+          "{name} and Yuna planned a game at the station.",
+          "{koName}와 유나는 역에서 놀이를 계획했어요."
+        ],
+        [
+          "They needed a train ticket to begin.",
+          "시작하려면 기차표가 필요했어요."
+        ],
+        [
+          "Suddenly, they could not find it anywhere.",
+          "갑자기 어디에서도 그것을 찾을 수 없었어요."
+        ],
+        [
+          "Instead of giving up, they checked their bags carefully.",
+          "포기하는 대신 두 사람은 가방을 꼼꼼히 살펴봤어요."
+        ],
+        [
+          "They found it and finally started the game.",
+          "마침내 물건을 찾아 놀이를 시작했어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b2d17",
+      "book": 2,
+      "day": 17,
+      "title": "Finding Purple Notebook",
+      "titleKo": "찾아보는 보라색 공책",
+      "sentences": [
+        [
+          "{name} was carrying a purple notebook in the library.",
+          "{koName}는 도서관에서 보라색 공책을 가져왔어요."
+        ],
+        [
+          "Mina noticed that something was wrong.",
+          "미나는 무언가 잘못되었다는 걸 알아챘어요."
+        ],
+        [
+          "They checked it together and talked about the problem.",
+          "둘은 함께 확인하고 문제를 이야기했어요."
+        ],
+        [
+          "{name} tried a different way to use it.",
+          "{koName}는 다른 방법으로 그것을 활용해 보았어요."
+        ],
+        [
+          "Their new idea worked, and both friends felt proud.",
+          "새로운 방법이 통하자 두 친구는 뿌듯했어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b2d18",
+      "book": 2,
+      "day": 18,
+      "title": "Finding Paper Crown",
+      "titleKo": "찾아보는 종이 왕관",
+      "sentences": [
+        [
+          "{name} and Sora found a paper crown at the party.",
+          "{koName}와 소라는 파티에서 종이 왕관을 발견했어요."
+        ],
+        [
+          "They wondered who had left it there.",
+          "누가 그곳에 두고 갔는지 궁금했어요."
+        ],
+        [
+          "Sora suggested asking people nearby.",
+          "소라는 근처 사람들에게 물어보자고 했어요."
+        ],
+        [
+          "After several questions, they found the owner.",
+          "몇 사람에게 물어본 끝에 주인을 찾았어요."
+        ],
+        [
+          "Returning the item made their day special.",
+          "물건을 돌려주어서 특별한 하루가 되었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b2d19",
+      "book": 2,
+      "day": 19,
+      "title": "Finding Little Flag",
+      "titleKo": "찾아보는 작은 깃발",
+      "sentences": [
+        [
+          "Hana wanted to use a little flag on the playground.",
+          "하나는 운동장에서 작은 깃발을 활용하고 싶었어요."
+        ],
+        [
+          "{name} had a different idea about it.",
+          "{koName}는 다른 생각을 하고 있었어요."
+        ],
+        [
+          "At first, they could not agree.",
+          "처음에는 서로 의견이 맞지 않았어요."
+        ],
+        [
+          "Then they listened to each other and made one plan.",
+          "그러다 서로의 말을 듣고 하나의 계획을 만들었어요."
+        ],
+        [
+          "They learned that two ideas can be better than one.",
+          "두 가지 생각을 합치면 더 좋을 수 있다는 걸 배웠어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b2d20",
+      "book": 2,
+      "day": 20,
+      "title": "Finding Wooden Toy",
+      "titleKo": "찾아보는 나무 장난감",
+      "sentences": [
+        [
+          "{name} was carrying a wooden toy at home.",
+          "{koName}는 집에서 나무 장난감을 들고 있었어요."
+        ],
+        [
+          "A strong wind surprised {name} and Yuna.",
+          "강한 바람이 불어 {koName}와 유나는 깜짝 놀랐어요."
+        ],
+        [
+          "They stopped and looked for a safe place.",
+          "두 사람은 멈춰 서서 안전한 곳을 찾았어요."
+        ],
+        [
+          "Working together, they kept the item from falling.",
+          "함께 힘을 모아 물건이 떨어지지 않게 했어요."
+        ],
+        [
+          "Both friends smiled when the wind became quiet.",
+          "바람이 잠잠해지자 둘은 미소 지었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b2d21",
+      "book": 2,
+      "day": 21,
+      "title": "Finding Orange Pencil",
+      "titleKo": "찾아보는 주황색 연필",
+      "sentences": [
+        [
+          "{name} and Mina planned a game in the classroom.",
+          "{koName}와 미나는 교실에서 놀이를 계획했어요."
+        ],
+        [
+          "They needed an orange pencil to begin.",
+          "시작하려면 주황색 연필이 필요했어요."
+        ],
+        [
+          "Suddenly, they could not find it anywhere.",
+          "갑자기 어디에서도 그것을 찾을 수 없었어요."
+        ],
+        [
+          "Instead of giving up, they checked their bags carefully.",
+          "포기하는 대신 두 사람은 가방을 꼼꼼히 살펴봤어요."
+        ],
+        [
+          "They found it and finally started the game.",
+          "마침내 물건을 찾아 놀이를 시작했어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b2d22",
+      "book": 2,
+      "day": 22,
+      "title": "Finding Small Photo",
+      "titleKo": "찾아보는 작은 사진",
+      "sentences": [
+        [
+          "{name} was carrying a small photo in the hallway.",
+          "{koName}는 복도에서 작은 사진을 가져왔어요."
+        ],
+        [
+          "Sora noticed that something was wrong.",
+          "소라는 무언가 잘못되었다는 걸 알아챘어요."
+        ],
+        [
+          "They checked it together and talked about the problem.",
+          "둘은 함께 확인하고 문제를 이야기했어요."
+        ],
+        [
+          "{name} tried a different way to use it.",
+          "{koName}는 다른 방법으로 그것을 활용해 보았어요."
+        ],
+        [
+          "Their new idea worked, and both friends felt proud.",
+          "새로운 방법이 통하자 두 친구는 뿌듯했어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b2d23",
+      "book": 2,
+      "day": 23,
+      "title": "Finding Blue Envelope",
+      "titleKo": "찾아보는 파란 봉투",
+      "sentences": [
+        [
+          "{name} and Hana found a blue envelope at the post office.",
+          "{koName}와 하나는 우체국에서 파란 봉투를 발견했어요."
+        ],
+        [
+          "They wondered who had left it there.",
+          "누가 그곳에 두고 갔는지 궁금했어요."
+        ],
+        [
+          "Hana suggested asking people nearby.",
+          "하나는 근처 사람들에게 물어보자고 했어요."
+        ],
+        [
+          "After several questions, they found the owner.",
+          "몇 사람에게 물어본 끝에 주인을 찾았어요."
+        ],
+        [
+          "Returning the item made their day special.",
+          "물건을 돌려주어서 특별한 하루가 되었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b2d24",
+      "book": 2,
+      "day": 24,
+      "title": "Finding Paper Airplane",
+      "titleKo": "찾아보는 종이비행기",
+      "sentences": [
+        [
+          "Yuna wanted to use a paper airplane on the playground.",
+          "유나는 운동장에서 종이비행기를 활용하고 싶었어요."
+        ],
+        [
+          "{name} had a different idea about it.",
+          "{koName}는 다른 생각을 하고 있었어요."
+        ],
+        [
+          "At first, they could not agree.",
+          "처음에는 서로 의견이 맞지 않았어요."
+        ],
+        [
+          "Then they listened to each other and made one plan.",
+          "그러다 서로의 말을 듣고 하나의 계획을 만들었어요."
+        ],
+        [
+          "They learned that two ideas can be better than one.",
+          "두 가지 생각을 합치면 더 좋을 수 있다는 걸 배웠어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b2d25",
+      "book": 2,
+      "day": 25,
+      "title": "Finding Little Poem",
+      "titleKo": "찾아보는 짧은 시",
+      "sentences": [
+        [
+          "{name} was carrying a short poem in the library.",
+          "{koName}는 도서관에서 짧은 시를 들고 있었어요."
+        ],
+        [
+          "A strong wind surprised {name} and Mina.",
+          "강한 바람이 불어 {koName}와 미나는 깜짝 놀랐어요."
+        ],
+        [
+          "They stopped and looked for a safe place.",
+          "두 사람은 멈춰 서서 안전한 곳을 찾았어요."
+        ],
+        [
+          "Working together, they kept the item from falling.",
+          "함께 힘을 모아 물건이 떨어지지 않게 했어요."
+        ],
+        [
+          "Both friends smiled when the wind became quiet.",
+          "바람이 잠잠해지자 둘은 미소 지었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b2d26",
+      "book": 2,
+      "day": 26,
+      "title": "Finding Striped Scarf",
+      "titleKo": "찾아보는 줄무늬 목도리",
+      "sentences": [
+        [
+          "{name} and Sora planned a game in the school yard.",
+          "{koName}와 소라는 학교 운동장에서 놀이를 계획했어요."
+        ],
+        [
+          "They needed a striped scarf to begin.",
+          "시작하려면 줄무늬 목도리가 필요했어요."
+        ],
+        [
+          "Suddenly, they could not find it anywhere.",
+          "갑자기 어디에서도 그것을 찾을 수 없었어요."
+        ],
+        [
+          "Instead of giving up, they checked their bags carefully.",
+          "포기하는 대신 두 사람은 가방을 꼼꼼히 살펴봤어요."
+        ],
+        [
+          "They found it and finally started the game.",
+          "마침내 물건을 찾아 놀이를 시작했어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b2d27",
+      "book": 2,
+      "day": 27,
+      "title": "Finding Tiny Button",
+      "titleKo": "찾아보는 작은 단추",
+      "sentences": [
+        [
+          "{name} was carrying a tiny button at home.",
+          "{koName}는 집에서 작은 단추를 가져왔어요."
+        ],
+        [
+          "Hana noticed that something was wrong.",
+          "하나는 무언가 잘못되었다는 걸 알아챘어요."
+        ],
+        [
+          "They checked it together and talked about the problem.",
+          "둘은 함께 확인하고 문제를 이야기했어요."
+        ],
+        [
+          "{name} tried a different way to use it.",
+          "{koName}는 다른 방법으로 그것을 활용해 보았어요."
+        ],
+        [
+          "Their new idea worked, and both friends felt proud.",
+          "새로운 방법이 통하자 두 친구는 뿌듯했어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b2d28",
+      "book": 2,
+      "day": 28,
+      "title": "Finding Flower Drawing",
+      "titleKo": "찾아보는 꽃 그림",
+      "sentences": [
+        [
+          "{name} and Yuna found a flower drawing in the art room.",
+          "{koName}와 유나는 미술실에서 꽃 그림을 발견했어요."
+        ],
+        [
+          "They wondered who had left it there.",
+          "누가 그곳에 두고 갔는지 궁금했어요."
+        ],
+        [
+          "Yuna suggested asking people nearby.",
+          "유나는 근처 사람들에게 물어보자고 했어요."
+        ],
+        [
+          "After several questions, they found the owner.",
+          "몇 사람에게 물어본 끝에 주인을 찾았어요."
+        ],
+        [
+          "Returning the item made their day special.",
+          "물건을 돌려주어서 특별한 하루가 되었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b2d29",
+      "book": 2,
+      "day": 29,
+      "title": "Finding New Keyring",
+      "titleKo": "찾아보는 새 열쇠고리",
+      "sentences": [
+        [
+          "Mina wanted to use a new keyring at school.",
+          "미나는 학교에서 새 열쇠고리를 활용하고 싶었어요."
+        ],
+        [
+          "{name} had a different idea about it.",
+          "{koName}는 다른 생각을 하고 있었어요."
+        ],
+        [
+          "At first, they could not agree.",
+          "처음에는 서로 의견이 맞지 않았어요."
+        ],
+        [
+          "Then they listened to each other and made one plan.",
+          "그러다 서로의 말을 듣고 하나의 계획을 만들었어요."
+        ],
+        [
+          "They learned that two ideas can be better than one.",
+          "두 가지 생각을 합치면 더 좋을 수 있다는 걸 배웠어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b2d30",
+      "book": 2,
+      "day": 30,
+      "title": "Finding Little Gift Bag",
+      "titleKo": "찾아보는 작은 선물 봉투",
+      "sentences": [
+        [
+          "{name} was carrying a little gift bag at the community center.",
+          "{koName}는 동네 문화센터에서 작은 선물 봉투를 들고 있었어요."
+        ],
+        [
+          "A strong wind surprised {name} and Sora.",
+          "강한 바람이 불어 {koName}와 소라는 깜짝 놀랐어요."
+        ],
+        [
+          "They stopped and looked for a safe place.",
+          "두 사람은 멈춰 서서 안전한 곳을 찾았어요."
+        ],
+        [
+          "Working together, they kept the item from falling.",
+          "함께 힘을 모아 물건이 떨어지지 않게 했어요."
+        ],
+        [
+          "Both friends smiled when the wind became quiet.",
+          "바람이 잠잠해지자 둘은 미소 지었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b3d01",
+      "book": 3,
+      "day": 1,
+      "title": "Working Together: Blue Box",
+      "titleKo": "협력의 시간: 파란 상자",
+      "sentences": [
+        [
+          "While {name} was working at school, Mina arrived with a blue box.",
+          "{koName}가 학교에서 작업하는 동안 미나가 파란 상자를 가져왔어요."
+        ],
+        [
+          "They wanted to create something useful for the class.",
+          "두 사람은 반 친구들에게 도움이 될 무언가를 만들고 싶었어요."
+        ],
+        [
+          "However, the first plan took too much time.",
+          "하지만 첫 계획은 시간이 너무 오래 걸렸어요."
+        ],
+        [
+          "They divided the work into smaller steps and helped each other.",
+          "둘은 일을 작은 단계로 나누고 서로 도왔어요."
+        ],
+        [
+          "By the end of the day, their project was finished.",
+          "하루가 끝날 무렵 프로젝트를 완성했어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b3d02",
+      "book": 3,
+      "day": 2,
+      "title": "Working Together: Red Heart",
+      "titleKo": "협력의 시간: 빨간 하트",
+      "sentences": [
+        [
+          "{name} noticed a red paper heart in the classroom and asked a question.",
+          "{koName}는 교실에서 빨간 종이 하트를 보고 질문을 했어요."
+        ],
+        [
+          "Sora gave an answer, but neither friend was sure.",
+          "소라가 답했지만 두 사람 모두 확신하지 못했어요."
+        ],
+        [
+          "They decided to observe carefully instead of guessing.",
+          "둘은 짐작하는 대신 자세히 관찰하기로 했어요."
+        ],
+        [
+          "After writing down what they saw, they compared their notes.",
+          "본 것을 적은 뒤 서로의 기록을 비교했어요."
+        ],
+        [
+          "The evidence helped them understand what had happened.",
+          "증거 덕분에 무슨 일이 있었는지 이해할 수 있었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b3d03",
+      "book": 3,
+      "day": 3,
+      "title": "Working Together: Yellow Ribbon",
+      "titleKo": "협력의 시간: 노란 리본",
+      "sentences": [
+        [
+          "{name} wanted to use a yellow ribbon for a group project.",
+          "{koName}는 모둠 활동에 노란 리본을 사용하고 싶었어요."
+        ],
+        [
+          "Hana thought the group should ask everyone first.",
+          "하나는 먼저 모두에게 의견을 물어야 한다고 생각했어요."
+        ],
+        [
+          "Some friends preferred a different idea.",
+          "다른 생각을 가진 친구들도 있었어요."
+        ],
+        [
+          "They held a short discussion and listened without interrupting.",
+          "모두 짧게 의견을 나누고 끼어들지 않고 들었어요."
+        ],
+        [
+          "Their final choice respected everybody in the group.",
+          "마지막 선택은 모둠원 모두를 존중하는 결정이었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b3d04",
+      "book": 3,
+      "day": 4,
+      "title": "Working Together: Paper Flower",
+      "titleKo": "협력의 시간: 종이꽃",
+      "sentences": [
+        [
+          "In the art room, {name} saw that a paper flower needed special care.",
+          "{koName}는 미술실에서 종이꽃이 특별한 관리가 필요하다는 걸 알았어요."
+        ],
+        [
+          "Yuna suggested finishing everything quickly.",
+          "유나는 모든 일을 빨리 끝내자고 했어요."
+        ],
+        [
+          "Instead, {name} asked what might go wrong if they rushed.",
+          "하지만 {koName}는 서두르면 무슨 문제가 생길지 물었어요."
+        ],
+        [
+          "Together they made a checklist and worked slowly.",
+          "둘은 점검표를 만들고 차근차근 일했어요."
+        ],
+        [
+          "Careful work prevented a mistake and saved time later.",
+          "꼼꼼하게 한 덕분에 실수를 막고 나중에 시간을 아꼈어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b3d05",
+      "book": 3,
+      "day": 5,
+      "title": "Working Together: Little Map",
+      "titleKo": "협력의 시간: 작은 지도",
+      "sentences": [
+        [
+          "{name} and Mina were preparing an exhibit about a little map.",
+          "{koName}와 미나는 작은 지도에 관한 전시를 준비하고 있었어요."
+        ],
+        [
+          "They realized that visitors might not understand their explanation.",
+          "사람들이 설명을 이해하지 못할 수도 있다는 걸 깨달았어요."
+        ],
+        [
+          "They invited a younger friend to read their first draft.",
+          "어린 친구에게 처음 쓴 설명을 읽어 달라고 했어요."
+        ],
+        [
+          "After hearing the feedback, they rewrote the difficult parts.",
+          "의견을 들은 뒤 어려운 부분을 다시 썼어요."
+        ],
+        [
+          "Now more people could enjoy and understand the exhibit.",
+          "이제 더 많은 사람이 전시를 즐기고 이해할 수 있었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b3d06",
+      "book": 3,
+      "day": 6,
+      "title": "Working Together: Green Leaf",
+      "titleKo": "협력의 시간: 초록 나뭇잎",
+      "sentences": [
+        [
+          "While {name} was working in the garden, Sora arrived with a green leaf.",
+          "{koName}가 정원에서 작업하는 동안 소라가 초록 나뭇잎을 가져왔어요."
+        ],
+        [
+          "They wanted to create something useful for the class.",
+          "두 사람은 반 친구들에게 도움이 될 무언가를 만들고 싶었어요."
+        ],
+        [
+          "However, the first plan took too much time.",
+          "하지만 첫 계획은 시간이 너무 오래 걸렸어요."
+        ],
+        [
+          "They divided the work into smaller steps and helped each other.",
+          "둘은 일을 작은 단계로 나누고 서로 도왔어요."
+        ],
+        [
+          "By the end of the day, their project was finished.",
+          "하루가 끝날 무렵 프로젝트를 완성했어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b3d07",
+      "book": 3,
+      "day": 7,
+      "title": "Working Together: New Bookmark",
+      "titleKo": "협력의 시간: 새 책갈피",
+      "sentences": [
+        [
+          "{name} noticed a new bookmark in the library and asked a question.",
+          "{koName}는 도서관에서 새 책갈피를 보고 질문을 했어요."
+        ],
+        [
+          "Hana gave an answer, but neither friend was sure.",
+          "하나가 답했지만 두 사람 모두 확신하지 못했어요."
+        ],
+        [
+          "They decided to observe carefully instead of guessing.",
+          "둘은 짐작하는 대신 자세히 관찰하기로 했어요."
+        ],
+        [
+          "After writing down what they saw, they compared their notes.",
+          "본 것을 적은 뒤 서로의 기록을 비교했어요."
+        ],
+        [
+          "The evidence helped them understand what had happened.",
+          "증거 덕분에 무슨 일이 있었는지 이해할 수 있었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b3d08",
+      "book": 3,
+      "day": 8,
+      "title": "Working Together: Paper Boat",
+      "titleKo": "협력의 시간: 종이배",
+      "sentences": [
+        [
+          "{name} wanted to use a paper boat for a group project.",
+          "{koName}는 모둠 활동에 종이배를 사용하고 싶었어요."
+        ],
+        [
+          "Yuna thought the group should ask everyone first.",
+          "유나는 먼저 모두에게 의견을 물어야 한다고 생각했어요."
+        ],
+        [
+          "Some friends preferred a different idea.",
+          "다른 생각을 가진 친구들도 있었어요."
+        ],
+        [
+          "They held a short discussion and listened without interrupting.",
+          "모두 짧게 의견을 나누고 끼어들지 않고 들었어요."
+        ],
+        [
+          "Their final choice respected everybody in the group.",
+          "마지막 선택은 모둠원 모두를 존중하는 결정이었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b3d09",
+      "book": 3,
+      "day": 9,
+      "title": "Working Together: Small Painting",
+      "titleKo": "협력의 시간: 작은 그림",
+      "sentences": [
+        [
+          "At school, {name} saw that a small painting needed special care.",
+          "{koName}는 학교에서 작은 그림이 특별한 관리가 필요하다는 걸 알았어요."
+        ],
+        [
+          "Mina suggested finishing everything quickly.",
+          "미나는 모든 일을 빨리 끝내자고 했어요."
+        ],
+        [
+          "Instead, {name} asked what might go wrong if they rushed.",
+          "하지만 {koName}는 서두르면 무슨 문제가 생길지 물었어요."
+        ],
+        [
+          "Together they made a checklist and worked slowly.",
+          "둘은 점검표를 만들고 차근차근 일했어요."
+        ],
+        [
+          "Careful work prevented a mistake and saved time later.",
+          "꼼꼼하게 한 덕분에 실수를 막고 나중에 시간을 아꼈어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b3d10",
+      "book": 3,
+      "day": 10,
+      "title": "Working Together: Silver Bell",
+      "titleKo": "협력의 시간: 은빛 방울",
+      "sentences": [
+        [
+          "{name} and Sora were preparing an exhibit about a silver bell.",
+          "{koName}와 소라는 은빛 방울에 관한 전시를 준비하고 있었어요."
+        ],
+        [
+          "They realized that visitors might not understand their explanation.",
+          "사람들이 설명을 이해하지 못할 수도 있다는 걸 깨달았어요."
+        ],
+        [
+          "They invited a younger friend to read their first draft.",
+          "어린 친구에게 처음 쓴 설명을 읽어 달라고 했어요."
+        ],
+        [
+          "After hearing the feedback, they rewrote the difficult parts.",
+          "의견을 들은 뒤 어려운 부분을 다시 썼어요."
+        ],
+        [
+          "Now more people could enjoy and understand the exhibit.",
+          "이제 더 많은 사람이 전시를 즐기고 이해할 수 있었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b3d11",
+      "book": 3,
+      "day": 11,
+      "title": "Working Together: Old Postcard",
+      "titleKo": "협력의 시간: 오래된 엽서",
+      "sentences": [
+        [
+          "While {name} was working at home, Hana arrived with an old postcard.",
+          "{koName}가 집에서 작업하는 동안 하나가 오래된 엽서를 가져왔어요."
+        ],
+        [
+          "They wanted to create something useful for the class.",
+          "두 사람은 반 친구들에게 도움이 될 무언가를 만들고 싶었어요."
+        ],
+        [
+          "However, the first plan took too much time.",
+          "하지만 첫 계획은 시간이 너무 오래 걸렸어요."
+        ],
+        [
+          "They divided the work into smaller steps and helped each other.",
+          "둘은 일을 작은 단계로 나누고 서로 도왔어요."
+        ],
+        [
+          "By the end of the day, their project was finished.",
+          "하루가 끝날 무렵 프로젝트를 완성했어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b3d12",
+      "book": 3,
+      "day": 12,
+      "title": "Working Together: Colorful Stone",
+      "titleKo": "협력의 시간: 알록달록 돌멩이",
+      "sentences": [
+        [
+          "{name} noticed a colorful stone in the park and asked a question.",
+          "{koName}는 공원에서 알록달록 돌멩이를 보고 질문을 했어요."
+        ],
+        [
+          "Yuna gave an answer, but neither friend was sure.",
+          "유나가 답했지만 두 사람 모두 확신하지 못했어요."
+        ],
+        [
+          "They decided to observe carefully instead of guessing.",
+          "둘은 짐작하는 대신 자세히 관찰하기로 했어요."
+        ],
+        [
+          "After writing down what they saw, they compared their notes.",
+          "본 것을 적은 뒤 서로의 기록을 비교했어요."
+        ],
+        [
+          "The evidence helped them understand what had happened.",
+          "증거 덕분에 무슨 일이 있었는지 이해할 수 있었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b3d13",
+      "book": 3,
+      "day": 13,
+      "title": "Working Together: Tiny Shell",
+      "titleKo": "협력의 시간: 작은 조개껍데기",
+      "sentences": [
+        [
+          "{name} wanted to use a tiny shell for a group project.",
+          "{koName}는 모둠 활동에 작은 조개껍데기를 사용하고 싶었어요."
+        ],
+        [
+          "Mina thought the group should ask everyone first.",
+          "미나는 먼저 모두에게 의견을 물어야 한다고 생각했어요."
+        ],
+        [
+          "Some friends preferred a different idea.",
+          "다른 생각을 가진 친구들도 있었어요."
+        ],
+        [
+          "They held a short discussion and listened without interrupting.",
+          "모두 짧게 의견을 나누고 끼어들지 않고 들었어요."
+        ],
+        [
+          "Their final choice respected everybody in the group.",
+          "마지막 선택은 모둠원 모두를 존중하는 결정이었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b3d14",
+      "book": 3,
+      "day": 14,
+      "title": "Working Together: Paper Star",
+      "titleKo": "협력의 시간: 종이별",
+      "sentences": [
+        [
+          "In the classroom, {name} saw that a paper star needed special care.",
+          "{koName}는 교실에서 종이별이 특별한 관리가 필요하다는 걸 알았어요."
+        ],
+        [
+          "Sora suggested finishing everything quickly.",
+          "소라는 모든 일을 빨리 끝내자고 했어요."
+        ],
+        [
+          "Instead, {name} asked what might go wrong if they rushed.",
+          "하지만 {koName}는 서두르면 무슨 문제가 생길지 물었어요."
+        ],
+        [
+          "Together they made a checklist and worked slowly.",
+          "둘은 점검표를 만들고 차근차근 일했어요."
+        ],
+        [
+          "Careful work prevented a mistake and saved time later.",
+          "꼼꼼하게 한 덕분에 실수를 막고 나중에 시간을 아꼈어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b3d15",
+      "book": 3,
+      "day": 15,
+      "title": "Working Together: Funny Sticker",
+      "titleKo": "협력의 시간: 재미있는 스티커",
+      "sentences": [
+        [
+          "{name} and Hana were preparing an exhibit about a funny sticker.",
+          "{koName}와 하나는 재미있는 스티커에 관한 전시를 준비하고 있었어요."
+        ],
+        [
+          "They realized that visitors might not understand their explanation.",
+          "사람들이 설명을 이해하지 못할 수도 있다는 걸 깨달았어요."
+        ],
+        [
+          "They invited a younger friend to read their first draft.",
+          "어린 친구에게 처음 쓴 설명을 읽어 달라고 했어요."
+        ],
+        [
+          "After hearing the feedback, they rewrote the difficult parts.",
+          "의견을 들은 뒤 어려운 부분을 다시 썼어요."
+        ],
+        [
+          "Now more people could enjoy and understand the exhibit.",
+          "이제 더 많은 사람이 전시를 즐기고 이해할 수 있었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b3d16",
+      "book": 3,
+      "day": 16,
+      "title": "Working Together: Lost Ticket",
+      "titleKo": "협력의 시간: 잃어버린 표",
+      "sentences": [
+        [
+          "While {name} was working at the station, Yuna arrived with a train ticket.",
+          "{koName}가 역에서 작업하는 동안 유나가 기차표를 가져왔어요."
+        ],
+        [
+          "They wanted to create something useful for the class.",
+          "두 사람은 반 친구들에게 도움이 될 무언가를 만들고 싶었어요."
+        ],
+        [
+          "However, the first plan took too much time.",
+          "하지만 첫 계획은 시간이 너무 오래 걸렸어요."
+        ],
+        [
+          "They divided the work into smaller steps and helped each other.",
+          "둘은 일을 작은 단계로 나누고 서로 도왔어요."
+        ],
+        [
+          "By the end of the day, their project was finished.",
+          "하루가 끝날 무렵 프로젝트를 완성했어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b3d17",
+      "book": 3,
+      "day": 17,
+      "title": "Working Together: Purple Notebook",
+      "titleKo": "협력의 시간: 보라색 공책",
+      "sentences": [
+        [
+          "{name} noticed a purple notebook in the library and asked a question.",
+          "{koName}는 도서관에서 보라색 공책을 보고 질문을 했어요."
+        ],
+        [
+          "Mina gave an answer, but neither friend was sure.",
+          "미나가 답했지만 두 사람 모두 확신하지 못했어요."
+        ],
+        [
+          "They decided to observe carefully instead of guessing.",
+          "둘은 짐작하는 대신 자세히 관찰하기로 했어요."
+        ],
+        [
+          "After writing down what they saw, they compared their notes.",
+          "본 것을 적은 뒤 서로의 기록을 비교했어요."
+        ],
+        [
+          "The evidence helped them understand what had happened.",
+          "증거 덕분에 무슨 일이 있었는지 이해할 수 있었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b3d18",
+      "book": 3,
+      "day": 18,
+      "title": "Working Together: Paper Crown",
+      "titleKo": "협력의 시간: 종이 왕관",
+      "sentences": [
+        [
+          "{name} wanted to use a paper crown for a group project.",
+          "{koName}는 모둠 활동에 종이 왕관을 사용하고 싶었어요."
+        ],
+        [
+          "Sora thought the group should ask everyone first.",
+          "소라는 먼저 모두에게 의견을 물어야 한다고 생각했어요."
+        ],
+        [
+          "Some friends preferred a different idea.",
+          "다른 생각을 가진 친구들도 있었어요."
+        ],
+        [
+          "They held a short discussion and listened without interrupting.",
+          "모두 짧게 의견을 나누고 끼어들지 않고 들었어요."
+        ],
+        [
+          "Their final choice respected everybody in the group.",
+          "마지막 선택은 모둠원 모두를 존중하는 결정이었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b3d19",
+      "book": 3,
+      "day": 19,
+      "title": "Working Together: Little Flag",
+      "titleKo": "협력의 시간: 작은 깃발",
+      "sentences": [
+        [
+          "On the playground, {name} saw that a little flag needed special care.",
+          "{koName}는 운동장에서 작은 깃발이 특별한 관리가 필요하다는 걸 알았어요."
+        ],
+        [
+          "Hana suggested finishing everything quickly.",
+          "하나는 모든 일을 빨리 끝내자고 했어요."
+        ],
+        [
+          "Instead, {name} asked what might go wrong if they rushed.",
+          "하지만 {koName}는 서두르면 무슨 문제가 생길지 물었어요."
+        ],
+        [
+          "Together they made a checklist and worked slowly.",
+          "둘은 점검표를 만들고 차근차근 일했어요."
+        ],
+        [
+          "Careful work prevented a mistake and saved time later.",
+          "꼼꼼하게 한 덕분에 실수를 막고 나중에 시간을 아꼈어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b3d20",
+      "book": 3,
+      "day": 20,
+      "title": "Working Together: Wooden Toy",
+      "titleKo": "협력의 시간: 나무 장난감",
+      "sentences": [
+        [
+          "{name} and Yuna were preparing an exhibit about a wooden toy.",
+          "{koName}와 유나는 나무 장난감에 관한 전시를 준비하고 있었어요."
+        ],
+        [
+          "They realized that visitors might not understand their explanation.",
+          "사람들이 설명을 이해하지 못할 수도 있다는 걸 깨달았어요."
+        ],
+        [
+          "They invited a younger friend to read their first draft.",
+          "어린 친구에게 처음 쓴 설명을 읽어 달라고 했어요."
+        ],
+        [
+          "After hearing the feedback, they rewrote the difficult parts.",
+          "의견을 들은 뒤 어려운 부분을 다시 썼어요."
+        ],
+        [
+          "Now more people could enjoy and understand the exhibit.",
+          "이제 더 많은 사람이 전시를 즐기고 이해할 수 있었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b3d21",
+      "book": 3,
+      "day": 21,
+      "title": "Working Together: Orange Pencil",
+      "titleKo": "협력의 시간: 주황색 연필",
+      "sentences": [
+        [
+          "While {name} was working in the classroom, Mina arrived with an orange pencil.",
+          "{koName}가 교실에서 작업하는 동안 미나가 주황색 연필을 가져왔어요."
+        ],
+        [
+          "They wanted to create something useful for the class.",
+          "두 사람은 반 친구들에게 도움이 될 무언가를 만들고 싶었어요."
+        ],
+        [
+          "However, the first plan took too much time.",
+          "하지만 첫 계획은 시간이 너무 오래 걸렸어요."
+        ],
+        [
+          "They divided the work into smaller steps and helped each other.",
+          "둘은 일을 작은 단계로 나누고 서로 도왔어요."
+        ],
+        [
+          "By the end of the day, their project was finished.",
+          "하루가 끝날 무렵 프로젝트를 완성했어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b3d22",
+      "book": 3,
+      "day": 22,
+      "title": "Working Together: Small Photo",
+      "titleKo": "협력의 시간: 작은 사진",
+      "sentences": [
+        [
+          "{name} noticed a small photo in the hallway and asked a question.",
+          "{koName}는 복도에서 작은 사진을 보고 질문을 했어요."
+        ],
+        [
+          "Sora gave an answer, but neither friend was sure.",
+          "소라가 답했지만 두 사람 모두 확신하지 못했어요."
+        ],
+        [
+          "They decided to observe carefully instead of guessing.",
+          "둘은 짐작하는 대신 자세히 관찰하기로 했어요."
+        ],
+        [
+          "After writing down what they saw, they compared their notes.",
+          "본 것을 적은 뒤 서로의 기록을 비교했어요."
+        ],
+        [
+          "The evidence helped them understand what had happened.",
+          "증거 덕분에 무슨 일이 있었는지 이해할 수 있었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b3d23",
+      "book": 3,
+      "day": 23,
+      "title": "Working Together: Blue Envelope",
+      "titleKo": "협력의 시간: 파란 봉투",
+      "sentences": [
+        [
+          "{name} wanted to use a blue envelope for a group project.",
+          "{koName}는 모둠 활동에 파란 봉투를 사용하고 싶었어요."
+        ],
+        [
+          "Hana thought the group should ask everyone first.",
+          "하나는 먼저 모두에게 의견을 물어야 한다고 생각했어요."
+        ],
+        [
+          "Some friends preferred a different idea.",
+          "다른 생각을 가진 친구들도 있었어요."
+        ],
+        [
+          "They held a short discussion and listened without interrupting.",
+          "모두 짧게 의견을 나누고 끼어들지 않고 들었어요."
+        ],
+        [
+          "Their final choice respected everybody in the group.",
+          "마지막 선택은 모둠원 모두를 존중하는 결정이었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b3d24",
+      "book": 3,
+      "day": 24,
+      "title": "Working Together: Paper Airplane",
+      "titleKo": "협력의 시간: 종이비행기",
+      "sentences": [
+        [
+          "On the playground, {name} saw that a paper airplane needed special care.",
+          "{koName}는 운동장에서 종이비행기가 특별한 관리가 필요하다는 걸 알았어요."
+        ],
+        [
+          "Yuna suggested finishing everything quickly.",
+          "유나는 모든 일을 빨리 끝내자고 했어요."
+        ],
+        [
+          "Instead, {name} asked what might go wrong if they rushed.",
+          "하지만 {koName}는 서두르면 무슨 문제가 생길지 물었어요."
+        ],
+        [
+          "Together they made a checklist and worked slowly.",
+          "둘은 점검표를 만들고 차근차근 일했어요."
+        ],
+        [
+          "Careful work prevented a mistake and saved time later.",
+          "꼼꼼하게 한 덕분에 실수를 막고 나중에 시간을 아꼈어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b3d25",
+      "book": 3,
+      "day": 25,
+      "title": "Working Together: Little Poem",
+      "titleKo": "협력의 시간: 짧은 시",
+      "sentences": [
+        [
+          "{name} and Mina were preparing an exhibit about a short poem.",
+          "{koName}와 미나는 짧은 시에 관한 전시를 준비하고 있었어요."
+        ],
+        [
+          "They realized that visitors might not understand their explanation.",
+          "사람들이 설명을 이해하지 못할 수도 있다는 걸 깨달았어요."
+        ],
+        [
+          "They invited a younger friend to read their first draft.",
+          "어린 친구에게 처음 쓴 설명을 읽어 달라고 했어요."
+        ],
+        [
+          "After hearing the feedback, they rewrote the difficult parts.",
+          "의견을 들은 뒤 어려운 부분을 다시 썼어요."
+        ],
+        [
+          "Now more people could enjoy and understand the exhibit.",
+          "이제 더 많은 사람이 전시를 즐기고 이해할 수 있었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b3d26",
+      "book": 3,
+      "day": 26,
+      "title": "Working Together: Striped Scarf",
+      "titleKo": "협력의 시간: 줄무늬 목도리",
+      "sentences": [
+        [
+          "While {name} was working in the school yard, Sora arrived with a striped scarf.",
+          "{koName}가 학교 운동장에서 작업하는 동안 소라가 줄무늬 목도리를 가져왔어요."
+        ],
+        [
+          "They wanted to create something useful for the class.",
+          "두 사람은 반 친구들에게 도움이 될 무언가를 만들고 싶었어요."
+        ],
+        [
+          "However, the first plan took too much time.",
+          "하지만 첫 계획은 시간이 너무 오래 걸렸어요."
+        ],
+        [
+          "They divided the work into smaller steps and helped each other.",
+          "둘은 일을 작은 단계로 나누고 서로 도왔어요."
+        ],
+        [
+          "By the end of the day, their project was finished.",
+          "하루가 끝날 무렵 프로젝트를 완성했어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b3d27",
+      "book": 3,
+      "day": 27,
+      "title": "Working Together: Tiny Button",
+      "titleKo": "협력의 시간: 작은 단추",
+      "sentences": [
+        [
+          "{name} noticed a tiny button at home and asked a question.",
+          "{koName}는 집에서 작은 단추를 보고 질문을 했어요."
+        ],
+        [
+          "Hana gave an answer, but neither friend was sure.",
+          "하나가 답했지만 두 사람 모두 확신하지 못했어요."
+        ],
+        [
+          "They decided to observe carefully instead of guessing.",
+          "둘은 짐작하는 대신 자세히 관찰하기로 했어요."
+        ],
+        [
+          "After writing down what they saw, they compared their notes.",
+          "본 것을 적은 뒤 서로의 기록을 비교했어요."
+        ],
+        [
+          "The evidence helped them understand what had happened.",
+          "증거 덕분에 무슨 일이 있었는지 이해할 수 있었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b3d28",
+      "book": 3,
+      "day": 28,
+      "title": "Working Together: Flower Drawing",
+      "titleKo": "협력의 시간: 꽃 그림",
+      "sentences": [
+        [
+          "{name} wanted to use a flower drawing for a group project.",
+          "{koName}는 모둠 활동에 꽃 그림을 사용하고 싶었어요."
+        ],
+        [
+          "Yuna thought the group should ask everyone first.",
+          "유나는 먼저 모두에게 의견을 물어야 한다고 생각했어요."
+        ],
+        [
+          "Some friends preferred a different idea.",
+          "다른 생각을 가진 친구들도 있었어요."
+        ],
+        [
+          "They held a short discussion and listened without interrupting.",
+          "모두 짧게 의견을 나누고 끼어들지 않고 들었어요."
+        ],
+        [
+          "Their final choice respected everybody in the group.",
+          "마지막 선택은 모둠원 모두를 존중하는 결정이었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b3d29",
+      "book": 3,
+      "day": 29,
+      "title": "Working Together: New Keyring",
+      "titleKo": "협력의 시간: 새 열쇠고리",
+      "sentences": [
+        [
+          "At school, {name} saw that a new keyring needed special care.",
+          "{koName}는 학교에서 새 열쇠고리가 특별한 관리가 필요하다는 걸 알았어요."
+        ],
+        [
+          "Mina suggested finishing everything quickly.",
+          "미나는 모든 일을 빨리 끝내자고 했어요."
+        ],
+        [
+          "Instead, {name} asked what might go wrong if they rushed.",
+          "하지만 {koName}는 서두르면 무슨 문제가 생길지 물었어요."
+        ],
+        [
+          "Together they made a checklist and worked slowly.",
+          "둘은 점검표를 만들고 차근차근 일했어요."
+        ],
+        [
+          "Careful work prevented a mistake and saved time later.",
+          "꼼꼼하게 한 덕분에 실수를 막고 나중에 시간을 아꼈어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b3d30",
+      "book": 3,
+      "day": 30,
+      "title": "Working Together: Little Gift Bag",
+      "titleKo": "협력의 시간: 작은 선물 봉투",
+      "sentences": [
+        [
+          "{name} and Sora were preparing an exhibit about a little gift bag.",
+          "{koName}와 소라는 작은 선물 봉투에 관한 전시를 준비하고 있었어요."
+        ],
+        [
+          "They realized that visitors might not understand their explanation.",
+          "사람들이 설명을 이해하지 못할 수도 있다는 걸 깨달았어요."
+        ],
+        [
+          "They invited a younger friend to read their first draft.",
+          "어린 친구에게 처음 쓴 설명을 읽어 달라고 했어요."
+        ],
+        [
+          "After hearing the feedback, they rewrote the difficult parts.",
+          "의견을 들은 뒤 어려운 부분을 다시 썼어요."
+        ],
+        [
+          "Now more people could enjoy and understand the exhibit.",
+          "이제 더 많은 사람이 전시를 즐기고 이해할 수 있었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b4d01",
+      "book": 4,
+      "day": 1,
+      "title": "The Mystery of Blue Box",
+      "titleKo": "수수께끼: 파란 상자",
+      "sentences": [
+        [
+          "During a visit at school, {name} discovered an unusual detail about a blue box.",
+          "{koName}는 학교에서 파란 상자에 관한 특이한 점을 발견했어요."
+        ],
+        [
+          "Mina believed it was a mistake, but there was no clear proof.",
+          "미나는 실수라고 생각했지만 확실한 증거는 없었어요."
+        ],
+        [
+          "They collected clues and considered several possible explanations.",
+          "둘은 단서를 모으고 몇 가지 설명을 생각해 봤어요."
+        ],
+        [
+          "One clue changed their first idea completely.",
+          "한 단서가 처음 생각을 완전히 바꾸었어요."
+        ],
+        [
+          "They learned that a good mystery needs patient thinking, not a quick guess.",
+          "좋은 수수께끼를 풀려면 성급한 추측보다 끈기 있는 생각이 필요하다는 걸 배웠어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b4d02",
+      "book": 4,
+      "day": 2,
+      "title": "The Mystery of Red Heart",
+      "titleKo": "수수께끼: 빨간 하트",
+      "sentences": [
+        [
+          "{name} and Sora were responsible for a red paper heart in the classroom.",
+          "{koName}와 소라는 교실에서 빨간 종이 하트를 맡고 있었어요."
+        ],
+        [
+          "A sudden change forced them to rethink their plan.",
+          "갑작스러운 변화로 계획을 다시 생각해야 했어요."
+        ],
+        [
+          "They listed what they knew and what they still needed to check.",
+          "알고 있는 것과 더 확인할 것을 나누어 적었어요."
+        ],
+        [
+          "After testing one small idea, they improved the rest of the plan.",
+          "작은 생각 하나를 시험한 뒤 나머지 계획을 개선했어요."
+        ],
+        [
+          "The experience taught them to adjust when new facts appear.",
+          "새로운 사실이 생기면 계획을 조정해야 한다는 걸 배웠어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b4d03",
+      "book": 4,
+      "day": 3,
+      "title": "The Mystery of Yellow Ribbon",
+      "titleKo": "수수께끼: 노란 리본",
+      "sentences": [
+        [
+          "At first, {name} thought the story about a yellow ribbon was easy to explain.",
+          "처음에 {koName}는 노란 리본에 관한 이야기를 쉽게 설명할 수 있다고 생각했어요."
+        ],
+        [
+          "Then Hana asked a question nobody had considered.",
+          "그런데 하나가 아무도 생각하지 못한 질문을 했어요."
+        ],
+        [
+          "They looked around in the library to look for more information.",
+          "둘은 더 많은 정보를 찾으려고 도서관에서 다시 살펴봤어요."
+        ],
+        [
+          "The answer turned out to be different from their first guess.",
+          "답은 처음 짐작과 달랐어요."
+        ],
+        [
+          "Both friends were glad they had stayed curious.",
+          "두 친구는 끝까지 궁금해하길 잘했다고 생각했어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b4d04",
+      "book": 4,
+      "day": 4,
+      "title": "The Mystery of Paper Flower",
+      "titleKo": "수수께끼: 종이꽃",
+      "sentences": [
+        [
+          "{name} found a paper flower in the art room and wanted to take it home.",
+          "{koName}는 미술실에서 종이꽃을 발견하고 집에 가져가고 싶었어요."
+        ],
+        [
+          "Yuna reminded {name} that it might belong to somebody else.",
+          "유나는 그 물건에 다른 주인이 있을 수도 있다고 알려 주었어요."
+        ],
+        [
+          "They discussed how to make a fair decision.",
+          "둘은 공정한 결정을 내리는 방법을 이야기했어요."
+        ],
+        [
+          "Instead of keeping it, they tried to find the rightful owner.",
+          "물건을 갖는 대신 정당한 주인을 찾으려고 했어요."
+        ],
+        [
+          "Doing the right thing felt better than getting a new possession.",
+          "새 물건을 얻는 것보다 옳은 일을 하는 기분이 더 좋았어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b4d05",
+      "book": 4,
+      "day": 5,
+      "title": "The Mystery of Little Map",
+      "titleKo": "수수께끼: 작은 지도",
+      "sentences": [
+        [
+          "{name} wanted to tell a story using a little map.",
+          "{koName}는 작은 지도를 활용해 이야기를 전하고 싶었어요."
+        ],
+        [
+          "Mina suggested showing both sides of what had happened.",
+          "미나는 일어난 일을 양쪽 입장에서 보여 주자고 했어요."
+        ],
+        [
+          "They interviewed two people and noticed different memories.",
+          "둘은 두 사람의 이야기를 듣고 기억이 다르다는 걸 알았어요."
+        ],
+        [
+          "Instead of choosing one account immediately, they checked the details.",
+          "한쪽 말을 바로 고르지 않고 세부 내용을 확인했어요."
+        ],
+        [
+          "Their final story was more accurate and more thoughtful.",
+          "마지막 이야기는 더 정확하고 깊이 있게 완성되었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b4d06",
+      "book": 4,
+      "day": 6,
+      "title": "The Mystery of Green Leaf",
+      "titleKo": "수수께끼: 초록 나뭇잎",
+      "sentences": [
+        [
+          "During a visit in the garden, {name} discovered an unusual detail about a green leaf.",
+          "{koName}는 정원에서 초록 나뭇잎에 관한 특이한 점을 발견했어요."
+        ],
+        [
+          "Sora believed it was a mistake, but there was no clear proof.",
+          "소라는 실수라고 생각했지만 확실한 증거는 없었어요."
+        ],
+        [
+          "They collected clues and considered several possible explanations.",
+          "둘은 단서를 모으고 몇 가지 설명을 생각해 봤어요."
+        ],
+        [
+          "One clue changed their first idea completely.",
+          "한 단서가 처음 생각을 완전히 바꾸었어요."
+        ],
+        [
+          "They learned that a good mystery needs patient thinking, not a quick guess.",
+          "좋은 수수께끼를 풀려면 성급한 추측보다 끈기 있는 생각이 필요하다는 걸 배웠어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b4d07",
+      "book": 4,
+      "day": 7,
+      "title": "The Mystery of New Bookmark",
+      "titleKo": "수수께끼: 새 책갈피",
+      "sentences": [
+        [
+          "{name} and Hana were responsible for a new bookmark in the library.",
+          "{koName}와 하나는 도서관에서 새 책갈피를 맡고 있었어요."
+        ],
+        [
+          "A sudden change forced them to rethink their plan.",
+          "갑작스러운 변화로 계획을 다시 생각해야 했어요."
+        ],
+        [
+          "They listed what they knew and what they still needed to check.",
+          "알고 있는 것과 더 확인할 것을 나누어 적었어요."
+        ],
+        [
+          "After testing one small idea, they improved the rest of the plan.",
+          "작은 생각 하나를 시험한 뒤 나머지 계획을 개선했어요."
+        ],
+        [
+          "The experience taught them to adjust when new facts appear.",
+          "새로운 사실이 생기면 계획을 조정해야 한다는 걸 배웠어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b4d08",
+      "book": 4,
+      "day": 8,
+      "title": "The Mystery of Paper Boat",
+      "titleKo": "수수께끼: 종이배",
+      "sentences": [
+        [
+          "At first, {name} thought the story about a paper boat was easy to explain.",
+          "처음에 {koName}는 종이배에 관한 이야기를 쉽게 설명할 수 있다고 생각했어요."
+        ],
+        [
+          "Then Yuna asked a question nobody had considered.",
+          "그런데 유나가 아무도 생각하지 못한 질문을 했어요."
+        ],
+        [
+          "They returned beside the river to look for more information.",
+          "둘은 더 많은 정보를 찾으려고 강가에서 다시 살펴봤어요."
+        ],
+        [
+          "The answer turned out to be different from their first guess.",
+          "답은 처음 짐작과 달랐어요."
+        ],
+        [
+          "Both friends were glad they had stayed curious.",
+          "두 친구는 끝까지 궁금해하길 잘했다고 생각했어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b4d09",
+      "book": 4,
+      "day": 9,
+      "title": "The Mystery of Small Painting",
+      "titleKo": "수수께끼: 작은 그림",
+      "sentences": [
+        [
+          "{name} found a small painting at school and wanted to take it home.",
+          "{koName}는 학교에서 작은 그림을 발견하고 집에 가져가고 싶었어요."
+        ],
+        [
+          "Mina reminded {name} that it might belong to somebody else.",
+          "미나는 그 물건에 다른 주인이 있을 수도 있다고 알려 주었어요."
+        ],
+        [
+          "They discussed how to make a fair decision.",
+          "둘은 공정한 결정을 내리는 방법을 이야기했어요."
+        ],
+        [
+          "Instead of keeping it, they tried to find the rightful owner.",
+          "물건을 갖는 대신 정당한 주인을 찾으려고 했어요."
+        ],
+        [
+          "Doing the right thing felt better than getting a new possession.",
+          "새 물건을 얻는 것보다 옳은 일을 하는 기분이 더 좋았어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b4d10",
+      "book": 4,
+      "day": 10,
+      "title": "The Mystery of Silver Bell",
+      "titleKo": "수수께끼: 은빛 방울",
+      "sentences": [
+        [
+          "{name} wanted to tell a story using a silver bell.",
+          "{koName}는 은빛 방울을 활용해 이야기를 전하고 싶었어요."
+        ],
+        [
+          "Sora suggested showing both sides of what had happened.",
+          "소라는 일어난 일을 양쪽 입장에서 보여 주자고 했어요."
+        ],
+        [
+          "They interviewed two people and noticed different memories.",
+          "둘은 두 사람의 이야기를 듣고 기억이 다르다는 걸 알았어요."
+        ],
+        [
+          "Instead of choosing one account immediately, they checked the details.",
+          "한쪽 말을 바로 고르지 않고 세부 내용을 확인했어요."
+        ],
+        [
+          "Their final story was more accurate and more thoughtful.",
+          "마지막 이야기는 더 정확하고 깊이 있게 완성되었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b4d11",
+      "book": 4,
+      "day": 11,
+      "title": "The Mystery of Old Postcard",
+      "titleKo": "수수께끼: 오래된 엽서",
+      "sentences": [
+        [
+          "During a visit at home, {name} discovered an unusual detail about an old postcard.",
+          "{koName}는 집에서 오래된 엽서에 관한 특이한 점을 발견했어요."
+        ],
+        [
+          "Hana believed it was a mistake, but there was no clear proof.",
+          "하나는 실수라고 생각했지만 확실한 증거는 없었어요."
+        ],
+        [
+          "They collected clues and considered several possible explanations.",
+          "둘은 단서를 모으고 몇 가지 설명을 생각해 봤어요."
+        ],
+        [
+          "One clue changed their first idea completely.",
+          "한 단서가 처음 생각을 완전히 바꾸었어요."
+        ],
+        [
+          "They learned that a good mystery needs patient thinking, not a quick guess.",
+          "좋은 수수께끼를 풀려면 성급한 추측보다 끈기 있는 생각이 필요하다는 걸 배웠어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b4d12",
+      "book": 4,
+      "day": 12,
+      "title": "The Mystery of Colorful Stone",
+      "titleKo": "수수께끼: 알록달록 돌멩이",
+      "sentences": [
+        [
+          "{name} and Yuna were responsible for a colorful stone in the park.",
+          "{koName}와 유나는 공원에서 알록달록 돌멩이를 맡고 있었어요."
+        ],
+        [
+          "A sudden change forced them to rethink their plan.",
+          "갑작스러운 변화로 계획을 다시 생각해야 했어요."
+        ],
+        [
+          "They listed what they knew and what they still needed to check.",
+          "알고 있는 것과 더 확인할 것을 나누어 적었어요."
+        ],
+        [
+          "After testing one small idea, they improved the rest of the plan.",
+          "작은 생각 하나를 시험한 뒤 나머지 계획을 개선했어요."
+        ],
+        [
+          "The experience taught them to adjust when new facts appear.",
+          "새로운 사실이 생기면 계획을 조정해야 한다는 걸 배웠어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b4d13",
+      "book": 4,
+      "day": 13,
+      "title": "The Mystery of Tiny Shell",
+      "titleKo": "수수께끼: 작은 조개껍데기",
+      "sentences": [
+        [
+          "At first, {name} thought the story about a tiny shell was easy to explain.",
+          "처음에 {koName}는 작은 조개껍데기에 관한 이야기를 쉽게 설명할 수 있다고 생각했어요."
+        ],
+        [
+          "Then Mina asked a question nobody had considered.",
+          "그런데 미나가 아무도 생각하지 못한 질문을 했어요."
+        ],
+        [
+          "They looked around at the beach to look for more information.",
+          "둘은 더 많은 정보를 찾으려고 해변에서 다시 살펴봤어요."
+        ],
+        [
+          "The answer turned out to be different from their first guess.",
+          "답은 처음 짐작과 달랐어요."
+        ],
+        [
+          "Both friends were glad they had stayed curious.",
+          "두 친구는 끝까지 궁금해하길 잘했다고 생각했어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b4d14",
+      "book": 4,
+      "day": 14,
+      "title": "The Mystery of Paper Star",
+      "titleKo": "수수께끼: 종이별",
+      "sentences": [
+        [
+          "{name} found a paper star in the classroom and wanted to take it home.",
+          "{koName}는 교실에서 종이별을 발견하고 집에 가져가고 싶었어요."
+        ],
+        [
+          "Sora reminded {name} that it might belong to somebody else.",
+          "소라는 그 물건에 다른 주인이 있을 수도 있다고 알려 주었어요."
+        ],
+        [
+          "They discussed how to make a fair decision.",
+          "둘은 공정한 결정을 내리는 방법을 이야기했어요."
+        ],
+        [
+          "Instead of keeping it, they tried to find the rightful owner.",
+          "물건을 갖는 대신 정당한 주인을 찾으려고 했어요."
+        ],
+        [
+          "Doing the right thing felt better than getting a new possession.",
+          "새 물건을 얻는 것보다 옳은 일을 하는 기분이 더 좋았어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b4d15",
+      "book": 4,
+      "day": 15,
+      "title": "The Mystery of Funny Sticker",
+      "titleKo": "수수께끼: 재미있는 스티커",
+      "sentences": [
+        [
+          "{name} wanted to tell a story using a funny sticker.",
+          "{koName}는 재미있는 스티커를 활용해 이야기를 전하고 싶었어요."
+        ],
+        [
+          "Hana suggested showing both sides of what had happened.",
+          "하나는 일어난 일을 양쪽 입장에서 보여 주자고 했어요."
+        ],
+        [
+          "They interviewed two people and noticed different memories.",
+          "둘은 두 사람의 이야기를 듣고 기억이 다르다는 걸 알았어요."
+        ],
+        [
+          "Instead of choosing one account immediately, they checked the details.",
+          "한쪽 말을 바로 고르지 않고 세부 내용을 확인했어요."
+        ],
+        [
+          "Their final story was more accurate and more thoughtful.",
+          "마지막 이야기는 더 정확하고 깊이 있게 완성되었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b4d16",
+      "book": 4,
+      "day": 16,
+      "title": "The Mystery of Lost Ticket",
+      "titleKo": "수수께끼: 잃어버린 표",
+      "sentences": [
+        [
+          "During a visit at the station, {name} discovered an unusual detail about a train ticket.",
+          "{koName}는 역에서 기차표에 관한 특이한 점을 발견했어요."
+        ],
+        [
+          "Yuna believed it was a mistake, but there was no clear proof.",
+          "유나는 실수라고 생각했지만 확실한 증거는 없었어요."
+        ],
+        [
+          "They collected clues and considered several possible explanations.",
+          "둘은 단서를 모으고 몇 가지 설명을 생각해 봤어요."
+        ],
+        [
+          "One clue changed their first idea completely.",
+          "한 단서가 처음 생각을 완전히 바꾸었어요."
+        ],
+        [
+          "They learned that a good mystery needs patient thinking, not a quick guess.",
+          "좋은 수수께끼를 풀려면 성급한 추측보다 끈기 있는 생각이 필요하다는 걸 배웠어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b4d17",
+      "book": 4,
+      "day": 17,
+      "title": "The Mystery of Purple Notebook",
+      "titleKo": "수수께끼: 보라색 공책",
+      "sentences": [
+        [
+          "{name} and Mina were responsible for a purple notebook in the library.",
+          "{koName}와 미나는 도서관에서 보라색 공책을 맡고 있었어요."
+        ],
+        [
+          "A sudden change forced them to rethink their plan.",
+          "갑작스러운 변화로 계획을 다시 생각해야 했어요."
+        ],
+        [
+          "They listed what they knew and what they still needed to check.",
+          "알고 있는 것과 더 확인할 것을 나누어 적었어요."
+        ],
+        [
+          "After testing one small idea, they improved the rest of the plan.",
+          "작은 생각 하나를 시험한 뒤 나머지 계획을 개선했어요."
+        ],
+        [
+          "The experience taught them to adjust when new facts appear.",
+          "새로운 사실이 생기면 계획을 조정해야 한다는 걸 배웠어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b4d18",
+      "book": 4,
+      "day": 18,
+      "title": "The Mystery of Paper Crown",
+      "titleKo": "수수께끼: 종이 왕관",
+      "sentences": [
+        [
+          "At first, {name} thought the story about a paper crown was easy to explain.",
+          "처음에 {koName}는 종이 왕관에 관한 이야기를 쉽게 설명할 수 있다고 생각했어요."
+        ],
+        [
+          "Then Sora asked a question nobody had considered.",
+          "그런데 소라가 아무도 생각하지 못한 질문을 했어요."
+        ],
+        [
+          "They looked around at the party to look for more information.",
+          "둘은 더 많은 정보를 찾으려고 파티에서 다시 살펴봤어요."
+        ],
+        [
+          "The answer turned out to be different from their first guess.",
+          "답은 처음 짐작과 달랐어요."
+        ],
+        [
+          "Both friends were glad they had stayed curious.",
+          "두 친구는 끝까지 궁금해하길 잘했다고 생각했어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b4d19",
+      "book": 4,
+      "day": 19,
+      "title": "The Mystery of Little Flag",
+      "titleKo": "수수께끼: 작은 깃발",
+      "sentences": [
+        [
+          "{name} found a little flag on the playground and wanted to take it home.",
+          "{koName}는 운동장에서 작은 깃발을 발견하고 집에 가져가고 싶었어요."
+        ],
+        [
+          "Hana reminded {name} that it might belong to somebody else.",
+          "하나는 그 물건에 다른 주인이 있을 수도 있다고 알려 주었어요."
+        ],
+        [
+          "They discussed how to make a fair decision.",
+          "둘은 공정한 결정을 내리는 방법을 이야기했어요."
+        ],
+        [
+          "Instead of keeping it, they tried to find the rightful owner.",
+          "물건을 갖는 대신 정당한 주인을 찾으려고 했어요."
+        ],
+        [
+          "Doing the right thing felt better than getting a new possession.",
+          "새 물건을 얻는 것보다 옳은 일을 하는 기분이 더 좋았어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b4d20",
+      "book": 4,
+      "day": 20,
+      "title": "The Mystery of Wooden Toy",
+      "titleKo": "수수께끼: 나무 장난감",
+      "sentences": [
+        [
+          "{name} wanted to tell a story using a wooden toy.",
+          "{koName}는 나무 장난감을 활용해 이야기를 전하고 싶었어요."
+        ],
+        [
+          "Yuna suggested showing both sides of what had happened.",
+          "유나는 일어난 일을 양쪽 입장에서 보여 주자고 했어요."
+        ],
+        [
+          "They interviewed two people and noticed different memories.",
+          "둘은 두 사람의 이야기를 듣고 기억이 다르다는 걸 알았어요."
+        ],
+        [
+          "Instead of choosing one account immediately, they checked the details.",
+          "한쪽 말을 바로 고르지 않고 세부 내용을 확인했어요."
+        ],
+        [
+          "Their final story was more accurate and more thoughtful.",
+          "마지막 이야기는 더 정확하고 깊이 있게 완성되었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b4d21",
+      "book": 4,
+      "day": 21,
+      "title": "The Mystery of Orange Pencil",
+      "titleKo": "수수께끼: 주황색 연필",
+      "sentences": [
+        [
+          "During a visit in the classroom, {name} discovered an unusual detail about an orange pencil.",
+          "{koName}는 교실에서 주황색 연필에 관한 특이한 점을 발견했어요."
+        ],
+        [
+          "Mina believed it was a mistake, but there was no clear proof.",
+          "미나는 실수라고 생각했지만 확실한 증거는 없었어요."
+        ],
+        [
+          "They collected clues and considered several possible explanations.",
+          "둘은 단서를 모으고 몇 가지 설명을 생각해 봤어요."
+        ],
+        [
+          "One clue changed their first idea completely.",
+          "한 단서가 처음 생각을 완전히 바꾸었어요."
+        ],
+        [
+          "They learned that a good mystery needs patient thinking, not a quick guess.",
+          "좋은 수수께끼를 풀려면 성급한 추측보다 끈기 있는 생각이 필요하다는 걸 배웠어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b4d22",
+      "book": 4,
+      "day": 22,
+      "title": "The Mystery of Small Photo",
+      "titleKo": "수수께끼: 작은 사진",
+      "sentences": [
+        [
+          "{name} and Sora were responsible for a small photo in the hallway.",
+          "{koName}와 소라는 복도에서 작은 사진을 맡고 있었어요."
+        ],
+        [
+          "A sudden change forced them to rethink their plan.",
+          "갑작스러운 변화로 계획을 다시 생각해야 했어요."
+        ],
+        [
+          "They listed what they knew and what they still needed to check.",
+          "알고 있는 것과 더 확인할 것을 나누어 적었어요."
+        ],
+        [
+          "After testing one small idea, they improved the rest of the plan.",
+          "작은 생각 하나를 시험한 뒤 나머지 계획을 개선했어요."
+        ],
+        [
+          "The experience taught them to adjust when new facts appear.",
+          "새로운 사실이 생기면 계획을 조정해야 한다는 걸 배웠어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b4d23",
+      "book": 4,
+      "day": 23,
+      "title": "The Mystery of Blue Envelope",
+      "titleKo": "수수께끼: 파란 봉투",
+      "sentences": [
+        [
+          "At first, {name} thought the story about a blue envelope was easy to explain.",
+          "처음에 {koName}는 파란 봉투에 관한 이야기를 쉽게 설명할 수 있다고 생각했어요."
+        ],
+        [
+          "Then Hana asked a question nobody had considered.",
+          "그런데 하나가 아무도 생각하지 못한 질문을 했어요."
+        ],
+        [
+          "They looked around at the post office to look for more information.",
+          "둘은 더 많은 정보를 찾으려고 우체국에서 다시 살펴봤어요."
+        ],
+        [
+          "The answer turned out to be different from their first guess.",
+          "답은 처음 짐작과 달랐어요."
+        ],
+        [
+          "Both friends were glad they had stayed curious.",
+          "두 친구는 끝까지 궁금해하길 잘했다고 생각했어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b4d24",
+      "book": 4,
+      "day": 24,
+      "title": "The Mystery of Paper Airplane",
+      "titleKo": "수수께끼: 종이비행기",
+      "sentences": [
+        [
+          "{name} found a paper airplane on the playground and wanted to take it home.",
+          "{koName}는 운동장에서 종이비행기를 발견하고 집에 가져가고 싶었어요."
+        ],
+        [
+          "Yuna reminded {name} that it might belong to somebody else.",
+          "유나는 그 물건에 다른 주인이 있을 수도 있다고 알려 주었어요."
+        ],
+        [
+          "They discussed how to make a fair decision.",
+          "둘은 공정한 결정을 내리는 방법을 이야기했어요."
+        ],
+        [
+          "Instead of keeping it, they tried to find the rightful owner.",
+          "물건을 갖는 대신 정당한 주인을 찾으려고 했어요."
+        ],
+        [
+          "Doing the right thing felt better than getting a new possession.",
+          "새 물건을 얻는 것보다 옳은 일을 하는 기분이 더 좋았어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b4d25",
+      "book": 4,
+      "day": 25,
+      "title": "The Mystery of Little Poem",
+      "titleKo": "수수께끼: 짧은 시",
+      "sentences": [
+        [
+          "{name} wanted to tell a story using a short poem.",
+          "{koName}는 짧은 시를 활용해 이야기를 전하고 싶었어요."
+        ],
+        [
+          "Mina suggested showing both sides of what had happened.",
+          "미나는 일어난 일을 양쪽 입장에서 보여 주자고 했어요."
+        ],
+        [
+          "They interviewed two people and noticed different memories.",
+          "둘은 두 사람의 이야기를 듣고 기억이 다르다는 걸 알았어요."
+        ],
+        [
+          "Instead of choosing one account immediately, they checked the details.",
+          "한쪽 말을 바로 고르지 않고 세부 내용을 확인했어요."
+        ],
+        [
+          "Their final story was more accurate and more thoughtful.",
+          "마지막 이야기는 더 정확하고 깊이 있게 완성되었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b4d26",
+      "book": 4,
+      "day": 26,
+      "title": "The Mystery of Striped Scarf",
+      "titleKo": "수수께끼: 줄무늬 목도리",
+      "sentences": [
+        [
+          "During a visit in the school yard, {name} discovered an unusual detail about a striped scarf.",
+          "{koName}는 학교 운동장에서 줄무늬 목도리에 관한 특이한 점을 발견했어요."
+        ],
+        [
+          "Sora believed it was a mistake, but there was no clear proof.",
+          "소라는 실수라고 생각했지만 확실한 증거는 없었어요."
+        ],
+        [
+          "They collected clues and considered several possible explanations.",
+          "둘은 단서를 모으고 몇 가지 설명을 생각해 봤어요."
+        ],
+        [
+          "One clue changed their first idea completely.",
+          "한 단서가 처음 생각을 완전히 바꾸었어요."
+        ],
+        [
+          "They learned that a good mystery needs patient thinking, not a quick guess.",
+          "좋은 수수께끼를 풀려면 성급한 추측보다 끈기 있는 생각이 필요하다는 걸 배웠어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b4d27",
+      "book": 4,
+      "day": 27,
+      "title": "The Mystery of Tiny Button",
+      "titleKo": "수수께끼: 작은 단추",
+      "sentences": [
+        [
+          "{name} and Hana were responsible for a tiny button at home.",
+          "{koName}와 하나는 집에서 작은 단추를 맡고 있었어요."
+        ],
+        [
+          "A sudden change forced them to rethink their plan.",
+          "갑작스러운 변화로 계획을 다시 생각해야 했어요."
+        ],
+        [
+          "They listed what they knew and what they still needed to check.",
+          "알고 있는 것과 더 확인할 것을 나누어 적었어요."
+        ],
+        [
+          "After testing one small idea, they improved the rest of the plan.",
+          "작은 생각 하나를 시험한 뒤 나머지 계획을 개선했어요."
+        ],
+        [
+          "The experience taught them to adjust when new facts appear.",
+          "새로운 사실이 생기면 계획을 조정해야 한다는 걸 배웠어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b4d28",
+      "book": 4,
+      "day": 28,
+      "title": "The Mystery of Flower Drawing",
+      "titleKo": "수수께끼: 꽃 그림",
+      "sentences": [
+        [
+          "At first, {name} thought the story about a flower drawing was easy to explain.",
+          "처음에 {koName}는 꽃 그림에 관한 이야기를 쉽게 설명할 수 있다고 생각했어요."
+        ],
+        [
+          "Then Yuna asked a question nobody had considered.",
+          "그런데 유나가 아무도 생각하지 못한 질문을 했어요."
+        ],
+        [
+          "They looked around in the art room to look for more information.",
+          "둘은 더 많은 정보를 찾으려고 미술실에서 다시 살펴봤어요."
+        ],
+        [
+          "The answer turned out to be different from their first guess.",
+          "답은 처음 짐작과 달랐어요."
+        ],
+        [
+          "Both friends were glad they had stayed curious.",
+          "두 친구는 끝까지 궁금해하길 잘했다고 생각했어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b4d29",
+      "book": 4,
+      "day": 29,
+      "title": "The Mystery of New Keyring",
+      "titleKo": "수수께끼: 새 열쇠고리",
+      "sentences": [
+        [
+          "{name} found a new keyring at school and wanted to take it home.",
+          "{koName}는 학교에서 새 열쇠고리를 발견하고 집에 가져가고 싶었어요."
+        ],
+        [
+          "Mina reminded {name} that it might belong to somebody else.",
+          "미나는 그 물건에 다른 주인이 있을 수도 있다고 알려 주었어요."
+        ],
+        [
+          "They discussed how to make a fair decision.",
+          "둘은 공정한 결정을 내리는 방법을 이야기했어요."
+        ],
+        [
+          "Instead of keeping it, they tried to find the rightful owner.",
+          "물건을 갖는 대신 정당한 주인을 찾으려고 했어요."
+        ],
+        [
+          "Doing the right thing felt better than getting a new possession.",
+          "새 물건을 얻는 것보다 옳은 일을 하는 기분이 더 좋았어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b4d30",
+      "book": 4,
+      "day": 30,
+      "title": "The Mystery of Little Gift Bag",
+      "titleKo": "수수께끼: 작은 선물 봉투",
+      "sentences": [
+        [
+          "{name} wanted to tell a story using a little gift bag.",
+          "{koName}는 작은 선물 봉투를 활용해 이야기를 전하고 싶었어요."
+        ],
+        [
+          "Sora suggested showing both sides of what had happened.",
+          "소라는 일어난 일을 양쪽 입장에서 보여 주자고 했어요."
+        ],
+        [
+          "They interviewed two people and noticed different memories.",
+          "둘은 두 사람의 이야기를 듣고 기억이 다르다는 걸 알았어요."
+        ],
+        [
+          "Instead of choosing one account immediately, they checked the details.",
+          "한쪽 말을 바로 고르지 않고 세부 내용을 확인했어요."
+        ],
+        [
+          "Their final story was more accurate and more thoughtful.",
+          "마지막 이야기는 더 정확하고 깊이 있게 완성되었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b5d01",
+      "book": 5,
+      "day": 1,
+      "title": "A New Choice: Blue Box",
+      "titleKo": "현명한 선택: 파란 상자",
+      "sentences": [
+        [
+          "When {name} and Mina planned a public display about a blue box, they disagreed about its main message.",
+          "{koName}와 미나는 파란 상자에 관한 공개 전시를 계획하며 핵심 메시지에 의견 차이가 있었어요."
+        ],
+        [
+          "One wanted to make the display exciting, while the other cared most about accuracy.",
+          "한 사람은 재미를, 다른 사람은 정확성을 가장 중요하게 생각했어요."
+        ],
+        [
+          "They checked the facts, asked for feedback, and considered what visitors would learn.",
+          "둘은 사실을 확인하고 의견을 듣고 관람객이 무엇을 배울지 생각했어요."
+        ],
+        [
+          "By combining their priorities, they created a clear and engaging display.",
+          "서로의 중요 기준을 합쳐 쉽고 재미있는 전시를 만들었어요."
+        ],
+        [
+          "{name} realized that good decisions often require balancing more than one goal.",
+          "{koName}는 좋은 결정을 하려면 여러 목표의 균형을 잡아야 한다는 걸 깨달았어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b5d02",
+      "book": 5,
+      "day": 2,
+      "title": "A New Choice: Red Heart",
+      "titleKo": "현명한 선택: 빨간 하트",
+      "sentences": [
+        [
+          "{name} was asked to explain why a red paper heart mattered to the community.",
+          "{koName}는 지역사회에 빨간 종이 하트가 왜 중요한지 설명해 달라는 부탁을 받았어요."
+        ],
+        [
+          "Sora pointed out that a single example might not tell the whole story.",
+          "소라는 사례 하나로 전체를 설명할 수는 없다고 말했어요."
+        ],
+        [
+          "They gathered different opinions and looked for reliable information.",
+          "둘은 다양한 의견과 믿을 만한 정보를 모았어요."
+        ],
+        [
+          "The final explanation acknowledged what they knew and what remained uncertain.",
+          "마지막 설명에는 아는 것과 아직 확실하지 않은 것을 모두 담았어요."
+        ],
+        [
+          "Being open about uncertainty helped their audience trust them.",
+          "모르는 부분을 솔직히 밝히자 듣는 사람들이 더 믿어 주었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b5d03",
+      "book": 5,
+      "day": 3,
+      "title": "A New Choice: Yellow Ribbon",
+      "titleKo": "현명한 선택: 노란 리본",
+      "sentences": [
+        [
+          "{name} and Hana were organizing a project in the library involving a yellow ribbon.",
+          "{koName}와 하나는 도서관에서 노란 리본을 활용하는 프로젝트를 준비했어요."
+        ],
+        [
+          "An unexpected problem threatened their original schedule.",
+          "예상하지 못한 문제로 원래 일정이 흔들렸어요."
+        ],
+        [
+          "They compared several solutions, thinking about time, cost, and fairness.",
+          "둘은 시간과 비용, 공정성을 생각하며 여러 해결책을 비교했어요."
+        ],
+        [
+          "Rather than choose the quickest option, they agreed on the most responsible one.",
+          "가장 빠른 방법 대신 가장 책임 있는 방법을 골랐어요."
+        ],
+        [
+          "Their project succeeded because they had thought beyond the immediate problem.",
+          "눈앞의 문제만 보지 않고 생각한 덕분에 프로젝트를 성공시켰어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b5d04",
+      "book": 5,
+      "day": 4,
+      "title": "A New Choice: Paper Flower",
+      "titleKo": "현명한 선택: 종이꽃",
+      "sentences": [
+        [
+          "After learning how a paper flower was made, {name} began to question a familiar habit.",
+          "{koName}는 종이꽃이 어떻게 만들어지는지 알고 난 뒤 익숙한 습관에 의문을 품었어요."
+        ],
+        [
+          "Yuna offered a different perspective based on personal experience.",
+          "유나는 자신의 경험을 바탕으로 다른 관점을 이야기했어요."
+        ],
+        [
+          "Instead of arguing, they looked for evidence that could help both understand.",
+          "다투는 대신 서로 이해하는 데 도움이 되는 근거를 찾았어요."
+        ],
+        [
+          "They changed one small part of their routine and observed the results.",
+          "생활 습관의 작은 부분을 바꾸고 결과를 관찰했어요."
+        ],
+        [
+          "The experiment reminded them that changing their minds can be a strength.",
+          "생각을 바꿀 수 있는 태도가 강점이 될 수 있다는 걸 배웠어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b5d05",
+      "book": 5,
+      "day": 5,
+      "title": "A New Choice: Little Map",
+      "titleKo": "현명한 선택: 작은 지도",
+      "sentences": [
+        [
+          "While preparing a presentation in the park, {name} noticed that their notes about a little map contained conflicting details.",
+          "{koName}는 공원에서 발표를 준비하다 작은 지도에 관한 기록에 서로 다른 정보가 있다는 걸 발견했어요."
+        ],
+        [
+          "Mina suggested leaving the problem out, but {name} preferred to investigate.",
+          "미나는 문제를 빼자고 했지만 {koName}는 더 확인하고 싶었어요."
+        ],
+        [
+          "Together they traced each claim back to its original source.",
+          "둘은 주장마다 원래 출처를 찾아봤어요."
+        ],
+        [
+          "They corrected the presentation and explained why the revision mattered.",
+          "발표 내용을 바로잡고 왜 고쳐야 했는지도 설명했어요."
+        ],
+        [
+          "The audience appreciated their care, and {name} learned to value honesty over perfection.",
+          "듣는 사람들이 그 태도를 고마워했고 {koName}는 완벽함보다 정직함을 중요하게 여기게 되었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b5d06",
+      "book": 5,
+      "day": 6,
+      "title": "A New Choice: Green Leaf",
+      "titleKo": "현명한 선택: 초록 나뭇잎",
+      "sentences": [
+        [
+          "When {name} and Sora planned a public display about a green leaf, they disagreed about its main message.",
+          "{koName}와 소라는 초록 나뭇잎에 관한 공개 전시를 계획하며 핵심 메시지에 의견 차이가 있었어요."
+        ],
+        [
+          "One wanted to make the display exciting, while the other cared most about accuracy.",
+          "한 사람은 재미를, 다른 사람은 정확성을 가장 중요하게 생각했어요."
+        ],
+        [
+          "They checked the facts, asked for feedback, and considered what visitors would learn.",
+          "둘은 사실을 확인하고 의견을 듣고 관람객이 무엇을 배울지 생각했어요."
+        ],
+        [
+          "By combining their priorities, they created a clear and engaging display.",
+          "서로의 중요 기준을 합쳐 쉽고 재미있는 전시를 만들었어요."
+        ],
+        [
+          "{name} realized that good decisions often require balancing more than one goal.",
+          "{koName}는 좋은 결정을 하려면 여러 목표의 균형을 잡아야 한다는 걸 깨달았어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b5d07",
+      "book": 5,
+      "day": 7,
+      "title": "A New Choice: New Bookmark",
+      "titleKo": "현명한 선택: 새 책갈피",
+      "sentences": [
+        [
+          "{name} was asked to explain why a new bookmark mattered to the community.",
+          "{koName}는 지역사회에 새 책갈피가 왜 중요한지 설명해 달라는 부탁을 받았어요."
+        ],
+        [
+          "Hana pointed out that a single example might not tell the whole story.",
+          "하나는 사례 하나로 전체를 설명할 수는 없다고 말했어요."
+        ],
+        [
+          "They gathered different opinions and looked for reliable information.",
+          "둘은 다양한 의견과 믿을 만한 정보를 모았어요."
+        ],
+        [
+          "The final explanation acknowledged what they knew and what remained uncertain.",
+          "마지막 설명에는 아는 것과 아직 확실하지 않은 것을 모두 담았어요."
+        ],
+        [
+          "Being open about uncertainty helped their audience trust them.",
+          "모르는 부분을 솔직히 밝히자 듣는 사람들이 더 믿어 주었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b5d08",
+      "book": 5,
+      "day": 8,
+      "title": "A New Choice: Paper Boat",
+      "titleKo": "현명한 선택: 종이배",
+      "sentences": [
+        [
+          "{name} and Yuna were organizing a project beside the river involving a paper boat.",
+          "{koName}와 유나는 강가에서 종이배를 활용하는 프로젝트를 준비했어요."
+        ],
+        [
+          "An unexpected problem threatened their original schedule.",
+          "예상하지 못한 문제로 원래 일정이 흔들렸어요."
+        ],
+        [
+          "They compared several solutions, thinking about time, cost, and fairness.",
+          "둘은 시간과 비용, 공정성을 생각하며 여러 해결책을 비교했어요."
+        ],
+        [
+          "Rather than choose the quickest option, they agreed on the most responsible one.",
+          "가장 빠른 방법 대신 가장 책임 있는 방법을 골랐어요."
+        ],
+        [
+          "Their project succeeded because they had thought beyond the immediate problem.",
+          "눈앞의 문제만 보지 않고 생각한 덕분에 프로젝트를 성공시켰어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b5d09",
+      "book": 5,
+      "day": 9,
+      "title": "A New Choice: Small Painting",
+      "titleKo": "현명한 선택: 작은 그림",
+      "sentences": [
+        [
+          "After learning how a small painting was made, {name} began to question a familiar habit.",
+          "{koName}는 작은 그림이 어떻게 만들어지는지 알고 난 뒤 익숙한 습관에 의문을 품었어요."
+        ],
+        [
+          "Mina offered a different perspective based on personal experience.",
+          "미나는 자신의 경험을 바탕으로 다른 관점을 이야기했어요."
+        ],
+        [
+          "Instead of arguing, they looked for evidence that could help both understand.",
+          "다투는 대신 서로 이해하는 데 도움이 되는 근거를 찾았어요."
+        ],
+        [
+          "They changed one small part of their routine and observed the results.",
+          "생활 습관의 작은 부분을 바꾸고 결과를 관찰했어요."
+        ],
+        [
+          "The experiment reminded them that changing their minds can be a strength.",
+          "생각을 바꿀 수 있는 태도가 강점이 될 수 있다는 걸 배웠어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b5d10",
+      "book": 5,
+      "day": 10,
+      "title": "A New Choice: Silver Bell",
+      "titleKo": "현명한 선택: 은빛 방울",
+      "sentences": [
+        [
+          "While preparing a presentation in the music room, {name} noticed that their notes about a silver bell contained conflicting details.",
+          "{koName}는 음악실에서 발표를 준비하다 은빛 방울에 관한 기록에 서로 다른 정보가 있다는 걸 발견했어요."
+        ],
+        [
+          "Sora suggested leaving the problem out, but {name} preferred to investigate.",
+          "소라는 문제를 빼자고 했지만 {koName}는 더 확인하고 싶었어요."
+        ],
+        [
+          "Together they traced each claim back to its original source.",
+          "둘은 주장마다 원래 출처를 찾아봤어요."
+        ],
+        [
+          "They corrected the presentation and explained why the revision mattered.",
+          "발표 내용을 바로잡고 왜 고쳐야 했는지도 설명했어요."
+        ],
+        [
+          "The audience appreciated their care, and {name} learned to value honesty over perfection.",
+          "듣는 사람들이 그 태도를 고마워했고 {koName}는 완벽함보다 정직함을 중요하게 여기게 되었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b5d11",
+      "book": 5,
+      "day": 11,
+      "title": "A New Choice: Old Postcard",
+      "titleKo": "현명한 선택: 오래된 엽서",
+      "sentences": [
+        [
+          "When {name} and Hana planned a public display about an old postcard, they disagreed about its main message.",
+          "{koName}와 하나는 오래된 엽서에 관한 공개 전시를 계획하며 핵심 메시지에 의견 차이가 있었어요."
+        ],
+        [
+          "One wanted to make the display exciting, while the other cared most about accuracy.",
+          "한 사람은 재미를, 다른 사람은 정확성을 가장 중요하게 생각했어요."
+        ],
+        [
+          "They checked the facts, asked for feedback, and considered what visitors would learn.",
+          "둘은 사실을 확인하고 의견을 듣고 관람객이 무엇을 배울지 생각했어요."
+        ],
+        [
+          "By combining their priorities, they created a clear and engaging display.",
+          "서로의 중요 기준을 합쳐 쉽고 재미있는 전시를 만들었어요."
+        ],
+        [
+          "{name} realized that good decisions often require balancing more than one goal.",
+          "{koName}는 좋은 결정을 하려면 여러 목표의 균형을 잡아야 한다는 걸 깨달았어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b5d12",
+      "book": 5,
+      "day": 12,
+      "title": "A New Choice: Colorful Stone",
+      "titleKo": "현명한 선택: 알록달록 돌멩이",
+      "sentences": [
+        [
+          "{name} was asked to explain why a colorful stone mattered to the community.",
+          "{koName}는 지역사회에 알록달록 돌멩이가 왜 중요한지 설명해 달라는 부탁을 받았어요."
+        ],
+        [
+          "Yuna pointed out that a single example might not tell the whole story.",
+          "유나는 사례 하나로 전체를 설명할 수는 없다고 말했어요."
+        ],
+        [
+          "They gathered different opinions and looked for reliable information.",
+          "둘은 다양한 의견과 믿을 만한 정보를 모았어요."
+        ],
+        [
+          "The final explanation acknowledged what they knew and what remained uncertain.",
+          "마지막 설명에는 아는 것과 아직 확실하지 않은 것을 모두 담았어요."
+        ],
+        [
+          "Being open about uncertainty helped their audience trust them.",
+          "모르는 부분을 솔직히 밝히자 듣는 사람들이 더 믿어 주었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b5d13",
+      "book": 5,
+      "day": 13,
+      "title": "A New Choice: Tiny Shell",
+      "titleKo": "현명한 선택: 작은 조개껍데기",
+      "sentences": [
+        [
+          "{name} and Mina were organizing a project at the beach involving a tiny shell.",
+          "{koName}와 미나는 해변에서 작은 조개껍데기를 활용하는 프로젝트를 준비했어요."
+        ],
+        [
+          "An unexpected problem threatened their original schedule.",
+          "예상하지 못한 문제로 원래 일정이 흔들렸어요."
+        ],
+        [
+          "They compared several solutions, thinking about time, cost, and fairness.",
+          "둘은 시간과 비용, 공정성을 생각하며 여러 해결책을 비교했어요."
+        ],
+        [
+          "Rather than choose the quickest option, they agreed on the most responsible one.",
+          "가장 빠른 방법 대신 가장 책임 있는 방법을 골랐어요."
+        ],
+        [
+          "Their project succeeded because they had thought beyond the immediate problem.",
+          "눈앞의 문제만 보지 않고 생각한 덕분에 프로젝트를 성공시켰어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b5d14",
+      "book": 5,
+      "day": 14,
+      "title": "A New Choice: Paper Star",
+      "titleKo": "현명한 선택: 종이별",
+      "sentences": [
+        [
+          "After learning how a paper star was made, {name} began to question a familiar habit.",
+          "{koName}는 종이별이 어떻게 만들어지는지 알고 난 뒤 익숙한 습관에 의문을 품었어요."
+        ],
+        [
+          "Sora offered a different perspective based on personal experience.",
+          "소라는 자신의 경험을 바탕으로 다른 관점을 이야기했어요."
+        ],
+        [
+          "Instead of arguing, they looked for evidence that could help both understand.",
+          "다투는 대신 서로 이해하는 데 도움이 되는 근거를 찾았어요."
+        ],
+        [
+          "They changed one small part of their routine and observed the results.",
+          "생활 습관의 작은 부분을 바꾸고 결과를 관찰했어요."
+        ],
+        [
+          "The experiment reminded them that changing their minds can be a strength.",
+          "생각을 바꿀 수 있는 태도가 강점이 될 수 있다는 걸 배웠어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b5d15",
+      "book": 5,
+      "day": 15,
+      "title": "A New Choice: Funny Sticker",
+      "titleKo": "현명한 선택: 재미있는 스티커",
+      "sentences": [
+        [
+          "While preparing a presentation at school, {name} noticed that their notes about a funny sticker contained conflicting details.",
+          "{koName}는 학교에서 발표를 준비하다 재미있는 스티커에 관한 기록에 서로 다른 정보가 있다는 걸 발견했어요."
+        ],
+        [
+          "Hana suggested leaving the problem out, but {name} preferred to investigate.",
+          "하나는 문제를 빼자고 했지만 {koName}는 더 확인하고 싶었어요."
+        ],
+        [
+          "Together they traced each claim back to its original source.",
+          "둘은 주장마다 원래 출처를 찾아봤어요."
+        ],
+        [
+          "They corrected the presentation and explained why the revision mattered.",
+          "발표 내용을 바로잡고 왜 고쳐야 했는지도 설명했어요."
+        ],
+        [
+          "The audience appreciated their care, and {name} learned to value honesty over perfection.",
+          "듣는 사람들이 그 태도를 고마워했고 {koName}는 완벽함보다 정직함을 중요하게 여기게 되었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b5d16",
+      "book": 5,
+      "day": 16,
+      "title": "A New Choice: Lost Ticket",
+      "titleKo": "현명한 선택: 잃어버린 표",
+      "sentences": [
+        [
+          "When {name} and Yuna planned a public display about a train ticket, they disagreed about its main message.",
+          "{koName}와 유나는 기차표에 관한 공개 전시를 계획하며 핵심 메시지에 의견 차이가 있었어요."
+        ],
+        [
+          "One wanted to make the display exciting, while the other cared most about accuracy.",
+          "한 사람은 재미를, 다른 사람은 정확성을 가장 중요하게 생각했어요."
+        ],
+        [
+          "They checked the facts, asked for feedback, and considered what visitors would learn.",
+          "둘은 사실을 확인하고 의견을 듣고 관람객이 무엇을 배울지 생각했어요."
+        ],
+        [
+          "By combining their priorities, they created a clear and engaging display.",
+          "서로의 중요 기준을 합쳐 쉽고 재미있는 전시를 만들었어요."
+        ],
+        [
+          "{name} realized that good decisions often require balancing more than one goal.",
+          "{koName}는 좋은 결정을 하려면 여러 목표의 균형을 잡아야 한다는 걸 깨달았어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b5d17",
+      "book": 5,
+      "day": 17,
+      "title": "A New Choice: Purple Notebook",
+      "titleKo": "현명한 선택: 보라색 공책",
+      "sentences": [
+        [
+          "{name} was asked to explain why a purple notebook mattered to the community.",
+          "{koName}는 지역사회에 보라색 공책이 왜 중요한지 설명해 달라는 부탁을 받았어요."
+        ],
+        [
+          "Mina pointed out that a single example might not tell the whole story.",
+          "미나는 사례 하나로 전체를 설명할 수는 없다고 말했어요."
+        ],
+        [
+          "They gathered different opinions and looked for reliable information.",
+          "둘은 다양한 의견과 믿을 만한 정보를 모았어요."
+        ],
+        [
+          "The final explanation acknowledged what they knew and what remained uncertain.",
+          "마지막 설명에는 아는 것과 아직 확실하지 않은 것을 모두 담았어요."
+        ],
+        [
+          "Being open about uncertainty helped their audience trust them.",
+          "모르는 부분을 솔직히 밝히자 듣는 사람들이 더 믿어 주었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b5d18",
+      "book": 5,
+      "day": 18,
+      "title": "A New Choice: Paper Crown",
+      "titleKo": "현명한 선택: 종이 왕관",
+      "sentences": [
+        [
+          "{name} and Sora were organizing a project at the party involving a paper crown.",
+          "{koName}와 소라는 파티에서 종이 왕관을 활용하는 프로젝트를 준비했어요."
+        ],
+        [
+          "An unexpected problem threatened their original schedule.",
+          "예상하지 못한 문제로 원래 일정이 흔들렸어요."
+        ],
+        [
+          "They compared several solutions, thinking about time, cost, and fairness.",
+          "둘은 시간과 비용, 공정성을 생각하며 여러 해결책을 비교했어요."
+        ],
+        [
+          "Rather than choose the quickest option, they agreed on the most responsible one.",
+          "가장 빠른 방법 대신 가장 책임 있는 방법을 골랐어요."
+        ],
+        [
+          "Their project succeeded because they had thought beyond the immediate problem.",
+          "눈앞의 문제만 보지 않고 생각한 덕분에 프로젝트를 성공시켰어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b5d19",
+      "book": 5,
+      "day": 19,
+      "title": "A New Choice: Little Flag",
+      "titleKo": "현명한 선택: 작은 깃발",
+      "sentences": [
+        [
+          "After learning how a little flag was made, {name} began to question a familiar habit.",
+          "{koName}는 작은 깃발이 어떻게 만들어지는지 알고 난 뒤 익숙한 습관에 의문을 품었어요."
+        ],
+        [
+          "Hana offered a different perspective based on personal experience.",
+          "하나는 자신의 경험을 바탕으로 다른 관점을 이야기했어요."
+        ],
+        [
+          "Instead of arguing, they looked for evidence that could help both understand.",
+          "다투는 대신 서로 이해하는 데 도움이 되는 근거를 찾았어요."
+        ],
+        [
+          "They changed one small part of their routine and observed the results.",
+          "생활 습관의 작은 부분을 바꾸고 결과를 관찰했어요."
+        ],
+        [
+          "The experiment reminded them that changing their minds can be a strength.",
+          "생각을 바꿀 수 있는 태도가 강점이 될 수 있다는 걸 배웠어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b5d20",
+      "book": 5,
+      "day": 20,
+      "title": "A New Choice: Wooden Toy",
+      "titleKo": "현명한 선택: 나무 장난감",
+      "sentences": [
+        [
+          "While preparing a presentation at home, {name} noticed that their notes about a wooden toy contained conflicting details.",
+          "{koName}는 집에서 발표를 준비하다 나무 장난감에 관한 기록에 서로 다른 정보가 있다는 걸 발견했어요."
+        ],
+        [
+          "Yuna suggested leaving the problem out, but {name} preferred to investigate.",
+          "유나는 문제를 빼자고 했지만 {koName}는 더 확인하고 싶었어요."
+        ],
+        [
+          "Together they traced each claim back to its original source.",
+          "둘은 주장마다 원래 출처를 찾아봤어요."
+        ],
+        [
+          "They corrected the presentation and explained why the revision mattered.",
+          "발표 내용을 바로잡고 왜 고쳐야 했는지도 설명했어요."
+        ],
+        [
+          "The audience appreciated their care, and {name} learned to value honesty over perfection.",
+          "듣는 사람들이 그 태도를 고마워했고 {koName}는 완벽함보다 정직함을 중요하게 여기게 되었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b5d21",
+      "book": 5,
+      "day": 21,
+      "title": "A New Choice: Orange Pencil",
+      "titleKo": "현명한 선택: 주황색 연필",
+      "sentences": [
+        [
+          "When {name} and Mina planned a public display about an orange pencil, they disagreed about its main message.",
+          "{koName}와 미나는 주황색 연필에 관한 공개 전시를 계획하며 핵심 메시지에 의견 차이가 있었어요."
+        ],
+        [
+          "One wanted to make the display exciting, while the other cared most about accuracy.",
+          "한 사람은 재미를, 다른 사람은 정확성을 가장 중요하게 생각했어요."
+        ],
+        [
+          "They checked the facts, asked for feedback, and considered what visitors would learn.",
+          "둘은 사실을 확인하고 의견을 듣고 관람객이 무엇을 배울지 생각했어요."
+        ],
+        [
+          "By combining their priorities, they created a clear and engaging display.",
+          "서로의 중요 기준을 합쳐 쉽고 재미있는 전시를 만들었어요."
+        ],
+        [
+          "{name} realized that good decisions often require balancing more than one goal.",
+          "{koName}는 좋은 결정을 하려면 여러 목표의 균형을 잡아야 한다는 걸 깨달았어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b5d22",
+      "book": 5,
+      "day": 22,
+      "title": "A New Choice: Small Photo",
+      "titleKo": "현명한 선택: 작은 사진",
+      "sentences": [
+        [
+          "{name} was asked to explain why a small photo mattered to the community.",
+          "{koName}는 지역사회에 작은 사진이 왜 중요한지 설명해 달라는 부탁을 받았어요."
+        ],
+        [
+          "Sora pointed out that a single example might not tell the whole story.",
+          "소라는 사례 하나로 전체를 설명할 수는 없다고 말했어요."
+        ],
+        [
+          "They gathered different opinions and looked for reliable information.",
+          "둘은 다양한 의견과 믿을 만한 정보를 모았어요."
+        ],
+        [
+          "The final explanation acknowledged what they knew and what remained uncertain.",
+          "마지막 설명에는 아는 것과 아직 확실하지 않은 것을 모두 담았어요."
+        ],
+        [
+          "Being open about uncertainty helped their audience trust them.",
+          "모르는 부분을 솔직히 밝히자 듣는 사람들이 더 믿어 주었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b5d23",
+      "book": 5,
+      "day": 23,
+      "title": "A New Choice: Blue Envelope",
+      "titleKo": "현명한 선택: 파란 봉투",
+      "sentences": [
+        [
+          "{name} and Hana were organizing a project at the post office involving a blue envelope.",
+          "{koName}와 하나는 우체국에서 파란 봉투를 활용하는 프로젝트를 준비했어요."
+        ],
+        [
+          "An unexpected problem threatened their original schedule.",
+          "예상하지 못한 문제로 원래 일정이 흔들렸어요."
+        ],
+        [
+          "They compared several solutions, thinking about time, cost, and fairness.",
+          "둘은 시간과 비용, 공정성을 생각하며 여러 해결책을 비교했어요."
+        ],
+        [
+          "Rather than choose the quickest option, they agreed on the most responsible one.",
+          "가장 빠른 방법 대신 가장 책임 있는 방법을 골랐어요."
+        ],
+        [
+          "Their project succeeded because they had thought beyond the immediate problem.",
+          "눈앞의 문제만 보지 않고 생각한 덕분에 프로젝트를 성공시켰어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b5d24",
+      "book": 5,
+      "day": 24,
+      "title": "A New Choice: Paper Airplane",
+      "titleKo": "현명한 선택: 종이비행기",
+      "sentences": [
+        [
+          "After learning how a paper airplane was made, {name} began to question a familiar habit.",
+          "{koName}는 종이비행기가 어떻게 만들어지는지 알고 난 뒤 익숙한 습관에 의문을 품었어요."
+        ],
+        [
+          "Yuna offered a different perspective based on personal experience.",
+          "유나는 자신의 경험을 바탕으로 다른 관점을 이야기했어요."
+        ],
+        [
+          "Instead of arguing, they looked for evidence that could help both understand.",
+          "다투는 대신 서로 이해하는 데 도움이 되는 근거를 찾았어요."
+        ],
+        [
+          "They changed one small part of their routine and observed the results.",
+          "생활 습관의 작은 부분을 바꾸고 결과를 관찰했어요."
+        ],
+        [
+          "The experiment reminded them that changing their minds can be a strength.",
+          "생각을 바꿀 수 있는 태도가 강점이 될 수 있다는 걸 배웠어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b5d25",
+      "book": 5,
+      "day": 25,
+      "title": "A New Choice: Little Poem",
+      "titleKo": "현명한 선택: 짧은 시",
+      "sentences": [
+        [
+          "While preparing a presentation in the library, {name} noticed that their notes about a short poem contained conflicting details.",
+          "{koName}는 도서관에서 발표를 준비하다 짧은 시에 관한 기록에 서로 다른 정보가 있다는 걸 발견했어요."
+        ],
+        [
+          "Mina suggested leaving the problem out, but {name} preferred to investigate.",
+          "미나는 문제를 빼자고 했지만 {koName}는 더 확인하고 싶었어요."
+        ],
+        [
+          "Together they traced each claim back to its original source.",
+          "둘은 주장마다 원래 출처를 찾아봤어요."
+        ],
+        [
+          "They corrected the presentation and explained why the revision mattered.",
+          "발표 내용을 바로잡고 왜 고쳐야 했는지도 설명했어요."
+        ],
+        [
+          "The audience appreciated their care, and {name} learned to value honesty over perfection.",
+          "듣는 사람들이 그 태도를 고마워했고 {koName}는 완벽함보다 정직함을 중요하게 여기게 되었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b5d26",
+      "book": 5,
+      "day": 26,
+      "title": "A New Choice: Striped Scarf",
+      "titleKo": "현명한 선택: 줄무늬 목도리",
+      "sentences": [
+        [
+          "When {name} and Sora planned a public display about a striped scarf, they disagreed about its main message.",
+          "{koName}와 소라는 줄무늬 목도리에 관한 공개 전시를 계획하며 핵심 메시지에 의견 차이가 있었어요."
+        ],
+        [
+          "One wanted to make the display exciting, while the other cared most about accuracy.",
+          "한 사람은 재미를, 다른 사람은 정확성을 가장 중요하게 생각했어요."
+        ],
+        [
+          "They checked the facts, asked for feedback, and considered what visitors would learn.",
+          "둘은 사실을 확인하고 의견을 듣고 관람객이 무엇을 배울지 생각했어요."
+        ],
+        [
+          "By combining their priorities, they created a clear and engaging display.",
+          "서로의 중요 기준을 합쳐 쉽고 재미있는 전시를 만들었어요."
+        ],
+        [
+          "{name} realized that good decisions often require balancing more than one goal.",
+          "{koName}는 좋은 결정을 하려면 여러 목표의 균형을 잡아야 한다는 걸 깨달았어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b5d27",
+      "book": 5,
+      "day": 27,
+      "title": "A New Choice: Tiny Button",
+      "titleKo": "현명한 선택: 작은 단추",
+      "sentences": [
+        [
+          "{name} was asked to explain why a tiny button mattered to the community.",
+          "{koName}는 지역사회에 작은 단추가 왜 중요한지 설명해 달라는 부탁을 받았어요."
+        ],
+        [
+          "Hana pointed out that a single example might not tell the whole story.",
+          "하나는 사례 하나로 전체를 설명할 수는 없다고 말했어요."
+        ],
+        [
+          "They gathered different opinions and looked for reliable information.",
+          "둘은 다양한 의견과 믿을 만한 정보를 모았어요."
+        ],
+        [
+          "The final explanation acknowledged what they knew and what remained uncertain.",
+          "마지막 설명에는 아는 것과 아직 확실하지 않은 것을 모두 담았어요."
+        ],
+        [
+          "Being open about uncertainty helped their audience trust them.",
+          "모르는 부분을 솔직히 밝히자 듣는 사람들이 더 믿어 주었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b5d28",
+      "book": 5,
+      "day": 28,
+      "title": "A New Choice: Flower Drawing",
+      "titleKo": "현명한 선택: 꽃 그림",
+      "sentences": [
+        [
+          "{name} and Yuna were organizing a project in the art room involving a flower drawing.",
+          "{koName}와 유나는 미술실에서 꽃 그림을 활용하는 프로젝트를 준비했어요."
+        ],
+        [
+          "An unexpected problem threatened their original schedule.",
+          "예상하지 못한 문제로 원래 일정이 흔들렸어요."
+        ],
+        [
+          "They compared several solutions, thinking about time, cost, and fairness.",
+          "둘은 시간과 비용, 공정성을 생각하며 여러 해결책을 비교했어요."
+        ],
+        [
+          "Rather than choose the quickest option, they agreed on the most responsible one.",
+          "가장 빠른 방법 대신 가장 책임 있는 방법을 골랐어요."
+        ],
+        [
+          "Their project succeeded because they had thought beyond the immediate problem.",
+          "눈앞의 문제만 보지 않고 생각한 덕분에 프로젝트를 성공시켰어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b5d29",
+      "book": 5,
+      "day": 29,
+      "title": "A New Choice: New Keyring",
+      "titleKo": "현명한 선택: 새 열쇠고리",
+      "sentences": [
+        [
+          "After learning how a new keyring was made, {name} began to question a familiar habit.",
+          "{koName}는 새 열쇠고리가 어떻게 만들어지는지 알고 난 뒤 익숙한 습관에 의문을 품었어요."
+        ],
+        [
+          "Mina offered a different perspective based on personal experience.",
+          "미나는 자신의 경험을 바탕으로 다른 관점을 이야기했어요."
+        ],
+        [
+          "Instead of arguing, they looked for evidence that could help both understand.",
+          "다투는 대신 서로 이해하는 데 도움이 되는 근거를 찾았어요."
+        ],
+        [
+          "They changed one small part of their routine and observed the results.",
+          "생활 습관의 작은 부분을 바꾸고 결과를 관찰했어요."
+        ],
+        [
+          "The experiment reminded them that changing their minds can be a strength.",
+          "생각을 바꿀 수 있는 태도가 강점이 될 수 있다는 걸 배웠어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    },
+    {
+      "id": "b5d30",
+      "book": 5,
+      "day": 30,
+      "title": "A New Choice: Little Gift Bag",
+      "titleKo": "현명한 선택: 작은 선물 봉투",
+      "sentences": [
+        [
+          "While preparing a presentation at the community center, {name} noticed that their notes about a little gift bag contained conflicting details.",
+          "{koName}는 동네 문화센터에서 발표를 준비하다 작은 선물 봉투에 관한 기록에 서로 다른 정보가 있다는 걸 발견했어요."
+        ],
+        [
+          "Sora suggested leaving the problem out, but {name} preferred to investigate.",
+          "소라는 문제를 빼자고 했지만 {koName}는 더 확인하고 싶었어요."
+        ],
+        [
+          "Together they traced each claim back to its original source.",
+          "둘은 주장마다 원래 출처를 찾아봤어요."
+        ],
+        [
+          "They corrected the presentation and explained why the revision mattered.",
+          "발표 내용을 바로잡고 왜 고쳐야 했는지도 설명했어요."
+        ],
+        [
+          "The audience appreciated their care, and {name} learned to value honesty over perfection.",
+          "듣는 사람들이 그 태도를 고마워했고 {koName}는 완벽함보다 정직함을 중요하게 여기게 되었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "교재 어휘·문형 검수 대기",
+      "source": "새로 작성한 복습 이야기 원고"
+    }
+  ]
+}
+</script>
+<script>/* 읽기·쓰기 복습 v4: 프로필별 기기 저장. 기존 캐릭터/별/Firebase 코드는 변경하지 않음. */
+(()=>{'use strict';
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const date=(add=0)=>{let d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()+add);return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');};
+const context=()=>window.rwReviewGetContext?.()||{profileId:'',person:'jiwoo',day:1};
+const key=()=>`rwReviewsV4:${encodeURIComponent(context().profileId||'unselected')}`;
+const blank=()=>({writing:{},expressions:{},daily:{},reads:{},seen:{}});
+let bank=[],filter='all',showKorean=false,speaking=null;
+function read(){try{let d=JSON.parse(localStorage.getItem(key())||'null');return d&&typeof d==='object'?Object.assign(blank(),d):blank();}catch(e){return blank();}}
+function save(d){try{localStorage.setItem(key(),JSON.stringify(d));return true;}catch(e){$('rwReviewStorageMsg').textContent='저장할 수 없어요. 기기 저장 공간을 확인해 주세요.';return false;}}
+function item(kind,day,index){const l=window.rwReviewGetLessons?.()?.[day-1];const row=kind==='writing'?l?.ws?.[index]:l?.vocab?.[index];return row?{day,index,question:row[0],answer:row[1]}:null;}
+const intervals=[1,3,7,14,30];
+function personText(s){return String(s).replaceAll('{name}',context().person==='minseo'?'Minseo':'Jiwoo').replaceAll('{koName}',context().person==='minseo'?'민서':'지우').replaceAll('Jiwoo',context().person==='minseo'?'Minseo':'Jiwoo').replaceAll('지우',context().person==='minseo'?'민서':'지우');}
+function entries(d){return [...Object.entries(d.writing).map(([k,v])=>({...v,kind:'writing',id:k})),...Object.entries(d.expressions).map(([k,v])=>({...v,kind:'expressions',id:k}))].filter(v=>v.question&&v.answer);}
+function grade(kind,day,index,choice){if(!context().profileId)return;const d=read(),bucket=kind==='writing'?d.writing:d.expressions,k=`${day}:${index}`,source=item(kind,day,index);if(!source)return;
+ if(choice==='wrong'){bucket[k]={...source,step:0,next:date(1)};filter='all';}
+ else if(bucket[k]){const nextStep=(bucket[k].step||0)+1;if(nextStep>=5)delete bucket[k];else bucket[k]={...bucket[k],step:nextStep,next:date(intervals[Math.min(4,nextStep)])};}
+ if(save(d)){$('rwReviewMarkMsg').textContent=choice==='wrong'?'오답을 저장했어요. 아래 전체 카드에서 바로 볼 수 있고 내일부터 복습해요.':'확인했어요. 다음 복습일을 조정했어요.';}
+ updateStatus();renderCards();
+}
+function updateStatus(){const d=read(),cards=entries(d),due=cards.filter(x=>!x.next||x.next<=date());$('rwReviewTotal').textContent=`등록 ${cards.length}개 · 오늘 ${due.length}개`;
+ document.querySelectorAll('[data-rw-mark-w]').forEach(b=>{if(b.dataset.rwMarkAction==='wrong')b.textContent=d.writing[`${context().day}:${b.dataset.rwMarkW}`]?'✓ 오답 저장됨':'❌ 틀렸어요 · 오답 저장';});
+ document.querySelectorAll('[data-rw-difficult]').forEach(b=>{b.textContent=d.expressions[`${context().day}:${b.dataset.rwDifficult}`]?'✓ 어려움 저장됨':'🔖 어려워요';});}
+function stopAudio(){try{speechSynthesis.cancel();}catch(e){}if(speaking){speaking.textContent='🔊 듣기';speaking=null;}}
+function talk(s,b){if(!('speechSynthesis' in window))return alert('이 기기는 듣기를 지원하지 않아요.');if(speaking===b){stopAudio();return;}stopAudio();let u=new SpeechSynthesisUtterance(s);u.lang='en-US';u.rate=.7;speaking=b;b.textContent='■ 중지';u.onend=u.onerror=()=>{if(speaking===b){b.textContent='🔊 듣기';speaking=null;}};speechSynthesis.speak(u);}
+function eligible(){const id=context().profileId;if(!id)return[];return bank.filter(s=>s.book===1&&s.verified&&!!safeGet(`rwCompletedV1:${id}:${s.day}`));}
+function safeGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function pick(){const candidates=eligible();if(!candidates.length)return null;const d=read(),t=date(),saved=d.daily[t];if(saved&&candidates.some(s=>s.id===saved))return candidates.find(s=>s.id===saved);
+ const prev=d.daily[date(-1)];const options=candidates.length>1?candidates.filter(s=>s.id!==prev):candidates;const min=Math.min(...options.map(s=>d.seen[s.id]||0));const least=options.filter(s=>(d.seen[s.id]||0)===min);const found=least[Math.floor(Math.random()*least.length)];d.daily[t]=found.id;d.seen[found.id]=(d.seen[found.id]||0)+1;save(d);return found;}
+function story(){const el=$('rwRandomStory');if(!context().profileId){el.innerHTML='<p class="rw-muted">먼저 학습 프로필을 선택해 주세요.</p>';return;}
+ if(!bank.length){el.innerHTML='<p class="rw-muted">이야기를 불러오는 중이에요.</p>';return;}
+ const allowed=eligible();$('rwRandomIntro').textContent=`전체 150편 중 검수 완료 2편 · 현재 열림 ${allowed.length}편`;
+ const s=pick();if(!s){el.innerHTML='<div class="rw-note">DAY 1~2 중 학습을 완료한 DAY의 복습 이야기만 열려요. 정규학습에서 ‘오늘 학습 완료하기’를 먼저 눌러 주세요.</div>';return;}
+ const readDone=read().reads[date()]===s.id;
+ el.innerHTML=`<div class="rw-review-story-head"><div><span class="rw-review-status">1권 DAY ${s.day}</span><h3>${esc(s.title)}</h3><p class="rw-muted">${esc(s.titleKo)}</p></div><label class="rw-check"><input id="rwRandomShowKo" type="checkbox" ${showKorean?'checked':''}>해석 보기</label></div>`+
+ s.sentences.map((pair,i)=>`<div class="rw-review-story-line"><b>${i+1}. ${esc(personText(pair[0]))}</b><p class="rw-ko" ${showKorean?'':'hidden'}>${esc(personText(pair[1]))}</p><button class="rw-small" type="button" data-rw-voice="${i}">🔊 듣기</button></div>`).join('')+
+ `<div class="rw-review-actions"><button id="rwRandomDone" class="rw-done" type="button">${readDone?'✓ 오늘 읽기 완료':'✓ 오늘 이야기 읽었어요'}</button><span class="rw-muted" id="rwRandomDoneMsg"></span></div>`;
+ $('rwRandomShowKo').onchange=e=>{showKorean=e.target.checked;el.querySelectorAll('.rw-review-story-line>.rw-ko').forEach(x=>x.hidden=!showKorean);};
+ el.querySelectorAll('[data-rw-voice]').forEach(b=>b.onclick=()=>talk(personText(s.sentences[Number(b.dataset.rwVoice)][0]),b));
+ $('rwRandomDone').onclick=()=>{let d=read();d.reads[date()]=s.id;if(save(d)){$('rwRandomDone').textContent='✓ 오늘 읽기 완료';$('rwRandomDoneMsg').textContent='이 프로필에 저장했어요.';}};
+}
+function reviewCard(d,v){const bucket=v.kind==='writing'?d.writing:d.expressions;return bucket[v.id];}
+function renderCards(){const el=$('rwReviewCards');if(!context().profileId){el.innerHTML='<p class="rw-muted">먼저 학습 프로필을 선택해 주세요.</p>';return;}
+ const d=read(),list=entries(d).sort((a,b)=>(a.next||'').localeCompare(b.next||'')),show=filter==='today'?list.filter(v=>!v.next||v.next<=date()):list;
+ $('rwReviewDue').classList.toggle('rw-tab-active',filter==='today');$('rwReviewAll').classList.toggle('rw-tab-active',filter==='all');
+ if(!show.length){el.innerHTML='<div class="rw-note">'+(list.length?'오늘 복습할 카드는 없어요. 「전체 카드」에서 미리 볼 수 있어요.':'DAY 영작에서 틀린 문제를 표시하거나 새 표현에서 「어려워요」를 눌러 복습 목록을 만드세요.')+'</div>';return;}
+ el.innerHTML=show.map((v,i)=>`<article class="rw-review-card"><div class="rw-review-card-top"><b>${v.kind==='writing'?'✏️ 영작 오답':'🔖 어려운 표현'} · DAY ${v.day}</b><span class="rw-muted">${v.next>date()?'다음 '+v.next:'오늘 복습'}</span></div><p class="rw-review-prompt">${esc(personText(v.question))}</p><div class="rw-review-reveal" hidden>${esc(personText(v.answer))}</div><button class="rw-small" type="button" data-reveal="${i}">정답 보기</button> <button class="rw-small" type="button" data-right="${i}">✅ 맞혔어요</button> <button class="rw-small" type="button" data-again="${i}">🔁 다시 복습</button></article>`).join('');
+ show.forEach((v,i)=>{const card=el.children[i],ans=card.querySelector('.rw-review-reveal');card.querySelector('[data-reveal]').onclick=e=>{ans.hidden=!ans.hidden;e.currentTarget.textContent=ans.hidden?'정답 보기':'정답 숨기기';};
+  function next(right){const data=read(),b=v.kind==='writing'?data.writing:data.expressions,old=b[v.id];if(!old)return;
+   if(right){const n=(Number(old.step)||0)+1;if(n>=5)delete b[v.id];else b[v.id]={...old,step:n,next:date(intervals[Math.min(n,4)])};}
+   else b[v.id]={...old,step:0,next:date(1)};
+   if(save(data)){updateStatus();renderCards();}
+  }
+  card.querySelector('[data-right]').onclick=()=>next(true);card.querySelector('[data-again]').onclick=()=>next(false);
+ });
+}
+function refresh(){stopAudio();updateStatus();story();renderCards();}
+window.rwReviewEngine={mark:(kind,day,index,action)=>grade(kind,day,index,action),refresh,diagnostics:()=>({stories:bank.length,verified:bank.filter(s=>s.verified).length,profile:context().profileId})};
+$('rwReviewDue').onclick=()=>{filter='today';renderCards();};$('rwReviewAll').onclick=()=>{filter='all';renderCards();};
+window.addEventListener('rw:profile',refresh);window.addEventListener('rw:lesson',refresh);
+window.addEventListener('storage',e=>{if(e.key?.startsWith('rwReviewsV4:')||e.key?.startsWith('rwCompletedV1:'))refresh();});
+try {
+ const d=JSON.parse(document.getElementById('rwStoryBankEmbedded').textContent);
+ if(d.total!==150||d.stories?.length!==150||d.stories.some(s=>s.sentences?.length!==5))throw Error('이야기 150편 검사 실패');
+ bank=d.stories;
+}catch(e){$('rwRandomStory').innerHTML='<p class="rw-error">이야기 데이터 오류: '+esc(e.message)+'</p>';}
+refresh();
+})();
+</script>
+<script>(()=>{'use strict';
+const $=id=>document.getElementById(id);
+let view=new Date();view=new Date(view.getFullYear(),view.getMonth(),1);
+function fmt(iso){if(!iso)return '';const d=new Date(iso);if(!Number.isFinite(d.getTime()))return '';return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function getCompleted(){const c=window.rwReviewGetContext?.()||{};if(!c.profileId)return [];const found=[];for(let day=1;day<=2;day++){try{const iso=localStorage.getItem(`rwCompletedV1:${c.profileId}:${day}`);if(iso)found.push({day,date:fmt(iso)});}catch(e){}}return found;}
+function refresh(){const c=window.rwReviewGetContext?.()||{},done=getCompleted(),dates={};done.forEach(x=>(dates[x.date]||=[]).push(x.day));
+ $('rwProgressSummary').textContent=c.profileId?`DAY 1~2 테스트 · ${done.length}/2 완료 · ${c.profileName||'현재 프로필'}`:'먼저 프로필을 선택해 주세요.';
+ const progress=$('rwDayProgress');progress.innerHTML=Array.from({length:30},(_,i)=>{const n=i+1,finished=done.some(x=>x.day===n);return n<=2?`<button type="button" data-rw-cal-day="${n}" class="${finished?'rw-day-complete':''}">${finished?'✓ ':''}${n}</button>`:`<span title="추가 예정 DAY ${n}">${n}</span>`;}).join('');
+ progress.querySelectorAll('[data-rw-cal-day]').forEach(btn=>btn.onclick=()=>{const day=btn.dataset.rwCalDay;$('rwDay').value=day;$('rwDay').dispatchEvent(new Event('change'));$('rwApp').scrollIntoView({behavior:'smooth',block:'start'});});
+ const y=view.getFullYear(),m=view.getMonth(),first=new Date(y,m,1).getDay(),last=new Date(y,m+1,0).getDate();
+ $('rwMonthTitle').textContent=`${y}년 ${m+1}월`;
+ const days=['일','월','화','수','목','금','토'].map(w=>`<div class="rw-weekday">${w}</div>`);
+ for(let i=0;i<first;i++)days.push('<div style="background:transparent"></div>');
+ const today=fmt(new Date().toISOString());
+ for(let d=1;d<=last;d++){const dt=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;let cls=dates[dt]?' rw-cal-done':'';if(dt===today)cls+=' rw-cal-today';days.push(`<div class="${cls}">${d}${dates[dt]?`<small>✓ DAY ${dates[dt].join(', ')}</small>`:''}</div>`);}
+ $('rwMonthGrid').innerHTML=days.join('');
+ $('rwCalendarStatus').textContent=done.length?`저장된 학습 완료: ${done.map(x=>`DAY ${x.day} (${x.date})`).join(' · ')}`:'아직 완료 기록이 없어요. DAY 1 또는 DAY 2를 완료하면 날짜가 표시돼요.';
+}
+$('rwMonthPrev').onclick=()=>{view=new Date(view.getFullYear(),view.getMonth()-1,1);refresh();};
+$('rwMonthNext').onclick=()=>{view=new Date(view.getFullYear(),view.getMonth()+1,1);refresh();};
+document.querySelectorAll('[data-rw-go]').forEach(b=>b.onclick=()=>{const target=$(b.dataset.rwGo);const c=window.rwReviewGetContext?.()||{};if(!c.profileId){$('rwLoginHint').scrollIntoView({behavior:'smooth',block:'start'});return;}target?.scrollIntoView({behavior:'smooth',block:'start'});});
+window.rwCalendar={refresh};window.addEventListener('rw:lesson',refresh);window.addEventListener('rw:profile',refresh);
+refresh();
+})();</script></body></html>
