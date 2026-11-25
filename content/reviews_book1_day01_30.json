@@ -1,0 +1,1174 @@
+{
+  "version": "v34",
+  "total": 30,
+  "verified": false,
+  "notes": "12개 영어·한국어 표현 수정, 누적 학습 어휘 범위 100% 준수 확인 전",
+  "stories": [
+    {
+      "id": "b1d01",
+      "book": 1,
+      "day": 1,
+      "title": "The Note in the Bag",
+      "titleKo": "가방 속 쪽지",
+      "sentences": [
+        [
+          "Mina saw a little note on the desk.",
+          "미나는 책상 위에서 작은 쪽지를 보았어요."
+        ],
+        [
+          "{name} put the note in a blue box.",
+          "{koName}는 쪽지를 파란 상자에 넣었어요."
+        ],
+        [
+          "After class, {name} gave the box to Mina.",
+          "수업이 끝난 뒤 {koName}는 미나에게 상자를 주었어요."
+        ],
+        [
+          "Mina opened it and read the note.",
+          "미나는 상자를 열어 쪽지를 읽었어요."
+        ],
+        [
+          "They smiled and went home together.",
+          "두 사람은 웃으며 함께 집에 갔어요."
+        ]
+      ],
+      "verified": false,
+      "status": "5문장 연결 이야기로 재작성 / 원문 학습 범위 확인 / 출판 전 교육적 재검토 권장",
+      "source": {
+        "source_books": "사용자 제공 일빵빵 1권·단어복습·문법 DAY별 자료 및 현재 정규 이야기",
+        "day": 1,
+        "type": "DAY별 원문 어휘·문형 활용 신규 복습 이야기 (원문 직접 인용 아님)"
+      },
+      "revision": "v33"
+    },
+    {
+      "id": "b1d02",
+      "book": 1,
+      "day": 2,
+      "title": "A Card for the Teacher",
+      "titleKo": "선생님께 드리는 카드",
+      "sentences": [
+        [
+          "Mina found a red heart beside her book.",
+          "미나는 책 옆에서 빨간 하트를 찾았어요."
+        ],
+        [
+          "{name} said, \"Let’s make a card!\"",
+          "{koName}가 \"카드를 만들자!\"라고 말했어요."
+        ],
+        [
+          "They put the heart on the card.",
+          "두 사람은 카드 위에 하트를 붙였어요."
+        ],
+        [
+          "{name} wrote, \"Thank you!\"",
+          "{koName}는 \"감사합니다!\"라고 썼어요."
+        ],
+        [
+          "The teacher saw the card and smiled.",
+          "선생님은 카드를 보고 미소 지었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "5문장 연결 이야기로 재작성 / 원문 학습 범위 확인 / 출판 전 교육적 재검토 권장",
+      "source": {
+        "source_books": "사용자 제공 일빵빵 1권·단어복습·문법 DAY별 자료 및 현재 정규 이야기",
+        "day": 2,
+        "type": "DAY별 원문 어휘·문형 활용 신규 복습 이야기 (원문 직접 인용 아님)"
+      },
+      "revision": "v33"
+    },
+    {
+      "id": "b1d03",
+      "book": 1,
+      "day": 3,
+      "title": "The Note in the Book",
+      "titleKo": "책 속의 쪽지",
+      "sentences": [
+        [
+          "Mina put a book on the desk.",
+          "미나는 책상 위에 책을 놓았어요."
+        ],
+        [
+          "{name} saw a little note inside the book.",
+          "{koName}는 책 안에서 작은 쪽지를 보았어요."
+        ],
+        [
+          "\"I read books,\" said {name} with a smile.",
+          "{koName}는 웃으며 \"나는 책을 읽어.\"라고 말했어요."
+        ],
+        [
+          "Mina said, \"Then read the note!\"",
+          "미나는 \"그럼 쪽지를 읽어 봐!\"라고 말했어요."
+        ],
+        [
+          "{name} read it and drew a heart.",
+          "{koName}는 쪽지를 읽고 하트를 그렸어요."
+        ]
+      ],
+      "verified": false,
+      "status": "표현·한영 대응 점검 후 수정 / 세 원본 앱 외 어휘의 완전 배제는 미확인",
+      "source": {
+        "source_books": "사용자 제공 일빵빵 1권·단어복습·문법 DAY별 자료 및 현재 정규 이야기",
+        "day": 3,
+        "type": "DAY별 원문 어휘·문형 활용 신규 복습 이야기 (원문 직접 인용 아님)"
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true,
+      "revision": "v34"
+    },
+    {
+      "id": "b1d04",
+      "book": 1,
+      "day": 4,
+      "title": "No Juice Today",
+      "titleKo": "오늘은 주스가 없어",
+      "sentences": [
+        [
+          "{name} and Mina met before class.",
+          "{koName}와 미나는 수업 전에 만났어요."
+        ],
+        [
+          "Mina had juice in her bag.",
+          "미나는 가방에 주스를 가지고 있었어요."
+        ],
+        [
+          "{name} said, \"I don’t drink juice.\"",
+          "{koName}가 \"나는 주스를 마시지 않아.\"라고 말했어요."
+        ],
+        [
+          "Mina put the juice on the desk.",
+          "미나는 주스를 책상 위에 놓았어요."
+        ],
+        [
+          "They took their books and went to class.",
+          "두 사람은 책을 가지고 수업에 갔어요."
+        ]
+      ],
+      "verified": false,
+      "status": "5문장 연결 이야기로 재작성 / 원문 학습 범위 확인 / 출판 전 교육적 재검토 권장",
+      "source": {
+        "source_books": "사용자 제공 일빵빵 1권·단어복습·문법 DAY별 자료 및 현재 정규 이야기",
+        "day": 4,
+        "type": "DAY별 원문 어휘·문형 활용 신규 복습 이야기 (원문 직접 인용 아님)"
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true,
+      "revision": "v33"
+    },
+    {
+      "id": "b1d05",
+      "book": 1,
+      "day": 5,
+      "title": "A Cup of Tea",
+      "titleKo": "차 한 잔",
+      "sentences": [
+        [
+          "Mina came to {name}’s home.",
+          "미나는 {koName}의 집에 왔어요."
+        ],
+        [
+          "{name} saw a cup on the table.",
+          "{koName}는 탁자 위의 컵을 보았어요."
+        ],
+        [
+          "\"Do you drink tea?\" asked {name}.",
+          "{koName}가 \"차를 마시니?\"라고 물었어요."
+        ],
+        [
+          "Mina said, \"Yes, I do.\"",
+          "미나는 \"응, 그래.\"라고 말했어요."
+        ],
+        [
+          "They sat together and read a book.",
+          "두 사람은 함께 앉아 책을 읽었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "표현·한영 대응 점검 후 수정 / 세 원본 앱 외 어휘의 완전 배제는 미확인",
+      "source": {
+        "source_books": "사용자 제공 일빵빵 1권·단어복습·문법 DAY별 자료 및 현재 정규 이야기",
+        "day": 5,
+        "type": "DAY별 원문 어휘·문형 활용 신규 복습 이야기 (원문 직접 인용 아님)"
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true,
+      "revision": "v34"
+    },
+    {
+      "id": "b1d06",
+      "book": 1,
+      "day": 6,
+      "title": "The Birthday Dishes",
+      "titleKo": "생일날의 설거지",
+      "sentences": [
+        [
+          "Mina came to {name}’s home with a card.",
+          "미나는 카드를 들고 {koName}의 집에 왔어요."
+        ],
+        [
+          "{name} gave Mina a birthday gift.",
+          "{koName}는 미나에게 생일 선물을 주었어요."
+        ],
+        [
+          "After lunch, they saw the dishes.",
+          "점심을 먹고 두 사람은 그릇들을 보았어요."
+        ],
+        [
+          "\"Do you wash the dishes?\" asked Mina.",
+          "미나가 \"설거지하니?\"라고 물었어요."
+        ],
+        [
+          "They washed the dishes and smiled.",
+          "두 사람은 설거지를 하고 웃었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "5문장 연결 이야기로 재작성 / 원문 학습 범위 확인 / 출판 전 교육적 재검토 권장",
+      "source": {
+        "source_books": "사용자 제공 일빵빵 1권·단어복습·문법 DAY별 자료 및 현재 정규 이야기",
+        "day": 6,
+        "type": "DAY별 원문 어휘·문형 활용 신규 복습 이야기 (원문 직접 인용 아님)"
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true,
+      "revision": "v33"
+    },
+    {
+      "id": "b1d07",
+      "book": 1,
+      "day": 7,
+      "title": "The Key by the Door",
+      "titleKo": "문 옆의 열쇠",
+      "sentences": [
+        [
+          "Mina found a key beside the door.",
+          "미나는 문 옆에서 열쇠를 찾았어요."
+        ],
+        [
+          "She put the key on a chair.",
+          "미나는 열쇠를 의자 위에 놓았어요."
+        ],
+        [
+          "\"I can open the door,\" said {name}.",
+          "{koName}가 \"내가 문을 열 수 있어.\"라고 말했어요."
+        ],
+        [
+          "Mina gave {name} the key.",
+          "미나는 {koName}에게 열쇠를 주었어요."
+        ],
+        [
+          "They opened the door and went inside.",
+          "두 사람은 문을 열고 안으로 들어갔어요."
+        ]
+      ],
+      "verified": false,
+      "status": "5문장 연결 이야기로 재작성 / 원문 학습 범위 확인 / 출판 전 교육적 재검토 권장",
+      "source": {
+        "source_books": "사용자 제공 일빵빵 1권·단어복습·문법 DAY별 자료 및 현재 정규 이야기",
+        "day": 7,
+        "type": "DAY별 원문 어휘·문형 활용 신규 복습 이야기 (원문 직접 인용 아님)"
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true,
+      "revision": "v33"
+    },
+    {
+      "id": "b1d08",
+      "book": 1,
+      "day": 8,
+      "title": "The Song After Class",
+      "titleKo": "수업 후의 노래",
+      "sentences": [
+        [
+          "Mina began to sing after class.",
+          "미나는 수업 후 노래를 부르기 시작했어요."
+        ],
+        [
+          "{name} had a book in the bag.",
+          "{koName}는 가방에 책을 가지고 있었어요."
+        ],
+        [
+          "\"I can’t sing this song,\" said {name}.",
+          "{koName}가 \"나는 이 노래를 부를 수 없어.\"라고 말했어요."
+        ],
+        [
+          "Mina sang the song again.",
+          "미나는 노래를 다시 불렀어요."
+        ],
+        [
+          "{name} smiled and sang with Mina.",
+          "{koName}는 웃으며 미나와 함께 노래했어요."
+        ]
+      ],
+      "verified": false,
+      "status": "5문장 연결 이야기로 재작성 / 원문 학습 범위 확인 / 출판 전 교육적 재검토 권장",
+      "source": {
+        "source_books": "사용자 제공 일빵빵 1권·단어복습·문법 DAY별 자료 및 현재 정규 이야기",
+        "day": 8,
+        "type": "DAY별 원문 어휘·문형 활용 신규 복습 이야기 (원문 직접 인용 아님)"
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true,
+      "revision": "v33"
+    },
+    {
+      "id": "b1d09",
+      "book": 1,
+      "day": 9,
+      "title": "The Book on the Chair",
+      "titleKo": "의자 위의 책",
+      "sentences": [
+        [
+          "Mina left a book on a chair.",
+          "미나는 의자 위에 책을 놓아두었어요."
+        ],
+        [
+          "{name} saw it after class.",
+          "{koName}는 수업 후 그 책을 보았어요."
+        ],
+        [
+          "\"Can I take the book?\" asked {name}.",
+          "{koName}가 \"내가 책을 가져가도 될까?\"라고 물었어요."
+        ],
+        [
+          "\"Yes, you can,\" said Mina.",
+          "미나는 \"응, 그래도 돼.\"라고 말했어요."
+        ],
+        [
+          "They took the book to the library.",
+          "두 사람은 그 책을 도서관으로 가져갔어요."
+        ]
+      ],
+      "verified": false,
+      "status": "5문장 연결 이야기로 재작성 / 원문 학습 범위 확인 / 출판 전 교육적 재검토 권장",
+      "source": {
+        "source_books": "사용자 제공 일빵빵 1권·단어복습·문법 DAY별 자료 및 현재 정규 이야기",
+        "day": 9,
+        "type": "DAY별 원문 어휘·문형 활용 신규 복습 이야기 (원문 직접 인용 아님)"
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true,
+      "revision": "v33"
+    },
+    {
+      "id": "b1d10",
+      "book": 1,
+      "day": 10,
+      "title": "A Snack at the Store",
+      "titleKo": "가게에서 먹는 간식",
+      "sentences": [
+        [
+          "{name} and Mina went to the store.",
+          "{koName}와 미나는 가게에 갔어요."
+        ],
+        [
+          "They saw a snack on the menu.",
+          "두 사람은 메뉴에서 간식을 보았어요."
+        ],
+        [
+          "\"Do you want to try it?\" asked Mina.",
+          "미나가 \"이거 먹어 볼래?\"라고 물었어요."
+        ],
+        [
+          "{name} tried the snack and smiled.",
+          "{koName}는 간식을 먹어 보고 웃었어요."
+        ],
+        [
+          "They went home together after lunch.",
+          "두 사람은 점심 후 함께 집으로 갔어요."
+        ]
+      ],
+      "verified": false,
+      "status": "표현·한영 대응 점검 후 수정 / 세 원본 앱 외 어휘의 완전 배제는 미확인",
+      "source": {
+        "source_books": "사용자 제공 일빵빵 1권·단어복습·문법 DAY별 자료 및 현재 정규 이야기",
+        "day": 10,
+        "type": "DAY별 원문 어휘·문형 활용 신규 복습 이야기 (원문 직접 인용 아님)"
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true,
+      "revision": "v34"
+    },
+    {
+      "id": "b1d11",
+      "book": 1,
+      "day": 11,
+      "title": "The Heavy Bag",
+      "titleKo": "무거운 가방",
+      "sentences": [
+        [
+          "Mina saw a heavy bag beside the door.",
+          "미나는 문 옆의 무거운 가방을 보았어요."
+        ],
+        [
+          "{name} said, \"I will help you.\"",
+          "{koName}가 \"내가 도와줄게.\"라고 말했어요."
+        ],
+        [
+          "{name} took the bag from Mina.",
+          "{koName}는 미나에게서 가방을 받았어요."
+        ],
+        [
+          "Mina opened the door for {name}.",
+          "미나는 {koName}를 위해 문을 열어 주었어요."
+        ],
+        [
+          "They took the bag to class together.",
+          "두 사람은 가방을 함께 교실로 가져갔어요."
+        ]
+      ],
+      "verified": false,
+      "status": "표현·한영 대응 점검 후 수정 / 세 원본 앱 외 어휘의 완전 배제는 미확인",
+      "source": {
+        "source_books": "사용자 제공 일빵빵 1권·단어복습·문법 DAY별 자료 및 현재 정규 이야기",
+        "day": 11,
+        "type": "DAY별 원문 어휘·문형 활용 신규 복습 이야기 (원문 직접 인용 아님)"
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true,
+      "revision": "v34"
+    },
+    {
+      "id": "b1d12",
+      "book": 1,
+      "day": 12,
+      "title": "The Textbook on the Desk",
+      "titleKo": "책상 위 교과서",
+      "sentences": [
+        [
+          "{name} had homework after class.",
+          "{koName}는 수업이 끝난 뒤 숙제가 있었어요."
+        ],
+        [
+          "Mina found a textbook on the desk.",
+          "미나는 책상 위에서 교과서를 찾았어요."
+        ],
+        [
+          "\"I won’t take your book,\" said Mina.",
+          "미나는 \"네 책을 가져가지 않을게.\"라고 말했어요."
+        ],
+        [
+          "{name} gave Mina a little note.",
+          "{koName}는 미나에게 작은 쪽지를 주었어요."
+        ],
+        [
+          "They read the note and closed the book.",
+          "두 사람은 쪽지를 읽고 책을 덮었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "5문장 연결 이야기로 재작성 / 원문 학습 범위 확인 / 출판 전 교육적 재검토 권장",
+      "source": {
+        "source_books": "사용자 제공 일빵빵 1권·단어복습·문법 DAY별 자료 및 현재 정규 이야기",
+        "day": 12,
+        "type": "DAY별 원문 어휘·문형 활용 신규 복습 이야기 (원문 직접 인용 아님)"
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true,
+      "revision": "v33"
+    },
+    {
+      "id": "b1d13",
+      "book": 1,
+      "day": 13,
+      "title": "The Doctor Card",
+      "titleKo": "의사 그림 카드",
+      "sentences": [
+        [
+          "Mina had a card with a doctor on it.",
+          "미나는 의사가 그려진 카드를 가지고 있었어요."
+        ],
+        [
+          "{name} saw the picture and smiled.",
+          "{koName}는 그림을 보고 웃었어요."
+        ],
+        [
+          "\"Will you help me?\" asked Mina.",
+          "미나가 \"나를 도와줄래?\"라고 물었어요."
+        ],
+        [
+          "{name} took the card and said, \"Yes!\"",
+          "{koName}는 카드를 받고 \"응!\"이라고 말했어요."
+        ],
+        [
+          "They gave the card to the teacher.",
+          "두 사람은 선생님께 카드를 드렸어요."
+        ]
+      ],
+      "verified": false,
+      "status": "5문장 연결 이야기로 재작성 / 원문 학습 범위 확인 / 출판 전 교육적 재검토 권장",
+      "source": {
+        "source_books": "사용자 제공 일빵빵 1권·단어복습·문법 DAY별 자료 및 현재 정규 이야기",
+        "day": 13,
+        "type": "DAY별 원문 어휘·문형 활용 신규 복습 이야기 (원문 직접 인용 아님)"
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true,
+      "revision": "v33"
+    },
+    {
+      "id": "b1d14",
+      "book": 1,
+      "day": 14,
+      "title": "The Boat on the Map",
+      "titleKo": "지도 위의 배",
+      "sentences": [
+        [
+          "{name} and Mina opened a map.",
+          "{koName}와 미나는 지도를 펼쳤어요."
+        ],
+        [
+          "They saw a little boat in the picture.",
+          "두 사람은 그림에서 작은 배를 보았어요."
+        ],
+        [
+          "\"Can you help me find it?\" asked Mina.",
+          "미나가 \"그걸 찾는 걸 도와줄래?\"라고 물었어요."
+        ],
+        [
+          "{name} pointed to the boat.",
+          "{koName}는 배를 가리켰어요."
+        ],
+        [
+          "Mina put a flower beside the map.",
+          "미나는 지도 옆에 꽃을 놓았어요."
+        ]
+      ],
+      "verified": false,
+      "status": "표현·한영 대응 점검 후 수정 / 세 원본 앱 외 어휘의 완전 배제는 미확인",
+      "source": {
+        "source_books": "사용자 제공 일빵빵 1권·단어복습·문법 DAY별 자료 및 현재 정규 이야기",
+        "day": 14,
+        "type": "DAY별 원문 어휘·문형 활용 신규 복습 이야기 (원문 직접 인용 아님)"
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true,
+      "revision": "v34"
+    },
+    {
+      "id": "b1d15",
+      "book": 1,
+      "day": 15,
+      "title": "The Little Cap",
+      "titleKo": "작은 모자",
+      "sentences": [
+        [
+          "Mina found a little cap in her bag.",
+          "미나는 가방에서 작은 모자를 찾았어요."
+        ],
+        [
+          "{name} saw the cap beside a mirror.",
+          "{koName}는 거울 옆에 놓인 모자를 보았어요."
+        ],
+        [
+          "\"I saw it in your bag!\" said {name}.",
+          "{koName}가 \"네 가방에서 봤어!\"라고 말했어요."
+        ],
+        [
+          "Mina put the cap on her head.",
+          "미나는 모자를 머리에 썼어요."
+        ],
+        [
+          "They looked in the mirror and smiled.",
+          "두 사람은 거울을 보고 웃었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "표현·한영 대응 점검 후 수정 / 세 원본 앱 외 어휘의 완전 배제는 미확인",
+      "source": {
+        "source_books": "사용자 제공 일빵빵 1권·단어복습·문법 DAY별 자료 및 현재 정규 이야기",
+        "day": 15,
+        "type": "DAY별 원문 어휘·문형 활용 신규 복습 이야기 (원문 직접 인용 아님)"
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true,
+      "revision": "v34"
+    },
+    {
+      "id": "b1d16",
+      "book": 1,
+      "day": 16,
+      "title": "A Stone for the Plant",
+      "titleKo": "식물 옆의 돌",
+      "sentences": [
+        [
+          "{name} and Mina went outside after class.",
+          "{koName}와 미나는 수업 후 밖으로 나갔어요."
+        ],
+        [
+          "They saw a plant beside the door.",
+          "두 사람은 문 옆에 있는 식물을 보았어요."
+        ],
+        [
+          "Mina pointed to a little stone.",
+          "미나는 작은 돌을 가리켰어요."
+        ],
+        [
+          "{name} found a little stone and put it beside the plant.",
+          "{koName}는 작은 돌을 찾아 식물 옆에 놓았어요."
+        ],
+        [
+          "They saw the moon and went home.",
+          "두 사람은 달을 보고 집에 갔어요."
+        ]
+      ],
+      "verified": false,
+      "status": "표현·한영 대응 점검 후 수정 / 세 원본 앱 외 어휘의 완전 배제는 미확인",
+      "source": {
+        "source_books": "사용자 제공 일빵빵 1권·단어복습·문법 DAY별 자료 및 현재 정규 이야기",
+        "day": 16,
+        "type": "DAY별 원문 어휘·문형 활용 신규 복습 이야기 (원문 직접 인용 아님)"
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true,
+      "revision": "v34"
+    },
+    {
+      "id": "b1d17",
+      "book": 1,
+      "day": 17,
+      "title": "A Picture for Mina",
+      "titleKo": "미나를 위한 그림",
+      "sentences": [
+        [
+          "{name} made a sketch after class.",
+          "{koName}는 수업 후 스케치를 했어요."
+        ],
+        [
+          "Mina saw the bright colors in the picture.",
+          "미나는 그림의 밝은 색들을 보았어요."
+        ],
+        [
+          "\"Did you draw this?\" asked Mina.",
+          "미나가 \"네가 이걸 그렸니?\"라고 물었어요."
+        ],
+        [
+          "\"Yes, this is my picture,\" said {name}.",
+          "{koName}는 \"응, 이건 내 그림이야.\"라고 말했어요."
+        ],
+        [
+          "They took the picture to the art museum.",
+          "두 사람은 그림을 미술관으로 가져갔어요."
+        ]
+      ],
+      "verified": false,
+      "status": "5문장 연결 이야기로 재작성 / 원문 학습 범위 확인 / 출판 전 교육적 재검토 권장",
+      "source": {
+        "source_books": "사용자 제공 일빵빵 1권·단어복습·문법 DAY별 자료 및 현재 정규 이야기",
+        "day": 17,
+        "type": "DAY별 원문 어휘·문형 활용 신규 복습 이야기 (원문 직접 인용 아님)"
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true,
+      "revision": "v33"
+    },
+    {
+      "id": "b1d18",
+      "book": 1,
+      "day": 18,
+      "title": "The Ticket at the Station",
+      "titleKo": "역에서 찾은 표",
+      "sentences": [
+        [
+          "Mina had a ticket for the theater.",
+          "미나는 극장 표를 가지고 있었어요."
+        ],
+        [
+          "{name} met Mina at the station.",
+          "{koName}는 역에서 미나를 만났어요."
+        ],
+        [
+          "\"Did you bring the ticket?\" asked {name}.",
+          "{koName}가 \"표를 가져왔니?\"라고 물었어요."
+        ],
+        [
+          "Mina took the ticket from her bag.",
+          "미나는 가방에서 표를 꺼냈어요."
+        ],
+        [
+          "They smiled and went to the theater.",
+          "두 사람은 웃으며 극장에 갔어요."
+        ]
+      ],
+      "verified": false,
+      "status": "5문장 연결 이야기로 재작성 / 원문 학습 범위 확인 / 출판 전 교육적 재검토 권장",
+      "source": {
+        "source_books": "사용자 제공 일빵빵 1권·단어복습·문법 DAY별 자료 및 현재 정규 이야기",
+        "day": 18,
+        "type": "DAY별 원문 어휘·문형 활용 신규 복습 이야기 (원문 직접 인용 아님)"
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true,
+      "revision": "v33"
+    },
+    {
+      "id": "b1d19",
+      "book": 1,
+      "day": 19,
+      "title": "The Gift and the Note",
+      "titleKo": "선물과 쪽지",
+      "sentences": [
+        [
+          "Mina saw {name} after class.",
+          "미나는 수업 후 {koName}를 보았어요."
+        ],
+        [
+          "{name} had a little gift in a bag.",
+          "{koName}는 가방에 작은 선물을 가지고 있었어요."
+        ],
+        [
+          "\"This is for you,\" said {name}.",
+          "{koName}가 \"이건 너를 위한 거야.\"라고 말했어요."
+        ],
+        [
+          "Mina opened the gift and found a note.",
+          "미나는 선물을 열고 쪽지를 발견했어요."
+        ],
+        [
+          "They read the note and smiled.",
+          "두 사람은 쪽지를 읽고 웃었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "표현·한영 대응 점검 후 수정 / 세 원본 앱 외 어휘의 완전 배제는 미확인",
+      "source": {
+        "source_books": "사용자 제공 일빵빵 1권·단어복습·문법 DAY별 자료 및 현재 정규 이야기",
+        "day": 19,
+        "type": "DAY별 원문 어휘·문형 활용 신규 복습 이야기 (원문 직접 인용 아님)"
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true,
+      "revision": "v34"
+    },
+    {
+      "id": "b1d20",
+      "book": 1,
+      "day": 20,
+      "title": "The Bat After the Game",
+      "titleKo": "경기 후의 방망이",
+      "sentences": [
+        [
+          "Mina had a baseball game after class.",
+          "미나는 수업 후 야구 경기가 있었어요."
+        ],
+        [
+          "{name} came to watch her play.",
+          "{koName}는 미나의 경기를 보러 왔어요."
+        ],
+        [
+          "\"I am hungry,\" said Mina.",
+          "미나가 \"나 배고파.\"라고 말했어요."
+        ],
+        [
+          "{name} gave Mina a little snack.",
+          "{koName}는 미나에게 작은 간식을 주었어요."
+        ],
+        [
+          "Mina took her bat and smiled.",
+          "미나는 방망이를 집어 들고 웃었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "표현·한영 대응 점검 후 수정 / 세 원본 앱 외 어휘의 완전 배제는 미확인",
+      "source": {
+        "source_books": "사용자 제공 일빵빵 1권·단어복습·문법 DAY별 자료 및 현재 정규 이야기",
+        "day": 20,
+        "type": "DAY별 원문 어휘·문형 활용 신규 복습 이야기 (원문 직접 인용 아님)"
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true,
+      "revision": "v34"
+    },
+    {
+      "id": "b1d21",
+      "book": 1,
+      "day": 21,
+      "title": "The Little Robot",
+      "titleKo": "작은 로봇",
+      "sentences": [
+        [
+          "{name} brought a little robot to class.",
+          "{koName}는 교실에 작은 로봇을 가져왔어요."
+        ],
+        [
+          "Mina opened her computer on the desk.",
+          "미나는 책상 위에서 컴퓨터를 열었어요."
+        ],
+        [
+          "\"Could you help me?\" asked Mina.",
+          "미나가 \"나를 도와줄 수 있니?\"라고 물었어요."
+        ],
+        [
+          "{name} put the robot beside the computer.",
+          "{koName}는 로봇을 컴퓨터 옆에 놓았어요."
+        ],
+        [
+          "They looked at the robot together and smiled.",
+          "두 사람은 함께 로봇을 보며 웃었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "5문장 연결 이야기로 재작성 / 원문 학습 범위 확인 / 출판 전 교육적 재검토 권장",
+      "source": {
+        "source_books": "사용자 제공 일빵빵 1권·단어복습·문법 DAY별 자료 및 현재 정규 이야기",
+        "day": 21,
+        "type": "DAY별 원문 어휘·문형 활용 신규 복습 이야기 (원문 직접 인용 아님)"
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true,
+      "revision": "v33"
+    },
+    {
+      "id": "b1d22",
+      "book": 1,
+      "day": 22,
+      "title": "A Book from the Store",
+      "titleKo": "가게에서 산 책",
+      "sentences": [
+        [
+          "{name} met Mina at the store.",
+          "{koName}는 가게에서 미나를 만났어요."
+        ],
+        [
+          "Mina found a book she liked.",
+          "미나는 마음에 드는 책을 찾았어요."
+        ],
+        [
+          "\"I like that book,\" said {name}.",
+          "{koName}가 \"그 책이 마음에 들어.\"라고 말했어요."
+        ],
+        [
+          "Mina bought the book, and {name} got a ticket.",
+          "미나는 책을 샀고 {koName}는 표를 받았어요."
+        ],
+        [
+          "They went home together.",
+          "두 사람은 함께 집에 갔어요."
+        ]
+      ],
+      "verified": false,
+      "status": "표현·한영 대응 점검 후 수정 / 세 원본 앱 외 어휘의 완전 배제는 미확인",
+      "source": {
+        "source_books": "사용자 제공 일빵빵 1권·단어복습·문법 DAY별 자료 및 현재 정규 이야기",
+        "day": 22,
+        "type": "DAY별 원문 어휘·문형 활용 신규 복습 이야기 (원문 직접 인용 아님)"
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true,
+      "revision": "v34"
+    },
+    {
+      "id": "b1d23",
+      "book": 1,
+      "day": 23,
+      "title": "The Book in the Bag",
+      "titleKo": "가방 속 책",
+      "sentences": [
+        [
+          "Mina saw a book on the desk.",
+          "미나는 책상 위의 책을 보았어요."
+        ],
+        [
+          "{name} put the book in a bag.",
+          "{koName}는 책을 가방에 넣었어요."
+        ],
+        [
+          "\"I won’t leave it here,\" said {name}.",
+          "{koName}가 \"이 책을 여기 두고 가지 않을 거야.\"라고 말했어요."
+        ],
+        [
+          "Mina opened the door for {name}.",
+          "미나는 {koName}를 위해 문을 열었어요."
+        ],
+        [
+          "They took the book to the library.",
+          "두 사람은 그 책을 도서관으로 가져갔어요."
+        ]
+      ],
+      "verified": false,
+      "status": "5문장 연결 이야기로 재작성 / 원문 학습 범위 확인 / 출판 전 교육적 재검토 권장",
+      "source": {
+        "source_books": "사용자 제공 일빵빵 1권·단어복습·문법 DAY별 자료 및 현재 정규 이야기",
+        "day": 23,
+        "type": "DAY별 원문 어휘·문형 활용 신규 복습 이야기 (원문 직접 인용 아님)"
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true,
+      "revision": "v33"
+    },
+    {
+      "id": "b1d24",
+      "book": 1,
+      "day": 24,
+      "title": "The Flower and the Card",
+      "titleKo": "꽃과 카드",
+      "sentences": [
+        [
+          "Mina found a flower after class.",
+          "미나는 수업 후 꽃 한 송이를 찾았어요."
+        ],
+        [
+          "{name} saw a gift inside the bag.",
+          "{koName}는 가방 안에 있는 선물을 보았어요."
+        ],
+        [
+          "\"Would you help me?\" asked Mina.",
+          "미나가 \"나를 도와줄래?\"라고 물었어요."
+        ],
+        [
+          "{name} took the gift and put it on the desk.",
+          "{koName}는 선물을 집어 책상 위에 놓았어요."
+        ],
+        [
+          "They put a little card beside the flower.",
+          "두 사람은 꽃 옆에 작은 카드를 놓았어요."
+        ]
+      ],
+      "verified": false,
+      "status": "5문장 연결 이야기로 재작성 / 원문 학습 범위 확인 / 출판 전 교육적 재검토 권장",
+      "source": {
+        "source_books": "사용자 제공 일빵빵 1권·단어복습·문법 DAY별 자료 및 현재 정규 이야기",
+        "day": 24,
+        "type": "DAY별 원문 어휘·문형 활용 신규 복습 이야기 (원문 직접 인용 아님)"
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true,
+      "revision": "v33"
+    },
+    {
+      "id": "b1d25",
+      "book": 1,
+      "day": 25,
+      "title": "A Visit from the Doctor",
+      "titleKo": "학교에 온 의사 선생님",
+      "sentences": [
+        [
+          "Mina met a doctor at school.",
+          "미나는 학교에서 의사를 만났어요."
+        ],
+        [
+          "{name} had a little bag with a book.",
+          "{koName}는 책이 들어 있는 작은 가방을 가지고 있었어요."
+        ],
+        [
+          "\"Please sit here,\" said the doctor.",
+          "의사가 \"여기에 앉으세요.\"라고 말했어요."
+        ],
+        [
+          "Mina sat beside {name}.",
+          "미나는 {koName} 옆에 앉았어요."
+        ],
+        [
+          "They opened the book together.",
+          "두 사람은 함께 책을 펼쳤어요."
+        ]
+      ],
+      "verified": false,
+      "status": "표현·한영 대응 점검 후 수정 / 세 원본 앱 외 어휘의 완전 배제는 미확인",
+      "source": {
+        "source_books": "사용자 제공 일빵빵 1권·단어복습·문법 DAY별 자료 및 현재 정규 이야기",
+        "day": 25,
+        "type": "DAY별 원문 어휘·문형 활용 신규 복습 이야기 (원문 직접 인용 아님)"
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true,
+      "revision": "v34"
+    },
+    {
+      "id": "b1d26",
+      "book": 1,
+      "day": 26,
+      "title": "Homework Together",
+      "titleKo": "함께 하는 숙제",
+      "sentences": [
+        [
+          "{name} had homework after class.",
+          "{koName}는 수업 후 숙제가 있었어요."
+        ],
+        [
+          "Mina saw a little note beside the book.",
+          "미나는 책 옆의 작은 쪽지를 보았어요."
+        ],
+        [
+          "\"You should read this,\" said {name}.",
+          "{koName}가 \"이걸 읽어 보는 게 좋겠어.\"라고 말했어요."
+        ],
+        [
+          "Mina read the note and opened the book.",
+          "미나는 쪽지를 읽고 책을 펼쳤어요."
+        ],
+        [
+          "They checked the homework together.",
+          "두 사람은 함께 숙제를 확인했어요."
+        ]
+      ],
+      "verified": false,
+      "status": "5문장 연결 이야기로 재작성 / 원문 학습 범위 확인 / 출판 전 교육적 재검토 권장",
+      "source": {
+        "source_books": "사용자 제공 일빵빵 1권·단어복습·문법 DAY별 자료 및 현재 정규 이야기",
+        "day": 26,
+        "type": "DAY별 원문 어휘·문형 활용 신규 복습 이야기 (원문 직접 인용 아님)"
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true,
+      "revision": "v33"
+    },
+    {
+      "id": "b1d27",
+      "book": 1,
+      "day": 27,
+      "title": "The Ticket and the Camera",
+      "titleKo": "표와 카메라",
+      "sentences": [
+        [
+          "Mina met {name} at the station.",
+          "미나는 역에서 {koName}를 만났어요."
+        ],
+        [
+          "Mina had a ticket in her hand.",
+          "미나는 손에 표를 들고 있었어요."
+        ],
+        [
+          "\"Can you take a picture?\" asked Mina.",
+          "미나가 \"사진 찍어 줄래?\"라고 물었어요."
+        ],
+        [
+          "{name} took a picture of Mina and the ticket.",
+          "{koName}는 미나와 표의 사진을 찍었어요."
+        ],
+        [
+          "Then they got on the bus together.",
+          "그런 다음 두 사람은 함께 버스에 탔어요."
+        ]
+      ],
+      "verified": false,
+      "status": "표현·한영 대응 점검 후 수정 / 세 원본 앱 외 어휘의 완전 배제는 미확인",
+      "source": {
+        "source_books": "사용자 제공 일빵빵 1권·단어복습·문법 DAY별 자료 및 현재 정규 이야기",
+        "day": 27,
+        "type": "DAY별 원문 어휘·문형 활용 신규 복습 이야기 (원문 직접 인용 아님)"
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true,
+      "revision": "v34"
+    },
+    {
+      "id": "b1d28",
+      "book": 1,
+      "day": 28,
+      "title": "The Book for Class",
+      "titleKo": "수업에 필요한 책",
+      "sentences": [
+        [
+          "{name} got ready for class.",
+          "{koName}는 수업 준비를 했어요."
+        ],
+        [
+          "Mina had a book in her bag.",
+          "미나는 가방에 책을 가지고 있었어요."
+        ],
+        [
+          "\"You don’t have to get another book,\" said Mina.",
+          "미나가 \"다른 책을 가져올 필요 없어.\"라고 말했어요."
+        ],
+        [
+          "Mina gave the book to {name}.",
+          "미나는 {koName}에게 책을 주었어요."
+        ],
+        [
+          "They read the book together after class.",
+          "두 사람은 수업 후 함께 책을 읽었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "5문장 연결 이야기로 재작성 / 원문 학습 범위 확인 / 출판 전 교육적 재검토 권장",
+      "source": {
+        "source_books": "사용자 제공 일빵빵 1권·단어복습·문법 DAY별 자료 및 현재 정규 이야기",
+        "day": 28,
+        "type": "DAY별 원문 어휘·문형 활용 신규 복습 이야기 (원문 직접 인용 아님)"
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true,
+      "revision": "v33"
+    },
+    {
+      "id": "b1d29",
+      "book": 1,
+      "day": 29,
+      "title": "The Picnic Map",
+      "titleKo": "소풍 지도",
+      "sentences": [
+        [
+          "Mina and {name} made a picnic plan.",
+          "미나와 {koName}는 소풍 계획을 세웠어요."
+        ],
+        [
+          "Mina made a list, and {name} got a map.",
+          "미나는 목록을 만들었고 {koName}는 지도를 가져왔어요."
+        ],
+        [
+          "\"Do we need to take a bag?\" asked Mina.",
+          "미나가 \"가방을 가져가야 할까?\"라고 물었어요."
+        ],
+        [
+          "{name} put the map in the bag.",
+          "{koName}는 지도를 가방에 넣었어요."
+        ],
+        [
+          "They smiled and went to the park.",
+          "두 사람은 웃으며 공원으로 갔어요."
+        ]
+      ],
+      "verified": false,
+      "status": "5문장 연결 이야기로 재작성 / 원문 학습 범위 확인 / 출판 전 교육적 재검토 권장",
+      "source": {
+        "source_books": "사용자 제공 일빵빵 1권·단어복습·문법 DAY별 자료 및 현재 정규 이야기",
+        "day": 29,
+        "type": "DAY별 원문 어휘·문형 활용 신규 복습 이야기 (원문 직접 인용 아님)"
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true,
+      "revision": "v33"
+    },
+    {
+      "id": "b1d30",
+      "book": 1,
+      "day": 30,
+      "title": "The Cake on the Table",
+      "titleKo": "탁자 위의 케이크",
+      "sentences": [
+        [
+          "The sky was dark after class.",
+          "수업이 끝난 후 하늘이 어두웠어요."
+        ],
+        [
+          "{name} and Mina stayed inside.",
+          "{koName}와 미나는 실내에 있었어요."
+        ],
+        [
+          "\"We might have rain,\" said Mina.",
+          "미나가 \"비가 올지도 몰라.\"라고 말했어요."
+        ],
+        [
+          "{name} made room for a cake on the table.",
+          "{koName}는 탁자 위에 케이크를 놓을 자리를 만들었어요."
+        ],
+        [
+          "They gave the teacher a note and smiled.",
+          "두 사람은 선생님께 쪽지를 드리고 웃었어요."
+        ]
+      ],
+      "verified": false,
+      "status": "5문장 연결 이야기로 재작성 / 원문 학습 범위 확인 / 출판 전 교육적 재검토 권장",
+      "source": {
+        "source_books": "사용자 제공 일빵빵 1권·단어복습·문법 DAY별 자료 및 현재 정규 이야기",
+        "day": 30,
+        "type": "DAY별 원문 어휘·문형 활용 신규 복습 이야기 (원문 직접 인용 아님)"
+      },
+      "unlock": "해당 DAY 완료 후 다음 학습일부터 추천",
+      "releaseForTest": true,
+      "revision": "v33"
+    }
+  ]
+}
