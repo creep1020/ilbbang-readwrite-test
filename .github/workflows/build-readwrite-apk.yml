@@ -56,7 +56,7 @@ jobs:
           <manifest xmlns:android="http://schemas.android.com/apk/res/android">
             <uses-permission android:name="android.permission.INTERNET" />
             <uses-permission android:name="android.permission.RECORD_AUDIO" />
-            <application android:label="영어 읽기·쓰기 음성시험" android:icon="@drawable/app_icon" android:usesCleartextTraffic="false" android:theme="@android:style/Theme.Material.Light.NoActionBar">
+            <application android:label="읽기·쓰기" android:icon="@drawable/app_icon" android:usesCleartextTraffic="false" android:theme="@android:style/Theme.Material.Light.NoActionBar">
               <activity android:name=".MainActivity" android:exported="true" android:screenOrientation="unspecified">
                 <intent-filter>
                   <action android:name="android.intent.action.MAIN" />
