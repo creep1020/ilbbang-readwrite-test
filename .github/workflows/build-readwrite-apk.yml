@@ -1,4 +1,4 @@
-name: Build English ReadWrite APK
+name: Build English ReadWrite Voice Fix APK
 on:
   workflow_dispatch:
 permissions:
@@ -43,11 +43,11 @@ jobs:
             namespace 'com.creep1020.readwrite'
             compileSdk 35
             defaultConfig {
-              applicationId 'com.creep1020.readwrite'
+              applicationId 'com.creep1020.readwrite.voicefix'
               minSdk 26
               targetSdk 34
-              versionCode 1
-              versionName '1.0-apk-test'
+              versionCode 2
+              versionName '1.1-voicefix-test'
             }
             compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
           }
@@ -56,7 +56,7 @@ jobs:
           <manifest xmlns:android="http://schemas.android.com/apk/res/android">
             <uses-permission android:name="android.permission.INTERNET" />
             <uses-permission android:name="android.permission.RECORD_AUDIO" />
-            <application android:label="영어 읽기·쓰기" android:icon="@drawable/app_icon" android:usesCleartextTraffic="false" android:theme="@android:style/Theme.Material.Light.NoActionBar">
+            <application android:label="영어 읽기·쓰기 음성시험" android:icon="@drawable/app_icon" android:usesCleartextTraffic="false" android:theme="@android:style/Theme.Material.Light.NoActionBar">
               <activity android:name=".MainActivity" android:exported="true" android:screenOrientation="unspecified">
                 <intent-filter>
                   <action android:name="android.intent.action.MAIN" />
@@ -68,13 +68,20 @@ jobs:
           XML
           cat > apkapp/src/main/java/com/creep1020/readwrite/MainActivity.java <<'JAVA'
           package com.creep1020.readwrite;
-
+          
           import android.Manifest;
           import android.app.Activity;
           import android.content.Intent;
           import android.content.pm.PackageManager;
+          import android.media.MediaRecorder;
           import android.net.Uri;
           import android.os.Bundle;
+          import android.os.Handler;
+          import android.os.Looper;
+          import android.speech.tts.TextToSpeech;
+          import android.speech.tts.UtteranceProgressListener;
+          import android.util.Base64;
+          import android.webkit.JavascriptInterface;
           import android.webkit.PermissionRequest;
           import android.webkit.ValueCallback;
           import android.webkit.WebChromeClient;
@@ -83,108 +90,164 @@ jobs:
           import android.webkit.WebView;
           import android.webkit.WebViewClient;
           import android.widget.Toast;
-
+          import org.json.JSONObject;
+          import java.io.File;
+          import java.nio.file.Files;
+          import java.util.Locale;
+          import java.util.HashMap;
+          
           public class MainActivity extends Activity {
               private static final String HOME = "https://creep1020.github.io/ilbbang-readwrite-test/";
-              private static final int MIC_REQUEST = 1001;
-              private static final int FILE_REQUEST = 1002;
+              private static final int MIC_REQUEST = 1001, FILE_REQUEST = 1002;
               private WebView web;
               private PermissionRequest pendingAudioRequest;
               private ValueCallback<Uri[]> fileCallback;
-
-              @Override public void onCreate(Bundle savedInstanceState) {
-                  super.onCreate(savedInstanceState);
-                  web = new WebView(this);
-                  setContentView(web);
-                  WebSettings s = web.getSettings();
-                  s.setJavaScriptEnabled(true);
-                  s.setDomStorageEnabled(true);
-                  s.setMediaPlaybackRequiresUserGesture(false);
-                  s.setAllowFileAccess(false);
-                  s.setAllowContentAccess(true);
-                  s.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
-                  s.setCacheMode(WebSettings.LOAD_DEFAULT);
-                  web.setWebViewClient(new WebViewClient() {
-                      @Override public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                          Uri u = request.getUrl();
-                          // Keep the learning app inside the APK; open unrelated URLs outside.
-                          if ("https".equals(u.getScheme()) && "creep1020.github.io".equals(u.getHost())
-                              && u.getPath() != null && u.getPath().startsWith("/ilbbang-readwrite-test/")) return false;
-                          try { startActivity(new Intent(Intent.ACTION_VIEW, u)); }
-                          catch (Exception e) { Toast.makeText(MainActivity.this, "링크를 열 수 없어요.", Toast.LENGTH_SHORT).show(); }
-                          return true;
-                      }
-                  });
-                  web.setWebChromeClient(new WebChromeClient() {
-                      @Override public void onPermissionRequest(PermissionRequest request) {
-                          runOnUiThread(() -> {
-                              Uri origin = request.getOrigin();
-                              boolean trusted = "https".equals(origin.getScheme())
-                                  && "creep1020.github.io".equals(origin.getHost())
-                                  ;
-                              boolean wantsAudio = false;
-                              for (String resource : request.getResources()) {
-                                  if (PermissionRequest.RESOURCE_AUDIO_CAPTURE.equals(resource)) wantsAudio = true;
-                              }
-                              if (!trusted || !wantsAudio) { request.deny(); return; }
-                              if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
-                                  request.grant(new String[]{PermissionRequest.RESOURCE_AUDIO_CAPTURE});
-                              } else {
-                                  pendingAudioRequest = request;
-                                  requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, MIC_REQUEST);
-                              }
-                          });
-                      }
-                      @Override public void onPermissionRequestCanceled(PermissionRequest request) {
-                          if (pendingAudioRequest == request) pendingAudioRequest = null;
-                      }
-                      @Override public boolean onShowFileChooser(WebView view, ValueCallback<Uri[]> callback, FileChooserParams params) {
-                          if (fileCallback != null) fileCallback.onReceiveValue(null);
-                          fileCallback = callback;
-                          try {
-                              Intent intent = params.createIntent();
-                              startActivityForResult(intent, FILE_REQUEST);
-                              return true;
-                          } catch (Exception e) {
-                              fileCallback = null;
-                              callback.onReceiveValue(null);
-                              return false;
-                          }
-                      }
-                  });
-                  if (savedInstanceState == null) web.loadUrl(HOME);
-                  else web.restoreState(savedInstanceState);
-              }
-
-              @Override public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-                  super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-                  if (requestCode == MIC_REQUEST && pendingAudioRequest != null) {
-                      PermissionRequest req = pendingAudioRequest;
-                      pendingAudioRequest = null;
-                      if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                          req.grant(new String[]{PermissionRequest.RESOURCE_AUDIO_CAPTURE});
-                      else req.deny();
+              private final Handler main = new Handler(Looper.getMainLooper());
+              private TextToSpeech tts;
+              private boolean ttsReady = false;
+              private MediaRecorder recorder;
+              private File recordingFile;
+              private String recordingId;
+              private String pendingRecordId;
+              private final String shim = "(function(){" +
+                "if(window.__rwAndroidVoiceShim)return;window.__rwAndroidVoiceShim=true;" +
+                "var bridge=window.IlbbangAndroid;var voices={},serial=0,recorders={};" +
+                "window.__rwNativeSpeechDone=function(id,ok){var u=voices[id];delete voices[id];if(u){var e={type:ok?'end':'error'};try{if(ok&&u.onend)u.onend(e);if(!ok&&u.onerror)u.onerror(e);}catch(_){}}};" +
+                "window.SpeechSynthesisUtterance=function(t){this.text=String(t||'');this.rate=0.85;this.lang='en-US';this.pitch=1;this.volume=1;this.onend=null;this.onerror=null;};" +
+                "var syn={speak:function(u){var id='tts'+(++serial);voices[id]=u;bridge.speakUtterance(id,u.text,Number(u.rate)||0.85);},cancel:function(){voices={};bridge.stopSpeaking();},getVoices:function(){return [];},pause:function(){},resume:function(){}};" +
+                "try{Object.defineProperty(window,'speechSynthesis',{value:syn,configurable:true});}catch(_){try{window.speechSynthesis=syn;}catch(__){}}" +
+                "var devices=window.navigator.mediaDevices||{};devices.getUserMedia=function(c){if(!c||!c.audio)return Promise.reject(Error('audio required'));return Promise.resolve({getTracks:function(){return[{stop:function(){}}]}});};" +
+                "try{Object.defineProperty(navigator,'mediaDevices',{value:devices,configurable:true});}catch(_){try{navigator.mediaDevices=devices;}catch(__){}}" +
+                "window.__rwNativeAudioResult=function(id,b64,err){var r=recorders[id];if(!r)return;delete recorders[id];r.state='inactive';if(err){if(r.onerror)r.onerror({error:new Error(err)});}else{try{var bin=atob(b64),arr=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);var blob=new Blob([arr],{type:'audio/mp4'});if(r.ondataavailable)r.ondataavailable({data:blob});}catch(e){if(r.onerror)r.onerror({error:e});}}if(r.onstop)r.onstop();};" +
+                "window.MediaRecorder=function(s,opts){this.stream=s;this.mimeType='audio/mp4';this.state='inactive';this.id='rec'+(++serial);this.ondataavailable=null;this.onstop=null;this.onerror=null;};" +
+                "window.MediaRecorder.isTypeSupported=function(t){return t==='audio/mp4';};" +
+                "window.MediaRecorder.prototype.start=function(){if(this.state!=='inactive')throw Error('already recording');this.state='recording';recorders[this.id]=this;bridge.startAudioCapture(this.id);};" +
+                "window.MediaRecorder.prototype.stop=function(){if(this.state!=='recording')throw Error('not recording');this.state='stopping';bridge.stopAudioCapture(this.id);};" +
+                "window.MediaRecorder.prototype.pause=function(){};window.MediaRecorder.prototype.resume=function(){};" +
+                "})();";
+          
+              private void js(String source) { if (web != null) web.evaluateJavascript(source, null); }
+              private static String q(String value) { return JSONObject.quote(value == null ? "" : value); }
+          
+              @Override public void onCreate(Bundle state) {
+                super.onCreate(state);
+                tts = new TextToSpeech(this, code -> {
+                  if(code == TextToSpeech.SUCCESS && tts != null) {
+                    int res=tts.setLanguage(Locale.US);
+                    ttsReady=res!=TextToSpeech.LANG_MISSING_DATA && res!=TextToSpeech.LANG_NOT_SUPPORTED;
+                    tts.setOnUtteranceProgressListener(new UtteranceProgressListener(){
+                      @Override public void onStart(String id){}
+                      @Override public void onDone(String id){ main.post(()->js("window.__rwNativeSpeechDone&&window.__rwNativeSpeechDone("+q(id)+",true)")); }
+                      @Override public void onError(String id){ main.post(()->js("window.__rwNativeSpeechDone&&window.__rwNativeSpeechDone("+q(id)+",false)")); }
+                    });
                   }
-              }
-
-              @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-                  super.onActivityResult(requestCode, resultCode, data);
-                  if (requestCode == FILE_REQUEST && fileCallback != null) {
-                      fileCallback.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(resultCode, data));
-                      fileCallback = null;
+                });
+                web=new WebView(this);
+                setContentView(web);
+                WebSettings s=web.getSettings();
+                s.setJavaScriptEnabled(true);s.setDomStorageEnabled(true);
+                s.setMediaPlaybackRequiresUserGesture(false);
+                s.setAllowFileAccess(false);s.setAllowContentAccess(true);
+                s.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
+                s.setCacheMode(WebSettings.LOAD_NO_CACHE);
+                web.addJavascriptInterface(new Bridge(),"IlbbangAndroid");
+                web.setWebViewClient(new WebViewClient(){
+                  @Override public void onPageFinished(WebView v,String url){
+                    if(url!=null && url.startsWith(HOME))js(shim);
                   }
+                  @Override public boolean shouldOverrideUrlLoading(WebView v,WebResourceRequest r){
+                    Uri u=r.getUrl();
+                    if("https".equals(u.getScheme()) && "creep1020.github.io".equals(u.getHost()) && u.getPath()!=null && u.getPath().startsWith("/ilbbang-readwrite-test/")) return false;
+                    try{startActivity(new Intent(Intent.ACTION_VIEW,u));}catch(Exception e){Toast.makeText(MainActivity.this,"링크를 열 수 없어요",Toast.LENGTH_SHORT).show();}
+                    return true;
+                  }
+                });
+                web.setWebChromeClient(new WebChromeClient(){
+                  @Override public void onPermissionRequest(PermissionRequest req){
+                    runOnUiThread(()->{
+                      Uri origin=req.getOrigin();boolean good="https".equals(origin.getScheme())&&"creep1020.github.io".equals(origin.getHost());
+                      boolean audio=false;for(String v:req.getResources())if(PermissionRequest.RESOURCE_AUDIO_CAPTURE.equals(v))audio=true;
+                      if(!good||!audio){req.deny();return;}
+                      if(checkSelfPermission(Manifest.permission.RECORD_AUDIO)==PackageManager.PERMISSION_GRANTED)req.grant(new String[]{PermissionRequest.RESOURCE_AUDIO_CAPTURE});
+                      else{pendingAudioRequest=req;requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO},MIC_REQUEST);}
+                    });
+                  }
+                  @Override public void onPermissionRequestCanceled(PermissionRequest r){if(pendingAudioRequest==r)pendingAudioRequest=null;}
+                  @Override public boolean onShowFileChooser(WebView v,ValueCallback<Uri[]> callback,FileChooserParams params){
+                    if(fileCallback!=null)fileCallback.onReceiveValue(null);fileCallback=callback;
+                    try{startActivityForResult(params.createIntent(),FILE_REQUEST);return true;}
+                    catch(Exception e){fileCallback=null;callback.onReceiveValue(null);return false;}
+                  }
+                });
+                if(state==null)web.loadUrl(HOME);else web.restoreState(state);
               }
-              @Override public void onBackPressed() {
-                  if (web != null && web.canGoBack()) web.goBack(); else super.onBackPressed();
+          
+              private class Bridge {
+                @JavascriptInterface public boolean canSpeakEnglish(){return ttsReady;}
+                @JavascriptInterface public void speak(String text,float rate){main.post(()->say("direct",text,rate));}
+                @JavascriptInterface public void speakUtterance(String id,String text,double rate){main.post(()->say(id,text,(float)rate));}
+                @JavascriptInterface public void stopSpeaking(){main.post(()->{if(tts!=null)tts.stop();});}
+                @JavascriptInterface public void startAudioCapture(String id){main.post(()->{
+                  if(recorder!=null){audioResult(id,"","이미 녹음 중입니다.");return;}
+                  if(checkSelfPermission(Manifest.permission.RECORD_AUDIO)!=PackageManager.PERMISSION_GRANTED){pendingRecordId=id;requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO},MIC_REQUEST);return;}
+                  beginRecording(id);
+                });}
+                @JavascriptInterface public void stopAudioCapture(String id){main.post(()->finishRecording(id));}
               }
-              @Override protected void onSaveInstanceState(Bundle out) {
-                  if (web != null) web.saveState(out);
-                  super.onSaveInstanceState(out);
+              private void say(String id,String text,float rate){
+                if(tts==null || !ttsReady){js("window.__rwNativeSpeechDone&&window.__rwNativeSpeechDone("+q(id)+",false)");Toast.makeText(this,"설정에서 영어 TTS 음성 데이터를 설치해 주세요.",Toast.LENGTH_LONG).show();return;}
+                tts.setSpeechRate(Math.max(0.4f,Math.min(1.4f,rate)));
+                if(tts.speak(text,TextToSpeech.QUEUE_FLUSH,null,id)!=TextToSpeech.SUCCESS)
+                  js("window.__rwNativeSpeechDone&&window.__rwNativeSpeechDone("+q(id)+",false)");
               }
-              @Override protected void onDestroy() {
-                  if (pendingAudioRequest != null) { pendingAudioRequest.deny(); pendingAudioRequest = null; }
-                  if (web != null) { web.destroy(); web = null; }
-                  super.onDestroy();
+              private void beginRecording(String id){
+                try{
+                  recordingFile=File.createTempFile("readwrite-", ".m4a", getCacheDir());
+                  recorder=new MediaRecorder(this);
+                  recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+                  recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+                  recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+                  recorder.setAudioEncodingBitRate(64000);recorder.setAudioSamplingRate(44100);
+                  recorder.setOutputFile(recordingFile.getAbsolutePath());
+                  recorder.prepare();recorder.start();recordingId=id;
+                }catch(Exception e){
+                  if(recorder!=null){recorder.release();recorder=null;}
+                  if(recordingFile!=null){recordingFile.delete();recordingFile=null;}
+                  recordingId=null;audioResult(id,"","녹음 시작 실패: "+e.getMessage());
+                }
+              }
+              private void finishRecording(String id){
+                if(!id.equals(recordingId)||recorder==null){audioResult(id,"","녹음 시작 전이거나 녹음이 준비되지 않았어요.");return;}
+                String error="",audio="";
+                try{recorder.stop();}catch(Exception e){error="녹음 종료 실패: "+e.getMessage();}
+                finally{recorder.release();recorder=null;recordingId=null;}
+                try{if(error.isEmpty()&&recordingFile!=null)audio=Base64.encodeToString(Files.readAllBytes(recordingFile.toPath()),Base64.NO_WRAP);}
+                catch(Exception e){error="녹음 읽기 실패: "+e.getMessage();}
+                if(recordingFile!=null){recordingFile.delete();recordingFile=null;}
+                audioResult(id,audio,error);
+              }
+              private void audioResult(String id,String audio,String err){
+                js("window.__rwNativeAudioResult&&window.__rwNativeAudioResult("+q(id)+","+q(audio)+","+q(err)+")");
+              }
+              @Override public void onRequestPermissionsResult(int code,String[] perms,int[] results){
+                super.onRequestPermissionsResult(code,perms,results);
+                if(code==MIC_REQUEST){
+                  boolean granted=results.length>0&&results[0]==PackageManager.PERMISSION_GRANTED;
+                  if(pendingAudioRequest!=null){PermissionRequest p=pendingAudioRequest;pendingAudioRequest=null;if(granted)p.grant(new String[]{PermissionRequest.RESOURCE_AUDIO_CAPTURE});else p.deny();}
+                  if(pendingRecordId!=null){String id=pendingRecordId;pendingRecordId=null;if(granted)beginRecording(id);else audioResult(id,"","마이크 권한이 필요해요.");}
+                }
+              }
+              @Override protected void onActivityResult(int code,int result,Intent data){
+                super.onActivityResult(code,result,data);
+                if(code==FILE_REQUEST&&fileCallback!=null){fileCallback.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(result,data));fileCallback=null;}
+              }
+              @Override public void onBackPressed(){if(web!=null&&web.canGoBack())web.goBack();else super.onBackPressed();}
+              @Override protected void onSaveInstanceState(Bundle out){if(web!=null)web.saveState(out);super.onSaveInstanceState(out);}
+              @Override protected void onDestroy(){
+                if(recorder!=null){try{recorder.stop();}catch(Exception ignored){}recorder.release();recorder=null;}
+                if(tts!=null){tts.stop();tts.shutdown();}
+                if(web!=null){web.removeJavascriptInterface("IlbbangAndroid");web.destroy();web=null;}
+                super.onDestroy();
               }
           }
           JAVA
@@ -193,6 +256,6 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: English-ReadWrite-APK-test
+          name: English-ReadWrite-VoiceFix-APK-test
           path: apkapp/build/outputs/apk/debug/*.apk
           if-no-files-found: error
