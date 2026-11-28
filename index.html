@@ -310,10 +310,10 @@ if ('serviceWorker' in navigator) {
     <div class="rw-section"><strong>✏️ 영작 5문제</strong><p class="rw-muted">공책에 직접 쓴 뒤 정답 확인 옆의 버튼으로 채점해요. 버튼을 누를 때마다 정답 ↔ 오답으로 바뀌고, 오답은 복습 목록에 저장돼요. 사진 자동채점은 사용하지 않아요.</p><div id="rwWriting"></div></div>
     <div class="rw-section"><strong>🔄 불규칙동사 복습</strong><div class="rw-table-wrap"><table class="rw-verbs" aria-label="불규칙동사 표"><colgroup><col><col><col><col></colgroup><thead><tr><th>원형</th><th>과거형</th><th>과거분사</th><th>뜻</th></tr></thead><tbody id="rwVerbs"></tbody></table></div></div>
     <div class="rw-section"><strong>✨ 오늘의 새 표현</strong><div id="rwVocab"></div></div>
-    <div class="rw-section"><strong>⭐ 학습 완료</strong><p class="rw-muted">9문장은 모두 미리 읽을 수 있고, 녹음을 모두 마친 후에만 오늘 학습 완료 버튼을 누를 수 있어요. 읽기·쓰기 기록과 녹음은 이 기기에 저장돼요. 기존 일빵빵 학습 기록·별과는 별도예요.</p><button id="rwDone" class="rw-done" type="button">오늘 학습 완료하기</button><p id="rwDoneMsg" class="rw-muted" role="status"></p></div>
+    <div class="rw-section"><strong>⭐ 학습 완료</strong><p class="rw-muted">9문장은 모두 미리 읽을 수 있고, 녹음을 모두 마친 후에만 오늘 학습 완료 버튼을 누를 수 있어요. 읽기·쓰기 기록은 기기에 저장하고 로그인 상태에서는 Firebase 동기화를 시도해요. 녹음 파일은 이 기기에 별도 저장돼요. 기존 일빵빵 별과 별도예요.</p><button id="rwDone" class="rw-done" type="button">오늘 학습 완료하기</button><p id="rwDoneMsg" class="rw-muted" role="status"></p></div>
   <div class="rw-section rw-review-box" id="rwCalendarPanel">
   <strong>🗓️ 나의 읽기·쓰기 학습 달력</strong>
-  <p class="rw-muted">학습 완료 날짜와 DAY 진도를 프로필별로 저장해요.</p>
+  <p class="rw-muted">DAY 1~30 자유 선택 · 하루 여러 DAY 학습 가능 · 완료 날짜와 DAY 번호를 각각 기록해요.</p>
   <div id="rwProgressSummary" class="rw-progress-summary" role="status">DAY 1~30 진도를 확인하는 중이에요.</div>
   <div class="rw-day-progress" id="rwDayProgress" aria-label="30일 진도표"></div>
   <div class="rw-month-head">
@@ -323,6 +323,15 @@ if ('serviceWorker' in navigator) {
   </div>
   <div class="rw-month-grid" id="rwMonthGrid" aria-label="월별 학습 기록"></div>
   <p class="rw-muted" id="rwCalendarStatus" role="status">✓ 표시된 날짜는 읽기·쓰기 학습을 완료한 날이에요.</p>
+  <section id="rwManualEditor" class="rw-section" hidden style="border:1px solid #c9d4ea;background:#f8fbff;margin-top:12px">
+    <strong>🔐 부모 학습 기록 수정</strong>
+    <p class="rw-muted">부모 PIN 잠금을 해제한 후 현재 프로필의 DAY와 날짜를 수정합니다. 별·캐릭터·녹음은 변경하지 않아요.</p>
+    <div class="controls"><label>작업<select id="rwEditAction"><option value="add">완료 기록 추가 / 미완료 → 완료</option><option value="delete">완료 기록 삭제 / 완료 → 미완료</option><option value="date">완료 날짜 변경</option><option value="day">완료 DAY 번호 수정</option></select></label></div>
+    <div class="controls"><label>대상 DAY<select id="rwEditDay"></select></label><label>날짜<input type="date" id="rwEditDate"></label></div>
+    <div class="controls" id="rwEditReplacementRow" hidden><label id="rwEditReplacementLabel">새 날짜<input type="date" id="rwEditNewDate"></label><label id="rwEditReplacementDayWrap" hidden>새 DAY<select id="rwEditNewDay"></select></label></div>
+    <button id="rwEditSubmit" type="button">확인 후 기록 수정</button>
+    <p class="rw-muted" id="rwEditStatus" role="status">부모 인증이 필요해요.</p>
+  </section>
 </div>
 
   </div>
@@ -1530,6 +1539,84 @@ let stopCloudListener = null;
 let parentNotifySettings = { enabled:false, time:'19:00', sound:true, lockscreen:'full', pinHash:'' };
 let parentSettingsUnlocked = false;
 window.ilbbangIsParentSettingsUnlocked = () => parentSettingsUnlocked;
+// Reading & writing day completion sync. Stored separately from Ilbbang 600 and reward documents.
+let rwCloudStop=null,rwCloudBound='',rwCloudPrimed=false;
+const rwRef=(id)=>doc(db,'ilbbangUsers',currentUid,'readwriteProgress',encodeURIComponent(String(id)));
+const rwLocalKey=(id,day)=>`rwCompletedV1:${id}:${day}`;
+const rwPendingKey=id=>`rwCompletionPendingV1:${encodeURIComponent(id)}`;
+const rwPending=id=>{try{return JSON.parse(localStorage.getItem(rwPendingKey(id))||'{}');}catch(e){return {};}};
+function rwQueue(id,day,value){const pending=rwPending(id);pending[String(day)]={value,modified:Date.now()};localStorage.setItem(rwPendingKey(id),JSON.stringify(pending));}
+async function rwFlushPending(id){
+ const pending=rwPending(id);if(!Object.keys(pending).length||!currentUid||rwCloudBound!==id)return;
+ const ref=rwRef(id);
+ await runTransaction(db,async tx=>{const snap=await tx.get(ref),days={...(snap.data()?.days||{})};
+   for(const [k,v] of Object.entries(pending))if(Number(k)>=1&&Number(k)<=30){const previous=days[k];if(!previous||Number(previous.modified||0)<=Number(v.modified||0))days[k]=v;}
+   tx.set(ref,{days,updatedAt:serverTimestamp()},{merge:true});
+ });
+ const existing=rwPending(id);for(const [k,v] of Object.entries(pending))if(existing[k]?.modified===v.modified)delete existing[k];
+ localStorage.setItem(rwPendingKey(id),JSON.stringify(existing));
+}
+const rwDate=(value)=>{const d=new Date(value);return Number.isFinite(d.getTime())?[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-'):'';};
+const rwStamp=(ymd)=>{if(!/^\d{4}-\d{2}-\d{2}$/.test(ymd))throw Error('날짜 형식이 올바르지 않아요.');const d=new Date(ymd+'T12:00:00');if(!Number.isFinite(d.getTime())||rwDate(d)!==ymd)throw Error('올바른 날짜를 선택해 주세요.');return d.toISOString();};
+function rwApplyCloud(id,days){
+  if(!id||rwCloudBound!==id)return;
+  const list=days&&typeof days==='object'?days:{};
+  const pending=rwPending(id);let changed=false;
+  for(let day=1;day<=30;day++){const k=rwLocalKey(id,day),v=list[String(day)];
+    if(pending[String(day)])continue;const previous=localStorage.getItem(k);
+    // An absent day is not a completion; tombstones prevent deleted entries from coming back.
+    if(v&&typeof v.value==='string'&&rwDate(v.value)){if(previous!==v.value){localStorage.setItem(k,v.value);changed=true;}}
+    else if(previous!==null){localStorage.removeItem(k);changed=true;}
+  }
+  if(changed){window.dispatchEvent(new Event('rw:lesson'));window.rwReviewEngine?.rebaseSchedule?.();}
+}
+async function rwBindCloud(){
+  if(!syncReady||!currentUid||!activeProfileId)return;
+  const id=activeProfileId;if(rwCloudBound===id&&rwCloudPrimed)return;
+  rwCloudStop?.();rwCloudStop=null;rwCloudBound=id;rwCloudPrimed=false;
+  const ref=rwRef(id);const snap=await getDoc(ref);if(rwCloudBound!==id)return;
+  if(!snap.exists()){
+    const days={};for(let i=1;i<=30;i++){const v=localStorage.getItem(rwLocalKey(id,i));if(v&&rwDate(v))days[String(i)]={value:v,modified:Date.now()};}
+    await runTransaction(db,async tx=>{const fresh=await tx.get(ref);if(!fresh.exists())tx.set(ref,{days,updatedAt:serverTimestamp()});});
+  }
+  rwCloudPrimed=true;
+  await rwFlushPending(id);
+  rwCloudStop=onSnapshot(ref,s=>{if(rwCloudBound!==id||!s.exists())return;rwApplyCloud(id,s.data().days);},err=>{console.warn('읽기·쓰기 기록 동기화:',err);});
+}
+window.rwProgressCloud={
+ ready:()=>!!(currentUid&&syncReady&&rwCloudPrimed),
+ write:async(day,ymd,manual)=>{
+   if(manual&&!parentSettingsUnlocked)throw Error('부모 PIN 잠금 해제가 필요해요.');
+   const id=activeProfileId;if(!id)throw Error('프로필을 선택해 주세요.');
+   const stamp=rwStamp(ymd);rwQueue(id,day,stamp);
+   if(!currentUid||!syncReady)throw Error('로그인 후 완료 기록을 동기화합니다. 이 기기에는 대기 기록이 남아 있어요.');
+   if(!rwCloudPrimed)await rwBindCloud();
+   await runTransaction(db,async tx=>{const ref=rwRef(id),snap=await tx.get(ref),days={...(snap.data()?.days||{})};
+     if(days[String(day)]?.value)return; // no duplicate completion or reward
+     days[String(day)]={value:stamp,modified:Date.now()};tx.set(ref,{days,updatedAt:serverTimestamp()},{merge:true});
+   });
+   await rwFlushPending(id);
+ },
+ update:async({profile,mode,day,date,newDay,newDate})=>{
+   if(!parentSettingsUnlocked)throw Error('부모 PIN을 해제해 주세요.');
+   if(!currentUid||!syncReady)throw Error('Firebase 로그인이 필요해요.');
+   if(profile!==activeProfileId)throw Error('선택한 프로필이 바뀌었어요. 다시 확인해 주세요.');
+   if(!rwCloudPrimed)await rwBindCloud();
+   const id=profile,stamp=rwStamp(mode==='date'?newDate:date);
+   await runTransaction(db,async tx=>{const ref=rwRef(id),snap=await tx.get(ref),days={...(snap.data()?.days||{})},before=days[String(day)]?.value;
+     if(mode!=='add'&&(!before||rwDate(before)!==date))throw Error('기록이 다른 기기에서 바뀌었어요. 새로고침 후 확인해 주세요.');
+     if(mode==='add'){if(before)throw Error('이미 완료된 DAY입니다.');days[String(day)]={value:stamp,modified:Date.now()};}
+     else if(mode==='delete')days[String(day)]={value:null,modified:Date.now(),deleted:true};
+     else if(mode==='date')days[String(day)]={value:stamp,modified:Date.now()};
+     else if(mode==='day'){if(day===newDay||days[String(newDay)]?.value)throw Error('대상 DAY가 이미 완료됐어요.');
+       days[String(day)]={value:null,modified:Date.now(),deleted:true};days[String(newDay)]={value:rwStamp(date),modified:Date.now()};}
+     else throw Error('지원하지 않는 변경입니다.');
+     tx.set(ref,{days,updatedAt:serverTimestamp()},{merge:true});
+   });
+   const snap=await getDoc(rwRef(id));if(rwCloudBound===id)rwApplyCloud(id,snap.data()?.days);
+ }
+};
+
 let stopNotifySettingsListener = null;
 
 const panel = document.createElement('section');
@@ -1596,6 +1683,7 @@ panel.innerHTML = `
             <div class="small" id="kekePreviewStatus" style="margin-top:6px" aria-live="polite">미리보기를 선택하지 않았습니다.</div>
           </div>
           <div style="margin:0 0 16px;padding:12px;border:1px solid #d8b6a8;border-radius:12px;background:#fffaf7">
+            <a href="#rwCalendarPanel" style="display:block;margin-bottom:12px;font-weight:700">🗓️ 읽기·쓰기 날짜별 완료 기록 수정하기 (달력으로 이동)</a>
             <strong style="font-size:14px">📚 읽기·쓰기 학습 기록 초기화</strong>
             <div class="small" style="margin:6px 0">현재 선택된 프로필의 읽기·쓰기 DAY 1~30 완료, 영작 오답·표현, 랜덤 복습 이야기 및 녹음 기록만 지웁니다. 기존 일빵빵 600문장·별·캐릭터·다른 프로필은 유지합니다. 이 기록은 이 기기에만 저장되며 Firebase와 자동 동기화되지 않습니다.</div>
             <button id="resetStudyRecords" type="button" style="border-color:#c66;color:#a33;width:100%">읽기·쓰기 기록만 초기화</button>
@@ -2039,6 +2127,7 @@ function updateProfileControls() {
   select.innerHTML = profiles.map(p => `<option value="${p.id}">${escapeHtml(p.name)}</option>`).join('');
   select.value = activeProfileId;
   window.ilbbangOnProfileUpdated?.({id:activeProfileId,name:profiles.find(p=>p.id===activeProfileId)?.name||"프로필"});
+  if(syncReady)rwBindCloud().catch(err=>console.warn('읽기·쓰기 Firebase 연결:',err));
   window.ilbbangRefreshMinseoFootball?.();
   $login('deleteProfile').disabled = profiles.length <= 1;
   $login('addProfile').disabled = profiles.length >= PROFILE_LIMIT;
@@ -2276,7 +2365,7 @@ $login('parentJoin').onclick = async () => {
   } catch (error) { message('가입 실패: ' + error.message); }
 };
 $login('logout').onclick = async () => {
-  try { syncReady = false; currentUid = null; parentSettingsUnlocked = false; kekePreviewStage=null; window.ilbbangOnParentSettingsChanged?.(); if (stopNotifySettingsListener) { stopNotifySettingsListener(); stopNotifySettingsListener = null; } await signOut(auth); message('로그아웃했어요. 이 기기의 기존 기록은 삭제되지 않았어요.'); }
+  try { syncReady = false; currentUid = null; parentSettingsUnlocked = false; kekePreviewStage=null; window.ilbbangOnParentSettingsChanged?.(); if (stopNotifySettingsListener) { stopNotifySettingsListener(); stopNotifySettingsListener = null; } rwCloudStop?.();rwCloudStop=null;rwCloudBound='';rwCloudPrimed=false;await signOut(auth); message('로그아웃했어요. 이 기기의 기존 기록은 삭제되지 않았어요.'); }
   catch (error) { message('로그아웃 실패: ' + error.message); }
 };
 $login('syncNow').onclick = () => {
@@ -2285,6 +2374,7 @@ $login('syncNow').onclick = () => {
 };
 onAuthStateChanged(auth, async user => {
   if (!user) {
+    rwCloudStop?.();rwCloudStop=null;rwCloudBound='';rwCloudPrimed=false;
     syncReady = false; currentUid = null; parentSettingsUnlocked = false; window.ilbbangOnParentSettingsChanged?.();
     if (stopNotifySettingsListener) { stopNotifySettingsListener(); stopNotifySettingsListener = null; }
     updateProfileControls();
@@ -8608,7 +8698,7 @@ function render(){
  R('Vocab').innerHTML=l.vocab.map((v,i)=>'<div class="rw-expression"><b>'+escapeHTML(v[0])+'</b><span>'+escapeHTML(v[1])+'</span><button type="button" class="rw-small" data-rw-vocab="'+i+'" data-rw-vocab-choice="know" aria-pressed="false">알아요</button><button type="button" class="rw-small" data-rw-vocab="'+i+'" data-rw-vocab-choice="unknown" aria-pressed="false">몰라요</button></div>').join('');
  const key=completionKey(day);let done=false;try{done=Boolean(localStorage.getItem(key));}catch(e){}
  R('DoneStatus').textContent=done?'✓ 완료':'학습 전';R('DoneMsg').textContent=done?'이미 완료한 DAY예요. 기록을 유지합니다.':'';R('Done').textContent=done?'✓ 학습 완료됨':'오늘 학습 완료하기';R('Done').disabled=true;rwUpdateScheduleProgress(0,l.story.length);
- R('Done').onclick=()=>{if(localStorage.getItem(completionKey(day))){R('DoneMsg').textContent='이미 완료한 DAY예요.';return;}if(!window.rwStoryRecorder?.complete('regular')){R('DoneMsg').textContent='영어 이야기의 모든 문장을 녹음하면 학습 완료할 수 있어요.';return;}try{localStorage.setItem(key,new Date().toISOString());R('DoneStatus').textContent='✓ 완료';R('Done').textContent='✓ 학습 완료됨';R('Done').disabled=true;R('DoneMsg').textContent='✓ 완료! 아래 학습 달력에 기록했어요.';rwUpdateScheduleProgress(l.story.length,l.story.length);window.dispatchEvent(new Event('rw:lesson'));document.getElementById('rwCalendarPanel')?.scrollIntoView({behavior:'smooth',block:'start'});}catch(e){R('DoneMsg').textContent='저장에 실패했어요. 브라우저 저장 공간을 확인해 주세요.';}};
+ R('Done').onclick=()=>{if(localStorage.getItem(completionKey(day))){R('DoneMsg').textContent='이미 완료한 DAY예요.';return;}if(!window.rwStoryRecorder?.complete('regular')){R('DoneMsg').textContent='영어 이야기의 모든 문장을 녹음하면 학습 완료할 수 있어요.';return;}try{localStorage.setItem(key,new Date().toISOString());R('DoneStatus').textContent='✓ 완료';R('Done').textContent='✓ 학습 완료됨';R('Done').disabled=true;R('DoneMsg').textContent='✓ 완료! 아래 학습 달력에 기록했어요.';rwUpdateScheduleProgress(l.story.length,l.story.length);window.dispatchEvent(new Event('rw:lesson'));window.rwProgressCloud?.write(day,todayISO(),false).catch(err=>{R('DoneMsg').textContent='기기에는 완료 저장됨 · Firebase 동기화 대기: '+(err.message||err);});document.getElementById('rwCalendarPanel')?.scrollIntoView({behavior:'smooth',block:'start'});}catch(e){R('DoneMsg').textContent='저장에 실패했어요. 브라우저 저장 공간을 확인해 주세요.';}};
 window.dispatchEvent(new Event('rw:lesson'));
 }
 function setProfile(data){
@@ -13666,22 +13756,22 @@ function item(kind,day,index){const l=window.rwReviewGetLessons?.()?.[day-1];con
 function personText(value,day){const ctx=context();const p=typeof ctx.personForDay==='function'?ctx.personForDay(day||ctx.day):ctx.person;const nm=p==='minseo'?'Minseo':'Jiwoo',kn=p==='minseo'?'민서':'지우';return String(value).replaceAll('{name}',nm).replaceAll('{koName}',kn).replaceAll('Jiwoo',nm).replaceAll('지우',kn);}
 function entries(d){return [...Object.entries(d.writing).map(([id,v])=>({...v,kind:'writing',id})),...Object.entries(d.expressions).map(([id,v])=>({...v,kind:'expressions',id}))].filter(v=>v.question&&v.answer);}
 function completionDate(day){const id=context().profileId;if(!id)return '';let stamp='';try{stamp=localStorage.getItem(`rwCompletedV1:${id}:${day}`)||'';}catch(e){}if(!stamp)return '';const d=new Date(stamp);if(!Number.isFinite(d.getTime()))return '';return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');}
-function previousStudyDone(day){const v=completionDate(day);return Boolean(v&&(day<context().day||v<date()));}
+function previousStudyDone(day){const v=completionDate(day);return Boolean(v&&v<date());}
 function isDue(v){if(!v||!previousStudyDone(v.day))return false;
  const nextDate=typeof v.next==='string'?v.next:'';
- if(Number.isFinite(Number(v.nextDay))&&v.nextDay!==undefined&&v.nextDay!==null){return context().day>=Number(v.nextDay)||(!!nextDate&&nextDate<=date());}
+ if(nextDate)return nextDate<=date();
  // Migration: v10 cards had only a date. Unreviewed DAY 1 cards should show on DAY 2,
  // but items already reviewed once must wait until their scheduled date.
- if((Number(v.step)||0)===0&&context().day>v.day)return true;
+ if((Number(v.step)||0)===0&&previousStudyDone(v.day))return true;
  return !nextDate||nextDate<=date();
 }
 function reviewStatus(){const d=read(),cards=entries(d),w=cards.filter(x=>x.kind==='writing');$('rwReviewTotal').textContent=`영작 오답 ${w.length}개 · 복습할 문장 ${w.filter(isDue).length}개`;
  document.querySelectorAll('[data-rw-mark-w]').forEach(b=>{const wrong=!!d.writing[`${context().day}:${b.dataset.rwMarkW}`];b.textContent=wrong?'❌ 오답 · 저장됨':'✅ 정답이에요';b.classList.toggle('rw-wrong-choice',wrong);b.setAttribute('aria-pressed',String(wrong));b.title='누를 때마다 정답과 오답이 전환돼요.';});
  document.querySelectorAll('[data-rw-vocab-choice]').forEach(b=>{const k=`${context().day}:${b.dataset.rwVocab}`,wrong=!!d.expressions[k],known=d.knownExpressions[k]===true,selected=b.dataset.rwVocabChoice==='unknown'?wrong:known;b.classList.toggle(b.dataset.rwVocabChoice==='unknown'?'rw-unknown-selected':'rw-know-selected',selected);b.setAttribute('aria-pressed',String(selected));});
 }
-function schedule(v,steps){return {...v,step:steps,next:date(intervals[Math.min(steps,4)]),nextDay:context().day+intervals[Math.min(steps,4)]};}
+function schedule(v,steps){return {...v,step:steps,next:date(intervals[Math.min(steps,4)]),nextDay:null};}
 function grade(kind,day,index,choice){if(!context().profileId)return;const d=read(),bucket=kind==='writing'?d.writing:d.expressions,k=`${day}:${index}`,source=item(kind,day,index);if(!source)return;
- if(choice==='wrong'){bucket[k]={...source,step:0,next:date(1),nextDay:Math.max(Number(day)+1,Number(context().day)+1)};if(kind!=='writing')d.knownExpressions[k]=false;}
+ if(choice==='wrong'){bucket[k]={...source,step:0,next:date(1),nextDay:null};if(kind!=='writing')d.knownExpressions[k]=false;}
  else{delete bucket[k];if(kind!=='writing')d.knownExpressions[k]=true;}
  if(!save(d))return;
  $('rwReviewMarkMsg').textContent=choice==='wrong'?(kind==='writing'?'영작 오답에 저장했어요. 다음 DAY부터 복습해요.':'몰랐던 표현으로 저장했어요. 다음 학습일부터 복습해요.'):(kind==='writing'?'정답으로 바꾸고 오답 목록에서 제외했어요.':'알아요로 변경하고 복습 목록에서 제외했어요.');
@@ -13731,9 +13821,19 @@ function cards(){const el=$('rwReviewCards'),panel=$('rwMistakePanel');if(!conte
   card.querySelector('[data-right]').onclick=()=>mark(true);card.querySelector('[data-again]').onclick=()=>mark(false);
  });
 }
+function rebaseSchedule(){
+ const d=read();let changed=false;
+ for(const bucket of [d.writing,d.expressions])for(const item of Object.values(bucket)){
+   const base=completionDate(item.day);if(!base)continue;
+   const dt=new Date(base+'T12:00:00');dt.setDate(dt.getDate()+intervals[Math.min(4,Math.max(0,Number(item.step)||0))]);
+   const next=[dt.getFullYear(),String(dt.getMonth()+1).padStart(2,'0'),String(dt.getDate()).padStart(2,'0')].join('-');
+   if(item.next!==next){item.next=next;item.nextDay=null;changed=true;}
+ }
+ if(changed)save(d);refreshContent();
+}
 function refreshContent(){reviewStatus();story();reviewWords();cards();}
 function refresh(){stopAudio();refreshContent();}
-window.rwReviewEngine={mark:(kind,day,index,action)=>grade(kind,day,index,action),toggleWriting,refresh,diagnostics:()=>({stories:bank.length,verified:bank.filter(s=>s.verified).length,profile:context().profileId,eligible:eligible().length,due:entries(read()).filter(isDue).length})};
+window.rwReviewEngine={mark:(kind,day,index,action)=>grade(kind,day,index,action),toggleWriting,refresh,rebaseSchedule,diagnostics:()=>({stories:bank.length,verified:bank.filter(s=>s.verified).length,profile:context().profileId,eligible:eligible().length,due:entries(read()).filter(isDue).length})};
 $('rwReviewDue').onclick=()=>{filter='today';cards();};$('rwReviewAll').onclick=()=>{filter='all';cards();};
 window.addEventListener('rw:profile',refresh);window.addEventListener('rw:lesson',refresh);
 window.addEventListener('storage',e=>{if(e.key?.startsWith('rwReviewsV4:')||e.key?.startsWith('rwCompletedV1:'))refresh();});
@@ -13761,7 +13861,40 @@ function refresh(){const c=window.rwReviewGetContext?.()||{},done=getCompleted()
 $('rwMonthPrev').onclick=()=>{view=new Date(view.getFullYear(),view.getMonth()-1,1);refresh();};
 $('rwMonthNext').onclick=()=>{view=new Date(view.getFullYear(),view.getMonth()+1,1);refresh();};
 
-window.rwCalendar={refresh};window.addEventListener('rw:lesson',refresh);window.addEventListener('rw:profile',refresh);
+const editPanel=$('rwManualEditor');
+const editAction=$('rwEditAction'),editDate=$('rwEditDate'),editDay=$('rwEditDay'),editNewDay=$('rwEditNewDay'),editNewDate=$('rwEditNewDate');
+const editStatus=$('rwEditStatus');
+for(let i=1;i<=30;i++){editDay.add(new Option('DAY '+i,String(i)));editNewDay.add(new Option('DAY '+i,String(i)));}
+function editToday(){const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');}
+editDate.value=editToday();editNewDate.value=editToday();
+function editorAccess(){const allowed=window.ilbbangIsParentSettingsUnlocked?.()===true;editPanel.hidden=!allowed;
+ if(allowed)editStatus.textContent='현재 선택된 프로필만 수정합니다. 변경 전에 확인창이 나와요.';
+}
+function editorMode(){const mode=editAction.value;$('rwEditReplacementRow').hidden=mode==='add'||mode==='delete';$('rwEditReplacementDayWrap').hidden=mode!=='day';$('rwEditReplacementLabel').hidden=mode!=='date';}
+editAction.onchange=editorMode;editorMode();
+$('rwEditSubmit').onclick=async()=>{
+ if(window.ilbbangIsParentSettingsUnlocked?.()!==true){editStatus.textContent='부모 PIN 인증을 먼저 해주세요.';return;}
+ const c=window.rwReviewGetContext?.()||{};if(!c.profileId){editStatus.textContent='프로필을 선택해 주세요.';return;}
+ const mode=editAction.value,day=Number(editDay.value),targetDay=Number(editNewDay.value),dt=editDate.value,newDt=editNewDate.value;
+ const valid=d=>/^\d{4}-\d{2}-\d{2}$/.test(d)&&!Number.isNaN(new Date(d+'T12:00:00').getTime());
+ if(!valid(dt)||mode==='date'&&!valid(newDt)){editStatus.textContent='날짜를 정확히 선택해 주세요.';return;}
+ if(!Number.isInteger(day)||day<1||day>30||mode==='day'&&(!Number.isInteger(targetDay)||targetDay<1||targetDay>30)){editStatus.textContent='DAY 번호를 확인해 주세요.';return;}
+ const before=getCompleted(),existing=before.find(x=>x.day===day),to=before.find(x=>x.day===targetDay);
+ if(mode==='add'&&existing){editStatus.textContent='이미 완료한 DAY입니다. 날짜 변경을 이용하세요.';return;}
+ if(mode!=='add'&&!existing){editStatus.textContent='수정할 완료 기록이 없어요.';return;}
+ if(mode!=='add'&&existing.date!==dt){editStatus.textContent='해당 DAY의 실제 완료 날짜는 '+existing.date+'입니다. 날짜를 맞춰 주세요.';return;}
+ if(mode==='day'&&targetDay!==day&&to){editStatus.textContent='이동할 DAY가 이미 완료되어 있어 중복을 막았어요.';return;}
+ if((mode==='day'&&day===targetDay)||(mode==='date'&&dt===newDt)){editStatus.textContent='변경된 내용이 없어요.';return;}
+ const desc=mode==='add'?`DAY ${day}을 ${dt} 완료로 추가`:mode==='delete'?`DAY ${day} (${dt})의 완료를 삭제`:mode==='date'?`DAY ${day}의 완료일 ${dt} → ${newDt}`:`${dt} 완료 DAY ${day} → DAY ${targetDay}`;
+ if(!confirm(`${c.profileName||'현재 프로필'} 기록을 변경할까요?\n\n${desc}\n\n별 포인트와 다른 자녀의 기록은 변경하지 않습니다.`))return;
+ const button=$('rwEditSubmit');button.disabled=true;editStatus.textContent='Firebase에 저장하고 있어요…';
+ try{await window.rwProgressCloud.update({profile:c.profileId,mode,day,date:dt,newDay:targetDay,newDate:newDt});editStatus.textContent='✓ 수정 완료 · 달력과 복습을 갱신했어요.';refresh();}
+ catch(e){editStatus.textContent='수정 실패: '+(e.message||e)+' · 기존 기록은 그대로예요.';}finally{button.disabled=false;}
+};
+const oldRefresh=refresh;window.rwCalendar={refresh:()=>{oldRefresh();editorAccess();}};
+window.addEventListener('rw:lesson',()=>{refresh();editorAccess();});window.addEventListener('rw:profile',()=>{refresh();editorAccess();});
+const oldParentSettingsChanged=window.ilbbangOnParentSettingsChanged;window.ilbbangOnParentSettingsChanged=()=>{oldParentSettingsChanged?.();editorAccess();};
+editorAccess();
 refresh();
 })();</script><script id="rwResetReadWriteV10">(function(){
 'use strict';
